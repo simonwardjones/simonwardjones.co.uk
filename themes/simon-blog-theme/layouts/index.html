@@ -1,0 +1,10 @@
+{{ define "main" }}
+<h1>Home page</h1>
+<p>Default list content</p>
+{{ range .Pages }}
+  <article>
+    <h2>{{ .Title }}</h2>
+    {{ .Content }}
+  </article>
+{{ end }}
+{{ end }}
