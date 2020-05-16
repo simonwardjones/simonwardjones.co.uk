@@ -1,3 +1,4 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 module.exports = {
@@ -7,14 +8,21 @@ module.exports = {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'static')
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+              filename: 'bundle.css',
+            //   chunkFilename: '[id].css',
+        }),
+    ],
     module: {
         rules: [
             {
                 test: /\.(scss)$/,
                 use: [
                     {
-                        // Adds CSS to the DOM by injecting a `<style>` tag
-                        loader: 'style-loader'
+                        loader: MiniCssExtractPlugin.loader
                     },
                     {
                         // Interprets `@import` and `url()` like `import/require()` and will resolve them
@@ -39,4 +47,4 @@ module.exports = {
             }
         ]
     }
-};
+}
