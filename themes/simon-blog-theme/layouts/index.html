@@ -1,10 +1,27 @@
 {{ define "main" }}
-<h1>Home page</h1>
-<p>Default list content</p>
-{{ range .Pages }}
-  <article>
-    <h2>{{ .Title }}</h2>
-    {{ .Content }}
-  </article>
-{{ end }}
+    <main aria-role="main">
+      <header class="homepage-header">
+        <section class="jumbotron text-center">
+          <h1>{{.Title}}</h1>
+        </section>
+        {{ with .Params.subtitle }}
+        <span class="subtitle">{{.}}</span>
+        {{ end }}
+      </header>
+      <div class="homepage-content">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              {{.Content}}
+            </div>
+          </div>
+        </div>
+        <!-- Note that the content for index.html, as a sort of list page, will pull from content/_index.md -->
+      </div>
+      <div>
+        {{ range first 10 .Site.RegularPages }}
+            {{ .Render "summary"}}
+        {{ end }}
+      </div>
+    </main>
 {{ end }}

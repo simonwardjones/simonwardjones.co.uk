@@ -4,4 +4,8 @@
     <h2>{{ .Title }}</h2>
     {{ .Content }}
   </article>
+
+{{ range .Site.Menus.main }}
+{{ .Children }}
+{{ end}}
 {{ end }}
