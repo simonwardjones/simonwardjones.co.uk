@@ -1,7 +1,7 @@
 ---
 title: "Bayesian Inference"
 date: 2017-03-06T10:10:42+01:00
-draft: true
+draft: false
 ---
 
 ## Introduction to Bayesian
