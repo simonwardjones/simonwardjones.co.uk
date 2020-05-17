@@ -2,6 +2,7 @@
 title: "Simon Ward-Jones"
 date: 2020-05-15T12:12:20+01:00
 draft: false
+mathjax: true
 ---
 
 Welcome to my website. I am an Data Scientist living and working in London. This site is very much still a work in progress but I will use it to share some of my little hacks, projects and things I find interesting.
