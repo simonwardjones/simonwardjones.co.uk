@@ -7,8 +7,11 @@ mathjax: true
 
 Welcome to my website. I am an Data Scientist living and working in London. This site is very much still a work in progress but I will use it to share some of my little hacks, projects and things I find interesting.
 
-This section is rendered using
-```html
+This page is being built still! 😛
+
+This section is rendered using `highlight` shortcode:
+
+{{< highlight html >}}
 {{ define "main" }}
     <main aria-role="main">
       <header class="homepage-header">
@@ -27,7 +30,7 @@ This section is rendered using
             </div>
           </div>
         </div>
-        <!-- Note that the content for index.html, as a sort of list page, will pull from content/_index.md -->
+        <!-- Note that the content for index.html will pull from content/_index.md -->
       </div>
       <div>
         {{ range first 10 .Site.RegularPages }}
@@ -36,4 +39,4 @@ This section is rendered using
       </div>
     </main>
 {{ end }}
-```
+ {{< /highlight >}}
