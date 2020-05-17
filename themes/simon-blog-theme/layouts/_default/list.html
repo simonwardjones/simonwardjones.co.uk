@@ -1,10 +1,36 @@
 {{ define "main" }}
-<h1>List page</h1>
-<p>Default list content</p>
-{{ range .Pages }}
-  <article>
-    <h2>{{ .Title }}</h2>
-    {{ .Content }}
-  </article>
-{{ end }}
+<main class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <header>
+        <h1 class="mt-4">{{.Title}}</h1>
+      </header>
+      <!-- "{{.Content}}" pulls from the markdown content of the corresponding _index.md -->
+      <div class="subheading">
+        {{.Content}}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Ranges through content/posts/*.md -->
+    {{ range .Pages }}
+    <div class="col-md-6 py-2">
+      <div class="card">
+        <div class="card-body py-2">
+          <h5 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h5>
+          <div class="card-subtitle small">{{.Date.Format "2006-01-02"}}</div>
+          <p class="card-text">{{ .Summary }}</p>
+          {{ if .Truncated }}
+          <!-- This <div> includes a read more link, but only if the summary is truncated... -->
+          <div>
+            <a href="{{ .RelPermalink }}">Read More…</a>
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</main>
 {{ end }}
