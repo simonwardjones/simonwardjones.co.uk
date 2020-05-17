@@ -1,1 +1,14 @@
+<script>
+    window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']],
+          processEscapes: false
+        }
+      };
+</script>
+{{ if .Params.mathjax }}
+    <!-- mathjax loader -->
+    {{ partial "mathjax_support.html"}}
+{{end}}
 <script src="/bundle.js"></script>
