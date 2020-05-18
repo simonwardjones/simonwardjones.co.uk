@@ -1,4 +1,4 @@
-// Overide sass variables
+// Overide sass variables for boostrap
 $theme-colors: (
   "primary": #0074d9,
   "danger": #ff4136,
@@ -6,16 +6,33 @@ $theme-colors: (
 $theme-colors: (
   "custom-color": #900,
 );
-.subheading {
-  border: medium;
-  border-top: thick black;
-  font-weight: 300;
-};
-// color-yiq finds contrast
-.custom-element {
-  color: color-yiq(#000); // returns `color: #fff`
-}
+
 // import roboto
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 $font-family-base: "Roboto";
+
+// my styles
+
+/* Great for Debug!
+ {
+   background: #000 !important;
+   color: #0f0 !important;
+  outline: solid #f00 1px !important;
+}
+*/
+
+.subheading {
+  border: medium;
+  border-top: thick black;
+  font-weight: 300;
+}
+
+// color-yiq finds contrast
+.custom-element {
+  color: color-yiq(#000); // returns `color: #fff`
+}
+
+mjx-container {
+  overflow-x: scroll;
+}
