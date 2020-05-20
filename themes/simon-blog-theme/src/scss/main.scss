@@ -1,3 +1,45 @@
 @import "custom";
-// @import "node_modules/bootstrap/scss/bootstrap";
 @import "~bootstrap/scss/bootstrap";
+
+
+.subheading {
+    border: medium;
+    border-top: thick black;
+    font-weight: 300;
+}
+
+// color-yiq finds contrast
+.custom-element {
+    color: color-yiq(#000); // returns `color: #fff`
+}
+
+mjx-container {
+    overflow-x: scroll;
+}
+  
+.range-slider {
+    height: 1em;
+    width: 100%;
+    border-top: 20px;
+    border-bottom: 20px;
+    -webkit-appearance: none
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    margin-top: -8px;
+    border-radius: 8px;
+    background: var(--blue);
+    cursor: pointer;
+}
+
+.range-slider::-webkit-slider-runnable-track {
+    height: 10px;
+    width: 100%;
+    background-color: lightgray;
+    border-radius: 5px
+}
+
+@import 'range_slider.scss'
