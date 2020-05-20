@@ -2,7 +2,7 @@
 <article class="container">
   <div class="row">
     <div class="col-sm-12">
-      <h1 class='my-4'>{{ .Title }}</h1>
+      <h1 class='display-4 my-4'>{{ .Title }}</h1>
       <div class="subheading mb-4">
         <div class="small mb-2" id="date-words"> {{ .Date.Format "2 Jan 2006" }} - {{ .WordCount }} Words </div>
         {{ with .Params.summary }}

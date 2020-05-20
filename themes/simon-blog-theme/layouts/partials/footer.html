@@ -1,5 +1,11 @@
 {{ if .Params.mathjax }}
     <!-- mathjax loader -->
-    {{ partial "mathjax_support.html"}}
+    {{ partial "mathjax_support.html" }}
 {{end}}
-<script src="/bundle.js"></script>
+
+<!-- Loop through webpack assets here to get js (js in footer) -->
+{{ range .Site.Data.manifest  }}
+{{ if strings.HasSuffix . "js" }}
+<script src="/{{.}}"></script>
+{{ end }}
+{{ end }}

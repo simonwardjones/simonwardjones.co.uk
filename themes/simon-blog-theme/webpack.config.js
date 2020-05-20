@@ -1,20 +1,28 @@
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
+// Mini css plugin extracts css to it's own file
+// Manifest plugin writes bundled files to json
+// Clean webpack deletes old build artefacts
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'production',
     entry: './src/js/main.js',
     output: {
-        filename: 'bundle.js',
+        filename: '[name].[hash].bundle.js',
         path: path.resolve(__dirname, 'static')
     },
     plugins: [
         new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // both options are optional
-              filename: 'bundle.css',
-            //   chunkFilename: '[id].css',
+            filename: '[name].[hash].bundle.css'
         }),
+        new ManifestPlugin({
+            fileName: '../data/manifest.json',
+        }),
+        new CleanWebpackPlugin({
+            dry: false
+        })
     ],
     module: {
         rules: [

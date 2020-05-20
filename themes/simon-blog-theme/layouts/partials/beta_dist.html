@@ -1,10 +1,32 @@
 <html>
 
+Note this file is not actually being used as a template - use instead the shortcode.
+It is here for easier dev as a single html page.
+
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.10.0/d3.min.js"></script>
+    
+    <!-- bootstrap baby! -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    JS, Popper.js, and jQuery
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+    <!-- d3 imports -->
+    <script src="https://unpkg.com/d3"></script>
+    <script src="https://unpkg.com/d3-array"></script>
     <script src="https://unpkg.com/d3-simple-slider"></script>
-    <!-- <script src="https://unpkg.com/@stdlib/stdlib@0.0.91/dist/stdlib-stats-base-dists-flat.min.js"></script> -->
-    <script src="https://unpkg.com/@stdlib/stdlib@0.0.32/dist/stdlib-flat.min.js"></script>
+    <script src="https://unpkg.com/d3-random"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.3/jstat.min.js"></script>
+
     <script type="text/javascript">
         class Chart {
 
@@ -54,7 +76,7 @@
                 // force zero baseline if all data points are positive
                 if (yExtent[0] > 0) { yExtent[0] = 0; };
 
-                this.xScale = d3.scaleTime()
+                this.xScale = d3.scaleLinear()
                     .range([0, this.width - m.right])
                     .domain(xExtent);
 
@@ -70,11 +92,11 @@
                 // this is all pretty straightforward D3 stuff
                 const xAxis = d3.axisBottom()
                     .scale(this.xScale)
-                    .ticks(d3.timeMonth);
+                    .tickFormat(d3.format(".1f"));
 
                 const yAxis = d3.axisLeft()
                     .scale(this.yScale)
-                    .tickFormat(d3.format("d"));
+                    .tickFormat(d3.format(".1f"));
 
                 this.plot.append("g")
                     .attr("class", "x axis")
@@ -89,16 +111,15 @@
             addLine() {
                 const line = d3.line()
                     .x(d => this.xScale(d[0]))
-                    .y(d => this.yScale(d[1]));
+                    .y(d => this.yScale(d[1]))
 
                 this.plot.append('path')
                     // use data stored in `this`
-                    .datum(this.data)
-                    .classed('line', true)
-                    .attr('d', line)
+                    .attr('d', line(this.data))
                     // set stroke to specified color, or default to red
-                    .style('stroke', this.lineColor || 'red')
-                    .attr("fill", "none");
+                    .style('stroke', this.lineColor || 'var(--blue)')
+                    .style('stroke-width', "3px")
+                    .attr("fill", "None");
             }
 
             // the following are "public methods"
@@ -122,68 +143,79 @@
     </script>
 </head>
 
+
 <body>
-    <div class="chart-container"></div>
-    <div id="slider-simple"></div>
-    <script>
-
-    let N = 10
-    var x = [ ...Array(N).keys() ].map( i => (i+1) / N);
-    var alpha = 10
-    var beta = 10
-
-    var y = x.map(x => {
-        return stdlib.base.dists.beta.pdf(x,alpha,beta)
-    })
-    var data = [x, y]
-    var sliderSimple = d3
-        .sliderBottom()
-        .min(d3.min(data))
-        .max(d3.max(data))
-        .width(300)
-        .tickFormat(d3.format('.2%'))
-        .ticks(5)
-        .default(0.015)
-        .on('onchange', val => {
-        d3.select('p#value-simple').text(d3.format('.2%')(val));
-        });
-
-    var gSimple = d3
-        .select('div#slider-simple')
-        .append('svg')
-        .attr('width', 500)
-        .attr('height', 100)
-        .append('g')
-        .attr('transform', 'translate(30,30)');
-
-    gSimple.call(sliderSimple);
-        // create new chart using Chart constructor
-        const chart = new Chart({
-            element: document.querySelector('.chart-container'),
-            data: [
-                <!-- [x,y], -->
-            ]
-        });
-        // change line colour on click
-        d3.selectAll('button.color').on('click', function () {
-            const color = d3.select(this).text().split(' ')[0];
-            chart.setColor(color);
-        });
-        // change data on click to something randomly-generated
-        d3.selectAll('button.data').on('click', () => {
-            chart.setData([
-                [new Date(2016, 0, 1), Math.random() * 100],
-                [new Date(2016, 1, 1), Math.random() * 100],
-                [new Date(2016, 2, 1), Math.random() * 100],
-                [new Date(2016, 3, 1), Math.random() * 100],
-                [new Date(2016, 4, 1), Math.random() * 100]
-            ]);
-        });
-        // redraw chart on each resize
-        // in a real-world example, it might be worth ‘throttling’ this
-        // more info: http://sampsonblog.com/749/simple-throttle-function
-        d3.select(window).on('resize', () => chart.draw());
-    </script>
+    <div class="chart">
+        <div class="row controls">
+            <form class="col-md-6" id="alpha-form">
+                <div class="form-group m-3">
+                    <label for="alpha">alpha: 1</label>
+                    <input type="range" min=0.1 max=10 value=2 step=0.1 class="custom-range" id="alpha">
+                </div>
+            </form>
+            <form class="col-md-6" id="beta-form">
+                <div class="form-group m-3">
+                    <label for="beta">beta: 1</label>
+                    <input type="range" min=0.1 max=10 value=2 step=0.1 class="custom-range" id="beta">
+                </div>
+            </form>
+            <div class="col-sm-12">
+                <div class="chart-container"></div>
+            </div>
+        </div>
+    </div>
 </body>
+
+<script>
+    alphaSlider = d3.select("#alpha")
+    alphaSlider.on("input", function () {
+        var alpha = this.value
+        d3.select('[for="alpha"]').text(`alpha: ${alpha}`)
+        update()
+    })
+    betaSlider = d3.select("#beta")
+    betaSlider.on("input", function () {
+        var beta = this.value
+        d3.select('[for="beta"]').text(`beta: ${beta}`)
+        update()
+    })
+
+    let N = 500
+    let step = 1 / N
+    var alpha = 2
+    var beta = 2
+    var [x, y] = generateBetaXYSeries(alpha, beta)
+    var data = d3.zip(x, y)
+
+    function update(){
+        let alpha = parseFloat(d3.select('#alpha').node().value)
+        let beta = parseFloat(d3.select('#beta').node().value)
+        console.log(`updating with alpha = ${alpha} and beta = ${beta}`)
+        let [x, y] = generateBetaXYSeries(alpha, beta)
+        let data = d3.zip(x, y)
+        chart.setData(data)
+    }
+
+    function generateBetaXYSeries(alpha, beta) {
+        let x = d3.range(step, 1, step)
+        let y = x.map((x) => {
+            let y = jStat.beta.pdf( x, alpha, beta )
+            if (Number.isNaN(y)){
+                console.log(`Nan value for alpha = ${alpha} and beta = ${beta}`)
+            }
+            return y
+        })
+        
+        return [x, y]
+    }
+
+    // create new chart using Chart constructor
+    const chart = new Chart({
+        element: document.querySelector('.chart-container'),
+        data: data //data
+    });
+    d3.select(window).on('resize', () => chart.draw());
+
+</script>
 
 </html>
