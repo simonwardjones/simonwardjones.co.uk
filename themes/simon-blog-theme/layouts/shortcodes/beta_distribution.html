@@ -1,0 +1,193 @@
+<div class="chart">
+    <div class="row controls">
+        <form class="col-md-6" id="alpha-form">
+            <div class="form-group m-3">
+                <label for="alpha">alpha: 2</label>
+                <input type="range" min=0.1 max=10 value=2 step=0.1 class="custom-range" id="alpha">
+            </div>
+        </form>
+        <form class="col-md-6" id="beta-form">
+            <div class="form-group m-3">
+                <label for="beta">beta: 2</label>
+                <input type="range" min=0.1 max=10 value=2 step=0.1 class="custom-range" id="beta">
+            </div>
+        </form>
+        <div class="col-sm-12">
+            <div class="chart-container"></div>
+        </div>
+    </div>
+</div>
+
+<!-- d3 imports -->
+<script src="https://unpkg.com/d3"></script>
+<script src="https://unpkg.com/d3-array"></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>
+<script src="https://unpkg.com/d3-random"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.3/jstat.min.js"></script>
+
+<script type="text/javascript">
+    class Chart {
+
+        constructor(opts) {
+            // load in arguments from config object
+            this.data = opts.data;
+            this.element = opts.element;
+            // create the chart
+            this.draw();
+        }
+
+        draw() {
+            // define width, height and margin
+            this.width = this.element.offsetWidth;
+            this.height = d3.max([200, this.width / 2])
+            this.margin = {
+                top: 20,
+                right: 75,
+                bottom: 45,
+                left: 50
+            };
+
+            // set up parent element and SVG
+            this.element.innerHTML = '';
+            const svg = d3.select(this.element).append('svg');
+            svg.attr('width', this.width);
+            svg.attr('height', this.height);
+
+            // we'll actually be appending to a <g> element
+            this.plot = svg.append('g')
+                .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
+
+            // create the other stuff
+            this.createScales();
+            this.addAxes();
+            this.addLine();
+        }
+
+        createScales() {
+            // shorthand to save typing later
+            const m = this.margin;
+
+            // calculate max and min for data
+            const xExtent = d3.extent(this.data, d => d[0]);
+            const yExtent = d3.extent(this.data, d => d[1]);
+
+            // force zero baseline if all data points are positive
+            if (yExtent[0] > 0) { yExtent[0] = 0; };
+
+            this.xScale = d3.scaleLinear()
+                .range([0, this.width - m.right])
+                .domain(xExtent);
+
+            this.yScale = d3.scaleLinear()
+                .range([this.height - (m.top + m.bottom), 0])
+                .domain(yExtent);
+        }
+
+        addAxes() {
+            const m = this.margin;
+
+            // create and append axis elements
+            // this is all pretty straightforward D3 stuff
+            const xAxis = d3.axisBottom()
+                .scale(this.xScale)
+                .tickFormat(d3.format(".1f"));
+
+            const yAxis = d3.axisLeft()
+                .scale(this.yScale)
+                .tickFormat(d3.format(".1f"));
+
+            this.plot.append("g")
+                .attr("class", "x axis")
+                .attr("transform", `translate(0, ${this.height - (m.top + m.bottom)})`)
+                .call(xAxis);
+
+            this.plot.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+        }
+
+        addLine() {
+            const line = d3.line()
+                .x(d => this.xScale(d[0]))
+                .y(d => this.yScale(d[1]))
+
+            this.plot.append('path')
+                // use data stored in `this`
+                .attr('d', line(this.data))
+                // set stroke to specified color, or default to red
+                .style('stroke', this.lineColor || 'var(--blue)')
+                .style('stroke-width', "3px")
+                .attr("fill", "None");
+        }
+
+        // the following are "public methods"
+        // which can be used by code outside of this file
+
+        setColor(newColor) {
+            this.plot.select('.line')
+                .style('stroke', newColor);
+
+            // store for use when redrawing
+            this.lineColor = newColor;
+        }
+
+        setData(newData) {
+            this.data = newData;
+
+            // full redraw needed
+            this.draw();
+        }
+    }
+
+
+    // sliders set up
+    alphaSlider = d3.select("#alpha")
+    alphaSlider.on("input", function () {
+        var alpha = this.value
+        d3.select('[for="alpha"]').text(`alpha: ${alpha}`)
+        update()
+    })
+    betaSlider = d3.select("#beta")
+    betaSlider.on("input", function () {
+        var beta = this.value
+        d3.select('[for="beta"]').text(`beta: ${beta}`)
+        update()
+    })
+
+    let N = 500
+    let step = 1 / N
+    var alpha = 2
+    var beta = 2
+    var [x, y] = generateBetaXYSeries(alpha, beta)
+    var data = d3.zip(x, y)
+
+    function update() {
+        let alpha = parseFloat(d3.select('#alpha').node().value)
+        let beta = parseFloat(d3.select('#beta').node().value)
+        console.log(`updating with alpha = ${alpha} and beta = ${beta}`)
+        let [x, y] = generateBetaXYSeries(alpha, beta)
+        let data = d3.zip(x, y)
+        chart.setData(data)
+    }
+
+    function generateBetaXYSeries(alpha, beta) {
+        let x = d3.range(step, 1, step)
+        let y = x.map((x) => {
+            let y = jStat.beta.pdf(x, alpha, beta)
+            if (Number.isNaN(y)) {
+                console.log(`Nan value for alpha = ${alpha} and beta = ${beta}`)
+            }
+            return y
+        })
+
+        return [x, y]
+    }
+
+    // create new chart using Chart constructor
+    const chart = new Chart({
+        element: document.querySelector('.chart-container'),
+        data: data //data
+    });
+    d3.select(window).on('resize', () => chart.draw());
+
+</script>
