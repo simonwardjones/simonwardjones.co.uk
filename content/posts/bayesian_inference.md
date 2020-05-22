@@ -55,7 +55,7 @@ In our example we have seen three heads so $x_1=x_2=x_3=1$ and then $\theta_{ML}
 
 Not exactly a genius prediction... 🤭
 
-This is were bayesian inference comes in and the concept of having a prior opinion (like tossing a heads probably has a probability near 1/2)
+This is where bayesian inference comes in and the concept of having a prior opinion (like tossing a heads probably has a probability near 1/2)
 
 ## Bayesian prior
 
