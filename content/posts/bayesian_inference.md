@@ -62,3 +62,28 @@ This is where bayesian inference comes in and the concept of having a prior opin
 In a bayesian setting we think of the parameter $\theta$ itself as a random variable and we have a prior opinion of what it's distribution is. A good distribution to choose is the Beta distribution which itself has two parameters $a, b$. The Beta distribution pdf function is displayed in the graph below:
 
 {{< beta_distribution >}}
+
+
+We assume that $\theta$ ~ $Beta(a,b)$. In our example of the coin this graph makes sense as the density of $\theta$ (the probability of getting heads) is centred around a half (assuming you haven't changed the graph).
+
+Bayes' law says 
+
+$$
+P(A|B) = \frac{P(B|A)P(A)}{P(B)}
+$$
+
+Using this we can say that the posterior probability is proportional to the product of the Likelihood and the Prior, or
+
+$$
+P(\theta|D)\propto P(D|\theta)*P(\theta)
+$$
+
+Hence using Bayes' theorem we can calculate the posterior distribution of $\theta$ using our initial prior and the information gained from having seen the data $D = \{x_1,...,x_n\}$. The posterior Distribution can be shown to also follow a Beta distribution, specifically 
+$$
+P(\theta|D) \sim Beta(a+k,b+n-k)
+$$
+
+The below plot allows you to vary your prior belief with $a$ and $b$ and view the posterior probability distribution after having seen n samples with k successes (n flips with k heads)
+
+<h2>Beta prior on Bernoulli Distribution</h2>
+
