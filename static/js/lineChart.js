@@ -48,18 +48,17 @@ class LineChart {
         if (this.data == undefined) {
             this.log('No data yet')
             this.updateSVG()
-            this.setStyles()
+            this.updateStyles()
             return
         }
         this.hasData = true
         this.updateDataColors()
         this.updateSVG()
-        this.setStyles()
+        this.updateStyles()
         this.updateScales()
         this.updateAxis()
         this.updateLines()
-        this.setStyles()
-        this.addLegend()
+        this.updateLegend()
 
     }
 
@@ -120,7 +119,7 @@ class LineChart {
         }
     }
 
-    setStyles(styleOptions = {}) {
+    updateStyles(styleOptions = {}) {
         styleOptions = { ...this.options, ...styleOptions }
         this.svg
             .style("background", styleOptions.svgBackground)
@@ -269,7 +268,7 @@ class LineChart {
             cyan: "#17a2b8",
         }
     }
-    
+
     colorIteratorGenerator() {
         let keys = Object.keys(this.defaultColors())
         let n = keys.length
@@ -294,21 +293,22 @@ class LineChart {
         })
     }
 
-    getLineColor(d){
+    getLineColor(d) {
         return d.lineColor || this.dataColors[d.id] || this.options.lineColor
     }
 
-    addLegend() {
-        window.legend = d3.select(this.element)
-            .selectAll('div')
+    updateLegend() {
+        let legend = d3.select(this.element)
+            .selectAll('div#legend')
             .data(['legend'])
             .join("div")
+            .attr("id", 'legend')
             .style("display", "flex")
             .style("flex-flow", "row wrap")
             .style("justify-content", "space-evenly")
             .style("background", this.options.svgBackground)
 
-        window.legendItems = legend.selectAll("div.legendItem")
+        let legendItems = legend.selectAll("div.legendItem")
             .data(this.data, d => d.id)
             .join(
                 enter => enter.append("div")
@@ -339,7 +339,7 @@ class LineChart {
 
     /* helper functions below*/
     log(message = "") {
-        if(this.options.debug){
+        if (this.options.debug) {
             console.log(`[${this.constructor.name}] `, message)
         }
     }
