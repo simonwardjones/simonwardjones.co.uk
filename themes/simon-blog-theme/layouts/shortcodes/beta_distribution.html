@@ -26,49 +26,67 @@
 
 
 <script type="text/javascript">
-    // sliders set up
-    alphaSlider = d3.select("#alpha")
-    alphaSlider.on("input", function () {
-        var alpha = this.value
-        d3.select('[for="alpha"]').text(`alpha: ${alpha}`)
-        update()
-    })
-    betaSlider = d3.select("#beta")
-    betaSlider.on("input", function () {
-        var beta = this.value
-        d3.select('[for="beta"]').text(`beta: ${beta}`)
-        update()
-    })
 
-    let N = 500
-    let step = 1 / N
-    var alpha = 2
-    var beta = 2
-    var data = generateBetaXYSeries(alpha, beta)
-
-    function update() {
-        let alpha = parseFloat(d3.select('#alpha').node().value)
-        let beta = parseFloat(d3.select('#beta').node().value)
-        chart.log(`[Beta example] Updating with alpha = ${alpha} and beta = ${beta}`)
-        let data = generateBetaXYSeries(alpha, beta)
-        chart.update(data)
-    }
-
-    function generateBetaXYSeries(alpha, beta) {
-        let x = d3.range(step, 1, step)
-        let y = x.map((x) => {
-            let y = jStat.beta.pdf(x, alpha, beta)
-            if (Number.isNaN(y)) {
-                console.log(`Nan value for alpha = ${alpha} and beta = ${beta}`)
-            }
-            return y
+    let betaDistributionChart = (function betaChart(){
+        // sliders set up
+        alphaSlider = d3.select("#alpha")
+        alphaSlider.on("input", function () {
+            var alpha = this.value
+            d3.select('[for="alpha"]').text(`alpha: ${alpha}`)
+            delayUpdate('alpha')
         })
-
-        return [{ id: 'Beta-distribution', values: d3.zip(x, y) }]
-    }
-
-    // create new chart using Chart constructor
-    const element = document.querySelector('.chart-container')
-    const chart = new LineChart(element, data, {duration:500});
+        betaSlider = d3.select("#beta")
+        betaSlider.on("input", function () {
+            var beta = this.value
+            d3.select('[for="beta"]').text(`beta: ${beta}`)
+            delayUpdate('beta')
+        })
+    
+        var data = generateBetaXYSeries(2, 2)
+    
+    
+        /*
+        When calling update directly from the slider
+        callback the slide becomes slow. To overcome this
+        instead we run the update on a separate thread using a
+        setTimeout. 
+        We store the reference to the callback timer so
+        so that if the update was called in the last 10 millisecond
+        we terminate the previous timer.
+        */
+        timers = {}
+        function delayUpdate(name) {
+            clearTimeout(timers[name])
+            timers[name] = setTimeout(update, 10)
+        }
+    
+        function update() {
+            let alpha = parseFloat(d3.select('#alpha').node().value)
+            let beta = parseFloat(d3.select('#beta').node().value)
+            chart.log(`[Beta example] Updating with alpha = ${alpha} and beta = ${beta}`)
+            let data = generateBetaXYSeries(alpha, beta)
+            chart.update(data)
+        }
+    
+        function generateBetaXYSeries(alpha, beta) {
+            let N = 500
+            let step = 1 / N
+            let x = d3.range(step, 1, step)
+            let y = x.map((x) => {
+                let y = jStat.beta.pdf(x, alpha, beta)
+                if (Number.isNaN(y)) {
+                    console.log(`Nan value for alpha = ${alpha} and beta = ${beta}`)
+                }
+                return y
+            })
+    
+            return [{ id: 'Beta-distribution', values: d3.zip(x, y) }]
+        }
+    
+        // create new chart using Chart constructor
+        const element = document.querySelector('.chart-container')
+        const chart = new LineChart(element, data, {duration:500});
+        return chart
+    })()
 
 </script>
