@@ -1,0 +1,112 @@
+<div class="chart">
+    <div class="row controls">
+        <form class="col-md-6" id="pp-alpha-form">
+            <div class="form-group m-0">
+                <label for="pp-alpha" class="slider-label">alpha: 2</label>
+                <input type="range" min=0.1 max=10 value=2 step=0.1 class="range-slider" id="pp-alpha">
+            </div>
+        </form>
+        <form class="col-md-6" id="pp-beta-form">
+            <div class="form-group m-0">
+                <label for="pp-beta" class="slider-label">beta: 2</label>
+                <input type="range" min=0.1 max=10 value=2 step=0.1 class="range-slider" id="pp-beta">
+            </div>
+        </form>
+        <form class="col-md-6" id="pp-n-form">
+            <div class="form-group m-0">
+                <label for="pp-n" class="slider-label">Number of samples: 2</label>
+                <input type="range" min=0 max=10 value=2 step=1 class="range-slider" id="pp-n">
+            </div>
+        </form>
+        <form class="col-md-6" id="pp-k-form">
+            <div class="form-group m-0">
+                <label for="pp-k" class="slider-label">Number of successes: 2</label>
+                <input type="range" min=0 max=2 value=1 step=1 class="range-slider" id="pp-k">
+            </div>
+        </form>
+        <div class="col-sm-12">
+            <div class="prior-posterior-chart-container"></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    const priorPosteriorChart = (function(){
+
+        // sliders set up
+        // pp = prior posterior
+        alphaSlider = d3.select("#pp-alpha")
+        alphaSlider.on("input", function () {
+            var alpha = this.value
+            d3.select('[for="pp-alpha"]').text(`alpha: ${alpha}`)
+            delayUpdate('alpha')
+        })
+        betaSlider = d3.select("#pp-beta")
+        betaSlider.on("input", function () {
+            var beta = this.value
+            d3.select('[for="pp-beta"]').text(`beta: ${beta}`)
+            delayUpdate('beta')
+        })
+        nSlider = d3.select("#pp-n")
+        nSlider.on("input", function () {
+            var n = parseInt(this.value)
+            d3.select('[for="pp-n"]').text(`Number of samples: ${n}`)
+    
+            // Update dependent successes slider
+            //set the max which updates the value
+            kSlider.node().max = n
+            // update label
+            d3.select('[for="pp-k"]').text(`Number of successes: ${kSlider.node().value}`)
+            delayUpdate('n')
+        })
+        kSlider = d3.select("#pp-k")
+        kSlider.on("input", function () {
+            var ppk = this.value
+            d3.select('[for="pp-k"]').text(`Number of successes: ${ppk}`)
+            delayUpdate('k')
+        })
+    
+        timers = {}
+        function delayUpdate(name) {
+            clearTimeout(timers[name])
+            timers[name] = setTimeout(update, 10)
+        }
+    
+        function update() {
+            let alpha = parseFloat(d3.select('#pp-alpha').node().value)
+            let beta = parseFloat(d3.select('#pp-beta').node().value)
+            let n = parseFloat(d3.select('#pp-n').node().value)
+            let k = parseFloat(d3.select('#pp-k').node().value)
+            let data = generateBetaXYSeries(alpha, beta, n, k)
+            chart.log(`[PriorPosterior example] Updating with alpha = ${alpha} and beta = ${beta}`)
+            chart.update(data)
+    
+        }
+    
+        function generateBetaXYSeries(alpha, beta, n, k) {
+            let N = 500
+            let step = 1 / N
+            let theta = d3.range(step, 1, step)
+            let prior = theta.map(theta => jStat.beta.pdf(theta, alpha, beta))
+            let posterior = theta.map(theta => jStat.beta.pdf(theta, alpha + k, beta + n - k))
+            let likelihood = theta.map(theta => (theta ** k) * ((1 - theta) ** (n - k)))
+            let normalisedLikelihood = likelihood.map(prob => {
+                return prob / (step * d3.sum(likelihood))
+            })
+            return [
+                { id: 'prior', values: d3.zip(theta, prior) },
+                { id: 'posterior', values: d3.zip(theta, posterior) },
+                { id: 'likelihood', values: d3.zip(theta, normalisedLikelihood) },
+            ]
+        }
+    
+        // create new chart using Chart constructor
+        const ppElement = document.querySelector('.prior-posterior-chart-container')
+        var ppData = generateBetaXYSeries(2, 2, 2, 1)
+        const chart = new LineChart(ppElement, ppData, { duration: 500 });
+        return chart
+    })()
+
+</script>
