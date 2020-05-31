@@ -1,33 +1,11 @@
-@import "custom";
+@import "customise_bootstrap";
 @import "~bootstrap/scss/bootstrap";
+
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+
 @import 'range_slider.scss';
-
-// my styles
-
-/* Great for Debug!
- {
-   background: #000 !important;
-   color: #0f0 !important;
-  outline: solid #f00 1px !important;
-}
-*/
-
-
-.subheading {
-    border: medium;
-    border-top: thick black;
-    font-weight: 300;
-}
-
-// color-yiq finds contrast
-.custom-element {
-    color: color-yiq(#000); // returns `color: #fff`
-}
-
-mjx-container {
-    overflow-x: scroll;
-}
-
-.name {
-    font-weight: 300;
-}
+@import 'social_buttons.scss';
+@import 'custom.scss';

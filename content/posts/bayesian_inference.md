@@ -5,6 +5,7 @@ draft: false
 mathjax: true
 menu: 
   main:
+    # weight: 1 # bring to top with high weight
     parent: Posts
 summary: Explaining the basics of bayesian inference with the example of flipping a coin 💰
 ---
