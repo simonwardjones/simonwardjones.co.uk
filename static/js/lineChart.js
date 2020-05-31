@@ -136,8 +136,9 @@ class LineChart {
             })
             return axisExtents
         }).map(axis => d3.extent(axis))
-
         const [xExtent, yExtent] = extents
+
+        yExtent[1] *= 1.1
 
         if (this.options.startYAtZero && yExtent[0] > 0) {
             yExtent[0] = 0;
@@ -219,7 +220,10 @@ class LineChart {
                 enter => enter.append("path")
                     .attr("class", `series ${this.chart_id}`)
                     .attr("id", d => d.id)
-                    .attr("d", (d) => line(d.values))
+                    .attr("d", (d) => {
+                        console.log(line(d.values))
+                        return line(d.values)
+                    })
                     .attr("stroke", d => this.getLineColor(d))
                     .attr("fill", "none")
                     .attr("stroke-width", this.options.lineWidth)
