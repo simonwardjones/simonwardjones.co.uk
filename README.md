@@ -17,6 +17,7 @@ However chrome does not hot reload css so for dev mode it is better to use the s
 
 Favicon and Icons
 - I generated them using favicon.io and then just referenced the links in the head partial
+- Icons are provided with fonts awesome https://fontawesome.com/icons?d=gallery&m=free
 
 ```bash
 npm run dev
