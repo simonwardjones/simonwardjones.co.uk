@@ -9,20 +9,20 @@
 
   <div class="row">
     <div class="social-buttons">
-      <a class="social-button linkedin" target="_blank" href="https://www.linkedin.com/in/simon-ward-jones-357b16aa"><i class="fab fa-linkedin"></i></a>
-      <a class="social-button email" target="_blank" href="mailto:simonwardjones16@gmail.com"><i class="fa fa-envelope"></i><p class="social-detail-email">simonwardjones16@gmail.com</p></a>
-      <a class="social-button phone" target="_blank" href="tel:+447545629774"><i class="fa fa-phone-square"></i><p class="social-detail-phone">+447545629774</p></a>
-      <a class="social-button github" target="_blank" href="https://github.com/simonwardjones"><i class="fab fa-github-square"></i></a>
-      <a class="social-button twitter" target="_blank" href="https://twitter.com/SimonWardJones"><i class="fab fa-twitter-square"></i></a>
-      <a class="social-button facebook" target="_blank" href="https://www.facebook.com/simon.wardjones"><i class="fab fa-facebook-square"></i></a>
-      <a class="social-button instagram" target="_blank" href="https://www.instagram.com/simonw_j/"><i class="fab fa-instagram-square"></i></a>
+      <a class="social-button linkedin" target="_blank" href="{{index .Site.Social "linkedin"}}"><i class="fab fa-linkedin"></i></a>
+      <a class="social-button email" target="_blank" href="mailto:{{index .Site.Social "email"}}"><i class="fa fa-envelope"></i><p class="social-detail-email">{{index .Site.Social "email"}}</p></a>
+      <a class="social-button phone" target="_blank" href="tel:{{index .Site.Social "phone"}}"><i class="fa fa-phone-square"></i><p class="social-detail-phone">{{index .Site.Social "phone"}}</p></a>
+      <a class="social-button github" target="_blank" href="{{index .Site.Social "github"}}"><i class="fab fa-github-square"></i></a>
+      <a class="social-button twitter" target="_blank" href="{{index .Site.Social "twitter"}}"><i class="fab fa-twitter-square"></i></a>
+      <a class="social-button facebook" target="_blank" href="{{index .Site.Social "facebook"}}"><i class="fab fa-facebook-square"></i></a>
+      <a class="social-button instagram" target="_blank" href="{{index .Site.Social "instagram"}}"><i class="fab fa-instagram-square"></i></a>
     </div>
   </div>
 
   <div class="row">
     <div class="col-12">
       <p>Or email here</p>
-      <form class="form-horizontal" action="http://formspree.io/simonwardjones16@gmail.com" method="POST">
+      <form class="form-horizontal" action="{{ index .Site.Params "formspree"}}" method="POST">
         <div class="form-group">
           <label for="name" class="col-sm-2 control-label">Name</label>
           <div class="col-sm-10">
@@ -50,7 +50,7 @@
           <div class="col-sm-10 col-sm-offset-2">
           </div>
         </div>
-      </form> 
+      </form>
     </div>
   </div>
 </article>

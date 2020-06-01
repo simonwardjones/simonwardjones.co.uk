@@ -2,3 +2,15 @@ baseURL = "https://simonwardjones.co.uk/"
 languageCode = "en-GB"
 title = "Simon Ward-Jones"
 theme = "simon-blog-theme"
+
+[params]
+formspree = "https://formspree.io/xrgyqgjw"
+
+[social]
+linkedin="https://www.linkedin.com/in/simon-ward-jones-357b16aa"
+email = "simonwardjones16@gmail.com"
+phone = "+447545629774"
+github = "https://github.com/simonwardjones"
+twitter = "https://twitter.com/SimonWardJones"
+facebook = "https://www.facebook.com/simon.wardjones"
+instagram = "https://www.instagram.com/simonw_j/"
