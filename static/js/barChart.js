@@ -1,7 +1,11 @@
 // Line chart in es6
 //import 'd3'
 
-class LineChart {
+class SimpleBarChart {
+    /*
+    Simple because it doesn't implement 
+    any stacking - just one bar
+    */
     constructor(element, data, options = {}) {
         this.element = element
         this.data = data
@@ -30,12 +34,7 @@ class LineChart {
             marginLeft: 40,
             marginRight: 10,
 
-            // svgBackground: "salmon",
-            startYAtZero: false,
-
-            lineWidth: "0.2em",
-            curveLine: true,
-            lineColor: "blue",
+            lineColor: "#007bff",
 
             duration: 2000,
             debug: false,
@@ -52,14 +51,12 @@ class LineChart {
             return
         }
         this.hasData = true
-        this.updateDataColors()
         this.updateSVG()
         this.updateStyles()
         this.updateScales()
         this.updateAxis()
-        this.updateLines()
+        this.updateBars()
         this.updateLegend()
-
     }
 
     getWidthHeight() {
@@ -128,35 +125,30 @@ class LineChart {
     updateScales() {
         const { top, bottom, right, left } = this.margin;
 
-        // find extents for each line then find overall extent
-        const extents = [0, 1].map(i => {
-            let axisExtents = []
-            this.data.forEach(line => {
-                d3.extent(line.values, d => d[i]).forEach(x => axisExtents.push(x))
-            })
-            return axisExtents
-        }).map(axis => d3.extent(axis))
-        const [xExtent, yExtent] = extents
-
-        yExtent[1] *= 1.1
-
-        if (this.options.startYAtZero && yExtent[0] > 0) {
-            yExtent[0] = 0;
-        };
-
-        this.xScale = d3.scaleLinear()
+        this.xScale = d3.scaleBand()
+            .domain(this.data.values.map(d => d[0]))
             .range([0, this.width - (left + right)])
-            .domain(xExtent);
+            .padding(0.1);
 
+        const yMax = d3.max(this.data.values.map(d => d[1])) * 1.1
         this.yScale = d3.scaleLinear()
             .range([this.height - (top + bottom), 0])
-            .domain(yExtent);
+            .domain([0, yMax]);
     }
 
     getAxis() {
+        let n = this.data.values.length
+        let step = Math.ceil(n / 10)
+        let nTicks = Math.floor(n / step)
+        const tickValues = [...Array(nTicks).keys()].map(i => {
+            let step = Math.ceil(n / nTicks)
+            return this.data.values[i * step][0]
+        })
+
         const xAxis = d3.axisBottom()
             .scale(this.xScale)
-            .tickFormat(d3.format(".1f"));
+            .tickValues(tickValues)
+            .tickFormat(d3.format(".0f"))
 
         const yAxis = d3.axisLeft()
             .scale(this.yScale)
@@ -200,59 +192,63 @@ class LineChart {
             )
     }
 
-    updateLines() {
-        var line
-        if (this.options.curveLine) {
-            this.log('Using curve mode')
-            line = d3.line().curve(d3['curveNatural'])
-                .x(d => this.xScale(d[0]))
-                .y(d => this.yScale(d[1]))
-        } else {
-            line = d3.line()
-                .x(d => this.xScale(d[0]))
-                .y(d => this.yScale(d[1]))
-        }
-        this.plot.selectAll("path.series")
-            .data(this.data, d => {
-                return d.id
-            })
+    updateBars() {
+        var tooltip = d3.select('body').selectAll('div.toolTip')
+            .data([true])
+            .join("div")
+            .attr("class", "toolTip")
+            .style("position", "absolute")
+            .style("display", "none")
+            .style("height", "auto")
+            .style("min-width", "80px")
+            .style("border", "1px solid #6F257F")
+            .style("padding", "14px")
+            .style("text-align", "center")
+            .style("background","#ffffff")
+            .style("pointer-events","none")
+
+        this.plot
+            .selectAll("rect")
+            .data(this.data.values)
             .join(
-                enter => enter.append("path")
-                    .attr("class", `series ${this.chart_id}`)
-                    .attr("id", d => d.id)
-                    .attr("d", d => line(d.values))
-                    .attr("stroke", d => this.getLineColor(d))
-                    .attr("fill", "none")
-                    .attr("stroke-width", this.options.lineWidth)
-                    .attr("opacity", 0)
-                    .call(enter =>
-                        enter.transition()
-                            .duration(this.options.duration)
-                            .attr("opacity", 1))
-                ,
-                update => update.call(update =>
-                    update.transition()
+                enter => enter
+                    .append("rect")
+                    .attr("x", d => this.xScale(d[0]))
+                    .attr("y", this.yScale(0))
+                    .attr("width", this.xScale.bandwidth())
+                    .attr("width", this.xScale.bandwidth())
+                    .attr("height", 0)
+                    .attr("fill", this.options.lineColor)
+                    .call(enter => enter.transition()
                         .duration(this.options.duration)
-                        .attrTween("d", d => {
-                            // Warning! selection.select propagates data so don't do 
-                            // this.plot.select !
-                            var previous = d3.select(`.${this.chart_id}#${d.id}`).attr("d")
-                            var current = line(d.values)
-                            return d3.interpolatePath(previous, current);
-                        })
-                )
-                ,
+                        .attr("y", d => this.yScale(d[1]))
+                        .attr("height", d => this.yScale(0) - this.yScale(d[1]))
+                    )
+                    .on("mousemove", function (d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 50 + "px")
+                            .style("top", d3.event.pageY - 70 + "px")
+                            .style("display", "inline-block")
+                            .text(`p(X=${d[0]}) = ${d[1].toFixed(4)}`);
+                    })
+                    .on("mouseout", function (d) { tooltip.style("display", "none"); }),
+                update => update
+                    .call(update => update.transition()
+                        .duration(this.options.duration)
+                        .attr("x", d => this.xScale(d[0]))
+                        .attr("y", d => this.yScale(d[1]))
+                        .attr("width", this.xScale.bandwidth())
+                        .attr("height", d => this.yScale(0) - this.yScale(d[1]))
+                    ),
                 exit => exit
-                    .call(exit =>
-                        exit.transition()
-                            .duration(this.options.duration)
-                            .attr("opacity", 0)
-                            .remove(),
+                    .call(exit => exit.transition()
+                        .duration(this.options.duration)
+                        .attr("y", this.yScale(0))
+                        .attr("height", 0)
+                        .remove()
                     )
             )
-
     }
-
 
     /* Creat color wheel*/
     defaultColors() {
@@ -284,18 +280,17 @@ class LineChart {
         return iterator
     }
 
-    updateDataColors() {
-        const dataColors = { ...this.dataColors }
-        this.data.forEach((d) => {
-            if (dataColors[d.id] === undefined) {
-                dataColors[d.id] = this.colorIterator.next()
-            }
-            this.dataColors = dataColors
-        })
+    /* helper functions below*/
+    log(message = "") {
+        if (this.options.debug) {
+            console.log(`[${this.constructor.name}] `, message)
+        }
     }
 
-    getLineColor(d) {
-        return d.lineColor || this.dataColors[d.id] || this.options.lineColor
+    randomClass() {
+        return [...Array(5)]
+            .map(_ => Math.floor(Math.random() * 26))
+            .map(x => 'abcdefghijklmnopqrstuvwxyz'[x]).join("")
     }
 
     updateLegend() {
@@ -310,7 +305,7 @@ class LineChart {
             .style("background", this.options.svgBackground)
 
         let legendItems = legend.selectAll("div.legendItem")
-            .data(this.data, d => d.id)
+            .data([this.data], d => d.id)
             .join(
                 enter => enter.append("div")
                     .attr("class", `legendItem ${this.chart_id}`)
@@ -318,7 +313,7 @@ class LineChart {
                     .style("padding", "4px")
                     .call(legendItem => {
                         legendItem.append("div")
-                            .style("background", d => this.getLineColor(d))
+                            .style("background", this.options.lineColor)
                             .style("height", "100%")
                             .attr('id', d => d)
                             .style("width", "1em")
@@ -337,22 +332,4 @@ class LineChart {
                     })
             )
     }
-
-    /* helper functions below*/
-    log(message = "") {
-        if (this.options.debug) {
-            console.log(`[${this.constructor.name}] `, message)
-        }
-    }
-
-    randomClass() {
-        return [...Array(5)]
-            .map(_ => Math.floor(Math.random() * 26))
-            .map(x => 'abcdefghijklmnopqrstuvwxyz'[x]).join("")
-    }
-
 }
-
-// For a next version create base chart and 
-// then extend to other chart types e.g.
-// class LineChart extends Chart { }

@@ -1,0 +1,87 @@
+<div class="chart">
+    <div class="row controls">
+        <form class="col-md-6" id="mu-form">
+            <div class="form-group m-0">
+                <label for="mu" class="slider-label">mu: 0</label>
+                <input type="range" min=-50 max=50 value=0 step=0.1 class="range-slider" id="mu">
+            </div>
+        </form>
+        <form class="col-md-6" id="sigma-form">
+            <div class="form-group m-0">
+                <label for="sigma" class="slider-label">sigma: 1</label>
+                <input type="range" min=0.01 max=10 value=1 step=0.01 class="range-slider" id="sigma">
+            </div>
+        </form>
+        <div class="col-sm-12">
+            <div id="normal-chart-container"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    let normalDistributionChart = (function normalChart(){
+        // sliders set up
+        muSlider = d3.select("#mu")
+        muSlider.on("input", function () {
+            var mu = this.value
+            d3.select('[for="mu"]').text(`mu: ${mu}`)
+            delayUpdate('mu')
+        })
+        sigmaSlider = d3.select("#sigma")
+        sigmaSlider.on("input", function () {
+            var sigma = this.value
+            d3.select('[for="sigma"]').text(`sigma: ${sigma}`)
+            delayUpdate('sigma')
+        })
+    
+        var data = generateNormal(0, 1)
+    
+    
+        /*
+        When calling update directly from the slider
+        callback the slide becomes slow. To overcome this
+        instead we run the update on a separate thread using a
+        setTimeout. 
+        We store the reference to the callback timer so
+        so that if the update was called in the last 10 millisecond
+        we terminate the previous timer.
+        */
+        timers = {}
+        function delayUpdate(name) {
+            clearTimeout(timers[name])
+            timers[name] = setTimeout(update, 10)
+        }
+    
+        function update() {
+            let mu = parseFloat(d3.select('#mu').node().value)
+            let sigma = parseFloat(d3.select('#sigma').node().value)
+            chart.log(`[Normal example] Updating with mu = ${mu} and sigma = ${sigma}`)
+            let data = generateNormal(mu, sigma)
+            chart.update(data)
+        }
+    
+        function generateNormal(mu, sigma) {
+            let N = 500
+            let min = jStat.normal.inv(0.001, mu, sigma )
+            let max = jStat.normal.inv(0.999, mu, sigma )
+            let step = (max - min) / N
+            let x = d3.range(min, max, step)
+            let y = x.map((x) => {
+                let y = jStat.normal.pdf(x, mu, sigma)
+                if (Number.isNaN(y)) {
+                    console.log(`Nan value for mu = ${mu} and sigma = ${sigma}`)
+                }
+                return y
+            })
+    
+            return [{ id: 'Normal-distribution', values: d3.zip(x, y) }]
+        }
+    
+        // create new chart using Chart constructor
+        const element = document.querySelector('#normal-chart-container')
+        const chart = new LineChart(element, data, {duration:500});
+        return chart
+    })()
+
+</script>

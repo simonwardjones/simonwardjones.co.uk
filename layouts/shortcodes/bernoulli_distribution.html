@@ -1,0 +1,71 @@
+<div class="chart">
+    <div class="row controls">
+        <form class="col-md-6" id="bernoulli-p-form">
+            <div class="form-group m-0">
+                <label for="bernoulli-p" class="slider-label">p: 0.6</label>
+                <input type="range" min=0 max=1 value=0.6 step=0.01 class="range-slider" id="bernoulli-p">
+            </div>
+        </form>
+        <div class="col-sm-12">
+            <div id="bernoulli-chart-container"></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate-path@2.1.2/build/d3-interpolate-path.min.js"></script>
+<script src="/js/barChart.js"></script>
+<script src="/js/lineChart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.3/jstat.min.js"></script>
+
+
+<script type="text/javascript">
+
+    let bernoulliDistributionChart = (function betaChart() {
+        // sliders set up
+        pSlider = d3.select("#bernoulli-p")
+        pSlider.on("input", function () {
+            var p = this.value
+            d3.select('[for="bernoulli-p"]').text(`p: ${p}`)
+            delayUpdate('p')
+        })
+        var data = generateBernoulli(0.6)
+
+
+        /*
+        When calling update directly from the slider
+        callback the slide becomes slow. To overcome this
+        instead we run the update on a separate thread using a
+        setTimeout. 
+        We store the reference to the callback timer so
+        so that if the update was called in the last 10 millisecond
+        we terminate the previous timer.
+        */
+        timers = {}
+        function delayUpdate(name) {
+            clearTimeout(timers[name])
+            timers[name] = setTimeout(update, 10)
+        }
+
+        function update() {
+            let p = parseFloat(d3.select('#bernoulli-p').node().value)
+            chart.log(`[Bernoulli example] Updating with p = ${p}`)
+            let data = generateBernoulli(p)
+            chart.update(data)
+        }
+
+        function generateBernoulli(p) {
+            return {
+                id: 'Bernoulli Distribution',
+                values: [[0, (1 - p)], [1, p]]
+            }
+        }
+
+        // create new chart using Chart constructor
+        const element = document.querySelector('#bernoulli-chart-container')
+        const chart = new SimpleBarChart(element, data, { duration: 500 });
+        return chart
+    })()
+
+</script>

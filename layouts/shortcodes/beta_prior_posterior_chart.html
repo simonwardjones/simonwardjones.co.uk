@@ -25,7 +25,7 @@
             </div>
         </form>
         <div class="col-sm-12">
-            <div class="prior-posterior-chart-container"></div>
+            <div id="prior-posterior-chart-container"></div>
         </div>
     </div>
 </div>
@@ -103,7 +103,7 @@
         }
     
         // create new chart using Chart constructor
-        const ppElement = document.querySelector('.prior-posterior-chart-container')
+        const ppElement = document.querySelector('#prior-posterior-chart-container')
         var ppData = generateBetaXYSeries(2, 2, 2, 1)
         const chart = new LineChart(ppElement, ppData, { duration: 500 });
         return chart
