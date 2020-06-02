@@ -17,4 +17,9 @@
     <link rel="stylesheet" type="text/css" href="/{{.}}">
     {{ end }}
     {{ end }}
+
+    <!-- tracking -->
+    {{ if not (in (.Site.BaseURL | string) "localhost") }}
+        {{ template "_internal/google_analytics_async.html" . }}
+    {{ end }}
 </head>

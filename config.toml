@@ -2,6 +2,7 @@ baseURL = "https://simonwardjones.co.uk/"
 languageCode = "en-GB"
 title = "Simon Ward-Jones"
 theme = "simon-blog-theme"
+googleAnalytics = "UA-168219404-1"
 
 [params]
 formspree = "https://formspree.io/xrgyqgjw"
