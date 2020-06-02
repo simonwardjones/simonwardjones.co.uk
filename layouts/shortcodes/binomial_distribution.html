@@ -23,13 +23,13 @@
 
     let binomialDistributionChart = (function binomialChart() {
         // sliders set up
-        pSlider = d3.select("#binomial-p")
+        let pSlider = d3.select("#binomial-p")
         pSlider.on("input", function () {
             var p = this.value
             d3.select('[for="binomial-p"]').text(`p: ${p}`)
             delayUpdate('p')
         })
-        nSlider = d3.select("#binomial-n")
+        let nSlider = d3.select("#binomial-n")
         nSlider.on("input", function () {
             var n = this.value
             d3.select('[for="binomial-n"]').text(`n: ${n}`)
@@ -47,7 +47,7 @@
         so that if the update was called in the last 10 millisecond
         we terminate the previous timer.
         */
-        timers = {}
+        let timers = {}
         function delayUpdate(name) {
             clearTimeout(timers[name])
             timers[name] = setTimeout(update, 10)

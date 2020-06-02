@@ -29,13 +29,13 @@
 
     let betaDistributionChart = (function betaChart(){
         // sliders set up
-        alphaSlider = d3.select("#alpha")
+        let alphaSlider = d3.select("#alpha")
         alphaSlider.on("input", function () {
             var alpha = this.value
             d3.select('[for="alpha"]').text(`alpha: ${alpha}`)
             delayUpdate('alpha')
         })
-        betaSlider = d3.select("#beta")
+        let betaSlider = d3.select("#beta")
         betaSlider.on("input", function () {
             var beta = this.value
             d3.select('[for="beta"]').text(`beta: ${beta}`)
@@ -54,7 +54,7 @@
         so that if the update was called in the last 10 millisecond
         we terminate the previous timer.
         */
-        timers = {}
+        let timers = {}
         function delayUpdate(name) {
             clearTimeout(timers[name])
             timers[name] = setTimeout(update, 10)

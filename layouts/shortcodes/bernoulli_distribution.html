@@ -24,7 +24,7 @@
 
     let bernoulliDistributionChart = (function betaChart() {
         // sliders set up
-        pSlider = d3.select("#bernoulli-p")
+        let pSlider = d3.select("#bernoulli-p")
         pSlider.on("input", function () {
             var p = this.value
             d3.select('[for="bernoulli-p"]').text(`p: ${p}`)
@@ -42,7 +42,7 @@
         so that if the update was called in the last 10 millisecond
         we terminate the previous timer.
         */
-        timers = {}
+        let timers = {}
         function delayUpdate(name) {
             clearTimeout(timers[name])
             timers[name] = setTimeout(update, 10)

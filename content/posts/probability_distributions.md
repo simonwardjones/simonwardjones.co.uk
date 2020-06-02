@@ -7,7 +7,8 @@ menu:
   main:
     parent: 'Posts'
     # weight: 20
-    name: "A visual tour of probability distributions"
+    name: "Probability Distributions"
+summary: A visual 👀 tour of probability distributions 
 ---
 
 
@@ -88,5 +89,23 @@ $$
 #### Beta distribution chart
 
 {{< beta_distribution >}}
+
+---
+
+# LogNormal Distribution
+
+A lognormal distribution is a continuous probability distribution of a random variable whose logarithm is normally distributed. That means if X is log-normally distributed, then Y = ln(X) has a normal distribution. A random variable which is log-normally distributed takes only positive values.
+
+The shorthand $ln(X) \sim \mathcal{N}(\mu,\sigma)$ means the logarithm of X is normally distributed with mean $\mu$ and variance $\sigma$ i.e. X is a lognormally distributed
+
+The probability density function of the lognormal distribution is
+$$
+f(x)=\frac{1}{x\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{ln(x)-\mu}{\sigma}\right)^2}
+\qquad \text{for }x\in (0,\infty)
+$$
+
+#### LogNormal distribution chart
+
+{{< lognormal_distribution >}}
 
 ---
