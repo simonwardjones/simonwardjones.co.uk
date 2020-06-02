@@ -156,7 +156,7 @@ class LineChart {
     getAxis() {
         const xAxis = d3.axisBottom()
             .scale(this.xScale)
-            .tickFormat(d3.format(".2f"));
+            .tickFormat(d3.format(".1f"));
 
         const yAxis = d3.axisLeft()
             .scale(this.yScale)

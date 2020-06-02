@@ -2,13 +2,13 @@
     <div class="row controls">
         <form class="col-md-6" id="binomial-p-form">
             <div class="form-group m-0">
-                <label for="binomial-p" class="slider-label">p: 0.5</label>
+                Probability of success $p$ = <label for="binomial-p" class="slider-label">0.5</label>
                 <input type="range" min=0 max=1 value=0.5 step=0.01 class="range-slider" id="binomial-p">
             </div>
         </form>
         <form class="col-md-6" id="binomial-n-form">
             <div class="form-group m-0">
-                <label for="binomial-n" class="slider-label">n: 6</label>
+                Number of trials $n$ = <label for="binomial-n" class="slider-label"></label>6</label>
                 <input type="range" min=0 max=100 value=6 step=1 class="range-slider" id="binomial-n">
             </div>
         </form>
@@ -26,13 +26,13 @@
         let pSlider = d3.select("#binomial-p")
         pSlider.on("input", function () {
             var p = this.value
-            d3.select('[for="binomial-p"]').text(`p: ${p}`)
+            d3.select('[for="binomial-p"]').text(p)
             delayUpdate('p')
         })
         let nSlider = d3.select("#binomial-n")
         nSlider.on("input", function () {
             var n = this.value
-            d3.select('[for="binomial-n"]').text(`n: ${n}`)
+            d3.select('[for="binomial-n"]').text(n)
             delayUpdate('n')
         })
         var data = generateBinomial(6, 0.5)

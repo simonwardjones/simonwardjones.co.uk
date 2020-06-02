@@ -2,13 +2,13 @@
     <div class="row controls">
         <form class="col-md-6" id="mu-form">
             <div class="form-group m-0">
-                <label for="ln-mu" class="slider-label">mu: 0.5</label>
+                Mean $\mu$ = <label for="ln-mu" class="slider-label">0.5</label>
                 <input type="range" min=-3 max=3 value=0.5 step=0.01 class="range-slider" id="ln-mu">
             </div>
         </form>
         <form class="col-md-6" id="sigma-form">
             <div class="form-group m-0">
-                <label for="ln-sigma" class="slider-label">sigma: 0.5</label>
+                Variance $\sigma^2$ = <label for="ln-sigma" class="slider-label">0.5</label>
                 <input type="range" min=0.01 max=2 value=0.5 step=0.01 class="range-slider" id="ln-sigma">
             </div>
         </form>
@@ -25,14 +25,14 @@
         let muSlider = d3.select("#ln-mu")
         muSlider.on("input", function () {
             var mu = this.value
-            d3.select('[for="ln-mu"]').text(`mu: ${mu}`)
+            d3.select('[for="ln-mu"]').text(mu)
             delayUpdate('mu')
             console.log('updating mu')
         })
         let sigmaSlider = d3.select("#ln-sigma")
         sigmaSlider.on("input", function () {
             var sigma = this.value
-            d3.select('[for="ln-sigma"]').text(`sigma: ${sigma}`)
+            d3.select('[for="ln-sigma"]').text(sigma)
             delayUpdate('sigma')
         })
     

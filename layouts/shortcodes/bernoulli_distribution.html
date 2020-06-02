@@ -2,7 +2,7 @@
     <div class="row controls">
         <form class="col-md-6" id="bernoulli-p-form">
             <div class="form-group m-0">
-                <label for="bernoulli-p" class="slider-label">p: 0.6</label>
+                Probability of success $p$ = <label for="bernoulli-p" class="slider-label">0.6</label>
                 <input type="range" min=0 max=1 value=0.6 step=0.01 class="range-slider" id="bernoulli-p">
             </div>
         </form>
@@ -27,7 +27,7 @@
         let pSlider = d3.select("#bernoulli-p")
         pSlider.on("input", function () {
             var p = this.value
-            d3.select('[for="bernoulli-p"]').text(`p: ${p}`)
+            d3.select('[for="bernoulli-p"]').text(p)
             delayUpdate('p')
         })
         var data = generateBernoulli(0.6)

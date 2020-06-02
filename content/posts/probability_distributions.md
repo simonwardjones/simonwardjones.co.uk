@@ -54,9 +54,9 @@ Try varying $p$ and $n$ to see the impact on the Binomial distribution
 ---
 
 # Normal Distribution
-The Normal or Gaussian distribution is a continuous probability distribution that has a bell-shaped probability density function governed by two parameters, the mean $\mu$ and the variance $\sigma$. The shorthand $X \sim \mathcal{N}(\mu,\sigma)$ means X is normally distributed with mean $\mu$ and variance $\sigma$
+The Normal or Gaussian distribution is a continuous probability distribution that has a bell-shaped probability density function governed by two parameters, the mean $\mu$ and the variance $\sigma^2$. The shorthand $X \sim \mathcal{N}(\mu,\sigma^2)$ means X is normally distributed with mean $\mu$ and variance $\sigma^2$
 
-The Normal distribution is important partly due to the central limit theorem. This states that the average of many samples of a random variable converges to a normal distribution as the number of samples increases.
+The Normal distribution is important due to the central limit theorem. This states that the average of many samples of a random variable converges to a normal distribution as the number of samples increases.
 
 The probability density function of the normal distribution is
 $$
@@ -66,7 +66,7 @@ $$
 
 #### Normal distribution chart
 
-Try varying $\mu$ and $\sigma$ to see the impact on the Normal distribution
+Try varying mean - $\mu$ and variance - $\sigma^2$ to see the impact on the Normal distribution
 
 {{< normal_distribution >}}
 
@@ -74,7 +74,7 @@ Try varying $\mu$ and $\sigma$ to see the impact on the Normal distribution
 
 # Beta Distribution
 
-The beta distribution is a family of continuous probability distributions defined on the interval $[0, 1]$ parametrized by two positive shape parameters, denoted by $\alpha$ and $\beta$. The Beta distribution has the following probability density function. It is often used in bayesian statistics as it is the conjugate prior of the Bernoulli, Binomial, Negative Binomial and geometric distributions. 
+The beta distribution is a family of continuous probability distributions defined on the interval $[0, 1]$ parametrized by two positive shape parameters, denoted by $\alpha$ and $\beta$. The Beta distribution has the following probability density function. It is often used in Bayesian statistics as it is the conjugate prior of the Bernoulli, Binomial, Negative Binomial and geometric distributions. 
 $$
 f(x) = \frac{1}{B(\alpha,\beta)}x^{\alpha-1}(1-x)^{\beta-1}
 \qquad \text{for }x\in [0,1]\\\\
@@ -97,9 +97,9 @@ Try varying $\alpha$ and $\beta$ to see the impact on the Beta distribution
 
 # LogNormal Distribution
 
-A lognormal distribution is a continuous probability distribution of a random variable whose logarithm is normally distributed. That means if X is log-normally distributed, then Y = ln(X) has a normal distribution. A random variable which is log-normally distributed takes only positive values.
+A lognormal distribution is a continuous probability distribution of a random variable whose logarithm is normally distributed. That means if $X$ is log-normally distributed, then $Y = ln(X)$ has a normal distribution. A random variable which is log-normally distributed takes only positive values.
 
-The shorthand $ln(X) \sim \mathcal{N}(\mu,\sigma)$ means the logarithm of X is normally distributed with mean $\mu$ and variance $\sigma$ i.e. X is a lognormally distributed
+The shorthand $ln(X) \sim \mathcal{N}(\mu,\sigma^2)$ means the logarithm of X is normally distributed with mean $\mu$ and variance $\sigma^2$ i.e. X is lognormally distributed.
 
 The probability density function of the lognormal distribution is
 $$
@@ -109,7 +109,7 @@ $$
 
 #### LogNormal distribution chart
 
-Try varying $\mu$ and $\sigma$ to see the impact on the Log-Normal distribution
+Try varying $\mu$ and $\sigma^2$ to see the impact on the Log-Normal distribution
 
 {{< lognormal_distribution >}}
 
