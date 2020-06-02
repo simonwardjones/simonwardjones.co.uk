@@ -30,25 +30,24 @@ For intuition a Bernoulli distribution could be used to represent flipping a coi
 
 #### Bernoulli distribution chart
 
+Try varying $p$ to see the impact on the Bernoulli distribution
+
 {{< bernoulli_distribution >}}
 
 ---
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 
 # Binomial Distribution
-The Binomial distribution with parameters n and p is the discrete probability distribution of the number of successes in a sequence of n independent experiments. Each trail is a bernoulli random variable (see above) representing two possible outcomes - think success ✅ and failure ❌.
+The Binomial distribution with parameters n and p is the discrete probability distribution of the number of successes in a sequence of n independent experiments. Each trial is a bernoulli random variable (see above) representing two possible outcomes - think success ✅ and failure ❌.
 
 The shorthand $X \sim B(n, p)$ is used to indicate that the random variable $X$ has the Binomial distribution with parameters $n, p$ - where $p$ is the chance of success on an individual trial where $0 < p < 1$ and $n$ is the number of trials. We can write the probability mass function as
 $$
 P(X=k) = {n \choose k}p^k(1 - p)^{1 - k}\qquad \text{for }k\in \\{0,\dots,n\\}
 $$
-For intuition a Binomial distribution can be used to represent the number of heads in as series of n coin flips.
+For intuition a Binomial distribution can be used to represent the number of heads in a series of $n$ coin flips.
 
 #### Binomial distribution chart
+
+Try varying $p$ and $n$ to see the impact on the Binomial distribution
 
 {{< binomial_distribution >}}
 
@@ -66,6 +65,8 @@ f(x)=\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\righ
 $$
 
 #### Normal distribution chart
+
+Try varying $\mu$ and $\sigma$ to see the impact on the Normal distribution
 
 {{< normal_distribution >}}
 
@@ -88,6 +89,8 @@ $$
 
 #### Beta distribution chart
 
+Try varying $\alpha$ and $\beta$ to see the impact on the Beta distribution
+
 {{< beta_distribution >}}
 
 ---
@@ -105,6 +108,8 @@ f(x)=\frac{1}{x\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}\left(\frac{ln(x)-\mu}{\sigma}
 $$
 
 #### LogNormal distribution chart
+
+Try varying $\mu$ and $\sigma$ to see the impact on the Log-Normal distribution
 
 {{< lognormal_distribution >}}
 
