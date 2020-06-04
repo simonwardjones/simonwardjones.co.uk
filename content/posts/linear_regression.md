@@ -68,7 +68,7 @@ The linear regression algorithm chooses the coefficients to minimise the average
 
 And that's linear regression!
 
-
+---
 
 ## The nitty gritty
 
@@ -207,123 +207,84 @@ Now that we have derived the gradient formula 🎉 let's implement gradient desc
 
 **Python implementation**
 
+We will build the implementation in an objected oriented fashion defining a class for Linear regression. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/linear_regression.py).
+
 ```python
 
 class LinearRegression():
 
-    def __init__(self, learning_rate=0.05):
-        """  
-        Linear regression model
-
-        Parameters:
-        ----------
-        learning_rate: float, optional, default 0.05
-            The learning rate parameter controlling the gradient descent
-            step size
-        """
-        self.learning_rate = learning_rate
-        print('Creating linear model instance')
-
-    def __repr__(self):
-        return (
-            f'<LinearRegression '
-            f'learning_rate={self.learning_rate}>')
-        
-
-        
-    def fit(self, X, y, n_iter=1000):
-        """  
-        Fit the linear regression model
-
-        Updates the weights with n_iter iterations of batch gradient
-        descent updates
-
-        Parameters:
-        ----------
-        X: numpy.ndarray
-            Training data, shape (m samples, (n - 1) features + 1)
-            Note the first column of X is expected to be ones (to allow 
-            for the bias to be included in beta)
-        y: numpy.ndarray
-            Target values, shape (m samples, 1)
-        n_iter: int, optional, default 1000
-            Number of batch gradient descent steps
-        """        
-        m, n = X.shape
-        print(f'fitting with m={m} samples with n={n-1} features\n')
-        self.beta = np.zeros(shape=(n, 1))
-        self.costs = []
-        self.betas = [self.beta]
-        for iteration in range(n_iter):
-            y_pred = self.predict(X)
-            cost = self.cost(y, y_pred)
-            self.costs.append(cost[0][0])
-            gradient = self.gradient(y, y_pred, X)
-            self.beta = self.beta - (
-                self.learning_rate * gradient)
-            self.betas.append(self.beta)
-
-    def cost(self, y, y_pred):
-        """  
-        Mean square error cost function
-
-        Parameters:
-        ----------
-        y: numpy.ndarray
-            True target values, shape (m samples, 1)
-        y_pred: numpy.ndarray
-            Predicted y values, shape (m samples, 1)
-
-        Returns:
-        -------
-        float:
-            mean square error value
-        """
-        m = y.shape[0]
-        cost = (1 / (2 * m)) * (y - y_pred).T @ (y - y_pred)
-        return cost
-
-    def gradient(self, y, y_pred, X):
-        """  
-        Calculates the gradient of the cost function
-
-        Parameters:
-        ----------
-        y: numpy.ndarray
-            Predicted y values, shape (m samples, 1)
-        y_pred: numpy.ndarray
-            True target values, shape (m samples, 1)
-        X: numpy.ndarray
-            Training data, shape (m samples, (n - 1) features + 1)
-            Note the first column of X is expected to be ones (to allow 
-            for the bias to be included in beta)
-
-        Returns:
-        -------
-        numpy.ndarray:
-            Derivate of mean square error cost function with respect to
-            the weights beta, shape (n features, 1)
-        """
-        m = X.shape[0]
-        gradient = (1 / m) * X.T @ (y_pred - y)
-        return gradient
-
-    def predict(self, X):
-        """  
-        Predict the target values from sample X feature values
-
-        Parameters:
-        ----------
-        X: numpy.ndarray
-            Training data, shape (m samples, (n - 1) features + 1)
-            Note the first column of X is expected to be ones (to allow 
-            for the bias to be included in beta)
-
-        Returns:
-        -------
-        numpy.ndarray:
-            Target value predictions, shape (m samples, 1)
-        """        
-        y_pred = X @ self.beta
-        return y_pred
 ```
+
+Next we define the __init__ method on the class setting the learning rate. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of negative gradient. The size of the step is governed by the learning rate.
+
+```python
+
+def __init__(self, learning_rate=0.05):
+    self.learning_rate = learning_rate
+    print('Creating linear model instance')
+
+```
+
+Next let's define a method for the `cost function` as defined above
+```python
+
+def cost(self, y, y_pred):
+    m = y.shape[0]
+    cost = (1 / (2 * m)) * \
+        (y - y_pred).T @ (y - y_pred)
+    return cost
+
+```
+Next let's define a method to calculate the `gradient` of the `cost function`
+
+```python
+
+def gradient(self, y, y_pred, X):
+    m = X.shape[0]
+    gradient = (1 / m) * \
+         X.T @ (y_pred - y)
+    return gradient
+
+```
+Before we define the `fit` method to implement `gradient descent` let's define one last method which predicts the target variable $y$ given the current coefficients and features $X$
+```python
+
+def predict(self, X):
+    y_pred = X @ self.beta
+    return y_pred
+
+```
+
+And finally here is the `fit` method implementing `n_iter` iterations of gradient descent.
+
+```python
+
+def fit(self, X, y, n_iter=1000):
+    m, n = X.shape
+    print(f'fitting with m={m} samples with n={n-1} features\n')
+    self.beta = np.zeros(shape=(n, 1))
+    self.costs = []
+    self.betas = [self.beta]
+    for iteration in range(n_iter):
+        y_pred = self.predict(X)
+        cost = self.cost(y, y_pred)
+        self.costs.append(cost[0][0])
+        gradient = self.gradient(y, y_pred, X)
+        self.beta = self.beta - (
+            self.learning_rate * gradient)
+        self.betas.append(self.beta)
+
+```
+
+And that's it. Here's and example use of the class
+
+```python
+
+linear_regression = LinearRegression()
+linear_regression.fit(X, y)
+
+linear_regression.predict(X_new)
+
+```
+
+Thanks for reading! 👏 Please let me know any question, mistakes or improvements

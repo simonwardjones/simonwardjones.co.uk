@@ -35,19 +35,25 @@ mjx-container {
     height: 100%;
 }
 
-$columns: 5;
+pre {
+    padding-left: 4px;
+}
+
 
 @include media-breakpoint-down(sm) {
+    $columns: 5;
+
     @for $i from 1 through $columns {
         .responsive-math-#{$i} {
             font-size: (1-($i / 10)) + em;
         }
     }
+
     pre {
         margin-left: -15px;
         margin-right: -15px;
         padding-left: 4px;
-        font-size: .5em;
+        font-size: .75em;
     }
 }
 
