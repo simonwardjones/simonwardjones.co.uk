@@ -1,0 +1,7 @@
+{{/*
+responsive-math - uses media query to resize
+responsive-math-unfold - unfolds tables
+*/}}
+<p class="{{ if .Get "class" }}{{ .Get "class" }}{{ else }}responsive-math responsive-math-unfold{{ end }}" >
+    $${{.Inner}}$$
+</p>

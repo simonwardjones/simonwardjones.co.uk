@@ -23,12 +23,36 @@
 // scroll mathjax long formulas (mostly for mobile)
 mjx-container {
     overflow-x: scroll;
+    font-size: 0.5em;
 }
 
 // homepage name in big
 .name {
     font-weight: 300;
 }
+
 .card {
     height: 100%;
+}
+
+$columns: 5;
+
+@include media-breakpoint-down(sm) {
+    @for $i from 1 through $columns {
+        .responsive-math-#{$i} {
+            font-size: (1-($i / 10)) + em;
+        }
+    }
+    pre {
+        margin-left: -15px;
+        margin-right: -15px;
+        padding-left: 4px;
+        font-size: .5em;
+    }
+}
+
+@include media-breakpoint-up(sm) {
+    .responsive-math-unfold mjx-mtr {
+        display: inline;
+    }
 }
