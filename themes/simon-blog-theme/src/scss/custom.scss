@@ -55,6 +55,11 @@ pre {
         padding-left: 4px;
         font-size: .75em;
     }
+
+    .table th, .table td {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
 }
 
 @include media-breakpoint-up(sm) {

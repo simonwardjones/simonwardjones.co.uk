@@ -11,9 +11,9 @@ menu:
 summary: "From zero to Linear Regression"
 ---
 
-What is linear regression 🤷‍♂️?
+What is `linear regression` 🤷‍♂️?
 
-If your interested read on, if you're not, see you self out. 🚪
+If you're interested read on, if you're not, see yourself out. 🚪
 
 This article is the first of a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
@@ -26,45 +26,47 @@ This article is the first of a series covering fundamental machine learning algo
 ## The idea and key concepts
 
 
-Regression is any algorithm that takes a collection of inputs and predicts a continuous output. I'll forgive you if you still don't follow.
+`Regression` is any algorithm that takes a collection of inputs and predicts an output. I'll forgive you if you still don't follow.
 
-Let's give an example and this should make much more sense. Let's say we are trying to predict how much a house 🏡 will sell for? We may know a few facts about the house e.g. the square footage of the house 🏠, the square footage of the garden 🌾 and whether there is a garage 🚙.
+Let's give an example and this should make much more sense. Let's say we are trying to predict how much a house 🏡 will sell for in a desirable area of North London. We may know a few facts about the house e.g. the square footage of the house 🏠, the square footage of the garden 🌳 and whether there is a garage 🚙.
 
-In machine learning we call these facts variables or features. Intuitively we may value the house using a combination of these features. 🏠🌾🚙
+In machine learning we call these facts `variables` or `features`. Intuitively we may value the house using a combination of these features. 🏠🌳🚙
 
-Linear regression uses a linear combination of the features to predict the output. This just means summing up each feature value multiplied by a number (called a coefficient) to represent how important that feature is e.g
+Linear regression uses a `linear combination` of the features to predict the output. This just means summing up each feature value multiplied by a number (called a `coefficient`) to represent how important that feature is e.g
 
 {{<formula class="responsive-math-unfold">}}
 \begin{aligned}
-\text{House Price} &= (£600 * \text{🏠}) \\
-& + (£50 * \text{🌾}) \\
+\text{House Price} &= (£1000 * \text{🏠}) \\
+& + (£50 * \text{🌳}) \\
 & + (£1000 * \text{🚙?})
 \end{aligned}
 {{</formula>}}
 
-In this example the House price is calculated as £$600$ for each square foot of the house plus $£50$ for each foot in the garden plus $£1000$ if there is a garage. If we took a nice $1000$ square foot property with a small $500$ square foot garden and no garage our linear regression model would predict the house is worth $£625,000$.
+In this example the house price is calculated as £$1000$ for each square foot of the house plus $£50$ for each foot in the garden plus $£1000$ if there is a garage. If we took a nice $600$ square foot property with a small $500$ square foot garden and no garage our linear regression model would predict the house is worth $£625,000$.
 
 {{<formula class="responsive-math-4">}}
 \begin{aligned}
-\text{House Price} &= (£600 * \text{🏠}) + (£50 * \text{🌾}) + (£1000 * \text{🚙 x  ?}) \\
-&= (£600 * 1000) + (£50 * 500) + (£1000 * 0)\\
+\text{House Price} &= (£1000 * \text{🏠}) + (£50 * \text{🌳}) + (£1000 * \text{🚙 ?}) \\
+&= (£1000 * 600) + (£50 * 500) + (£1000 * 0)\\
 &= £625,000
 \end{aligned}
 {{</formula>}}
 
-Now that's how the linear regression model works! The question now is how do you choose the coefficients for the features, in our example the $600$ the $50$ and the $1000$? 🤷‍♂️
+Now that's how the linear regression model works! The question now is how do you choose the coefficients for the features, in our example the $1000$ the $50$ and the $1000$? 🤷‍♂️
 
-As with many machine learning models (so called supervised learning algorithms) we find these parameters by looking at training data. Training data is just examples where you already know the answer. In our case it is a list of houses where we know the house prices in advance. Here is an example of three training examples:
+A common type of machine learning algorithm called `supervised learning algorithms` find these parameters using `training data`. Training data is just examples where you already know the answer. In our case it is a list of houses where we know both the house features 🏠🌳🚙 and the house prices 💰in advance. Here is an example of three training examples with the model predictions:
 
 {{< table "table table-striped" >}}
-| House size 🏠 | Garden size 🌾 | Garage? 🚙 | House Price 💰 |
-| ------------ | ------------- | --------- | ------------- |
-| 1000         | 700           | Garage    | £700,000      |
-| 770          | 580           | No Garage | £650,000      |
-| 660          | 200           | Garage    | £580,000      |
+| House size 🏠 | Garden size 🌳 | Garage? 🚙 | True House Price 💰 | Predicted house price 💰 |
+| ------------ | ------------- | --------- | ------------------ | ----------------------- |
+| 1000         | 700           | Garage    | £1m                | £ 1.036m                |
+| 770          | 580           | No Garage | £0.75m             | £0.799m                 |
+| 660          | 200           | Garage    | £0.72m             | £0.671m                 |
 {{</table>}}
 
-The linear regression algorithm chooses the coefficients to minimise the average error when predicting the house price for all the training examples.
+Linear regression is a `supervised` learning algorithm which means it works out the best coefficients using the training data. It does this by iteratively changing the coefficients to reduce the error between the predictions and the true house prices. The specifics of this is process is more complex (detailed in the next section).
+
+In short the linear regression algorithm chooses the coefficients to `minimise the average error` when predicting the house price for all the training examples.
 
 And that's linear regression!
 
@@ -72,23 +74,25 @@ And that's linear regression!
 
 ## The nitty gritty
 
+In order to keep this as accessible as possible to people less familiar with mathematical concepts and notation I will include footnotes to explain where I think it may help.
+
 **The model**
 
-If we let $y$ represent a single continuous target variable and $x_1,\dots,x_n$ (where $n \in \mathbb{N}$) represent the feature values. Then the linear model can be written as 
+If we let $y$ represent a single continuous target variable and $x_1,\dots,x_n$ (where $n \in \mathbb{N}$[^1]) represent the feature values. Then the linear model can be written as 
 
 
 {{<formula class="responsive-math">}}
 \begin{align}
 \hat{y}&=\beta_0x_0+\cdots+\beta_nx_n \\
-\hat{y}&=\sum^{n}_{i=0}\beta_ix_i \\
-\hat{y}&=\mathbf{\boldsymbol{\beta}^Tx}
+\hat{y}&=\sum^{n}_{i=0}\beta_ix_i
 \end{align}
 {{</formula>}}
-Where $\boldsymbol{\beta},\mathbf{x}\in\mathbb{R}^{n\times1}$
+
+A hat above a variable is often used to represent a prediction of the true value. Here the y hat represents the linear model prediction.
 
 **The cost function**
 
-We define below the cost (a.k.a. error or loss) function $J$ as half of the mean square error for the $m$ training samples where $m \in \mathbb{N}$. We use a superscript to represent each training example so $y^j$ is the $j$th training data target value and $x_i^j$ is the $i$th feature value of the $j$th training example.
+We define below the `cost` (a.k.a. `error` or `loss`) function $J$ as half of the `mean square error` for the $m$ training samples where $m \in \mathbb{N}$. We use a superscript to represent each training example so $y^j$ is the $j$th training data target value and $x_i^j$ is the $i$th feature value of the $j$th training example.
 
 {{<formula class="responsive-math">}}
 \begin{align}
@@ -97,14 +101,14 @@ J(\boldsymbol{\beta})
 y^j-\hat{y}^j
 \right)^2\\
 &= \frac{1}{2m}\sum^{m}_{j=1}\left(
-y^j-g(\boldsymbol{\beta}^T\mathbf{x}^j)
+y^j-\sum^{n}_{i=0}\beta_ix_i^j
 \right)^2
 \end{align}
 {{</formula>}}
 
 **Gradient descent**
 
-In order to find the coefficients that lead to the minimal cost we use gradient descent. The gradient of the cost function tells you in which direction to change your coefficients in order to reduce the value of the cost function the most. The gradient is defined as the vector of partial derivatives with respect to each coefficient so let's first calculate these:
+In order to find the coefficients that lead to the minimal cost we use `gradient descent`. The `gradient` of the cost function tells you in which direction to change your coefficients in order to reduce the value of the cost function the most. The gradient is defined as the `vector of partial derivatives` with respect to each coefficient so let's first calculate these:
 
 {{<formula class="responsive-math-3">}}
 \begin{align}
@@ -147,23 +151,35 @@ Now we can write the gradient as:
 
 We could calculate the above gradient using the sums defined but it is more efficient for implementing if we `vectorise` the calculation.
 
-For this we define the design matrix $\mathbf{X}$ by stacking the $m$ training examples on top of each other, and $\mathbf{y}$ the vector of target values by stacking the $m$ target variables on top of each other. This means:
-{{<formula class="responsive-math">}}
+**Vectorise**
+
+For this we define the `design matrix` $\mathbf{X}$ by stacking the $m$ training examples on top of each other, so each row of $\mathbf{X}$ represents one training example and the columns represent the different features. We also define $\mathbf{y}$ the vector of target values by stacking the $m$ target variables on top of each other. Finally we also define the vector of $n$ coefficients $\boldsymbol{\beta}$. Where:[^2]
+
+{{<formula class="responsive-math-1">}}
 \mathbf{X}\in\mathbb{R}^{m\times n},
-\quad \mathbf{y}\in\mathbb{R}^{m\times 1}
+\quad \mathbf{y}\in\mathbb{R}^{m\times 1},
+\quad \boldsymbol{\beta}\in\mathbb{R}^{n\times1}
 {{</formula>}}
 
 Or more visually
 
 {{<formula class="responsive-math-1">}}
 \mathbf{X}=\begin{bmatrix}
-    \dots & (\mathbf{x}^1)^T & \dots\\
-    \dots & (\mathbf{x}^2)^T & \dots\\
-    \dots & \vdots  & \dots\\
-    \dots & (\mathbf{x}^m)^T & \dots
-\end{bmatrix}\quad
+    x_1^1  & x_2^1  & \dots  & x_n^1  \\
+    x_1^2  & x_2^2  & \dots  & x_n^2  \\
+    \vdots & \vdots & \ddots & \vdots \\
+    x_1^m  & x_2^m  & \dots  & x_n^m  \\
+\end{bmatrix}
+{{</formula>}}
+
+and
+
+{{<formula class="responsive-math-1">}}
 \mathbf{y}=\begin{bmatrix}
     y_1\\y_2\\\vdots\\y_m
+\end{bmatrix} \quad
+\boldsymbol{\beta} = \begin{bmatrix}
+    \beta_1\\\beta_2\\\vdots\\\beta_m
 \end{bmatrix}
 {{</formula>}}
 
@@ -185,7 +201,7 @@ Now if we take the above gradient we derived above and re-write it splitting the
 \end{bmatrix}\\
 {{</formula>}}
 
-From this (I hope you can convince yourself) we can write
+From this (I hope you can convince yourself, assuming you know matrix multiplication) we can write
 {{<formula class="responsive-math">}}
 \begin{align}
 \nabla_{\boldsymbol{\beta}} J
@@ -207,7 +223,7 @@ Now that we have derived the gradient formula 🎉 let's implement gradient desc
 
 **Python implementation**
 
-We will build the implementation in an objected oriented fashion defining a class for Linear regression. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/linear_regression.py).
+We will build the implementation in an object oriented fashion defining a class for Linear regression. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/linear_regression.py).
 
 ```python
 
@@ -215,7 +231,7 @@ class LinearRegression():
 
 ```
 
-Next we define the __init__ method on the class setting the learning rate. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of negative gradient. The size of the step is governed by the learning rate.
+Next we define the __init__ method on the class setting the `learning rate`. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
 
 ```python
 
@@ -276,7 +292,7 @@ def fit(self, X, y, n_iter=1000):
 
 ```
 
-And that's it. Here's and example use of the class
+And that's it. Here’s an example use of the class:
 
 ```python
 
@@ -287,4 +303,11 @@ linear_regression.predict(X_new)
 
 ```
 
-Thanks for reading! 👏 Please let me know any question, mistakes or improvements
+
+Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
+
+
+**Footnotes**
+
+[^1]: $\mathbb{N}$ means the natural numbers i.e. $0,1,2,3,\dots$ and $\in$ means "in", so $n\in\mathbb{N}$ is notation for $n$ is in $0,1,2,3,\dots$.
+[^2]: $\mathbb{R}$ represents any real value e.g. -2.5, 1367.324, $\pi$, ... there are a lot!  $\mathbb{R}^{n\times m}$ is a matrix with $n$ rows and $m$ columns. So $\boldsymbol{\beta}\in\mathbb{R}^{n\times1}$ means $\boldsymbol{\beta}$ is a vector of length $n$. $\mathbf{y}\in\mathbb{R}^{m\times 1}$ means y is a vector of length $m$. $\mathbf{X}\in\mathbb{R}^{m\times n}$ means $\mathbf{X}$ is a matrix with m rows and n columns.
