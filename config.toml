@@ -6,6 +6,7 @@ googleAnalytics = "UA-168219404-1"
 
 [params]
 formspree = "https://formspree.io/xrgyqgjw"
+twitter_handle = "@SimonWardJones"
 
 [social]
 linkedin="https://www.linkedin.com/in/simon-ward-jones-357b16aa"
