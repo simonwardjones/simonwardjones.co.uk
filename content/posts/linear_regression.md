@@ -9,7 +9,7 @@ menu:
     # weight: 20
     name: "Linear Regression"
 summary: "From zero to Linear Regression"
-image: "/img/linear_regression.png"
+image: "img/linear_regression.png"
 ---
 
 What is `linear regression` 🤷‍♂️?
