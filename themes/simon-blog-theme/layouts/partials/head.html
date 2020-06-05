@@ -11,7 +11,7 @@
     <meta name="twitter:site" content="{{ index .Site.Params "twitter_handle" }}" />
     <meta name="twitter:title" content="{{ .Title }}" />
     <meta name="twitter:description" content="{{ .Summary }}" />
-    <meta name="twitter:image" content="{{ with .Params.image }}{{ . }}{{ end }}" />
+    <meta name="twitter:image" content="{{ with .Params.image }}{{ . | absURL }}{{ end }}" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
