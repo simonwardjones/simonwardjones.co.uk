@@ -19,6 +19,9 @@ Favicon and Icons
 - I generated them using favicon.io and then just referenced the links in the head partial
 - Icons are provided with fonts awesome https://fontawesome.com/icons?d=gallery&m=free
 
+
+Checking emojis compatibility - https://www.emojibase.com/emojilist/money
+
 ```bash
 npm run dev
 ```
