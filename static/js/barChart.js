@@ -141,7 +141,8 @@ class SimpleBarChart {
         let step = Math.ceil(n / 10)
         let nTicks = Math.floor(n / step)
         const tickValues = [...Array(nTicks).keys()].map(i => {
-            let step = Math.ceil(n / nTicks)
+            let step = Math.floor(n / nTicks)
+            // console.log(this.data.values.length,n)
             return this.data.values[i * step][0]
         })
 
