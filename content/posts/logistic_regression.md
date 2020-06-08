@@ -307,7 +307,7 @@ def __init__(self, learning_rate=0.05):
 
 ```
 
-We also define the `sigmoid` function:
+We also define the `sigmoid` function.
 
 ```python
 
@@ -316,7 +316,7 @@ def sigmoid(self, x):
 
 ```
 
-Here we define a method `predict_proba` to predict the probability of success given the samples $X$:
+Next we define a method `predict_proba` to predict the probability of success given the samples $X$.
 
 ```python
 
@@ -326,7 +326,7 @@ def predict_proba(self, X):
 
 ```
 
-Similarly we define a `predict` method to predict the outcome target variable $y$ using a the decision rule described above:
+Similarly we define a `predict` method to predict the outcome target variable $y$ using a the decision rule described above.
 
 ```python
 
