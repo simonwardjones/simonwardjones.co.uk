@@ -1,6 +1,6 @@
 ---
 title: "Logistic Regression"
-date: 2020-06-07T18:30:08+01:00
+date: 2020-06-08T18:30:08+01:00
 draft: false
 mathjax: true
 menu:
@@ -13,7 +13,7 @@ image: "img/logistic_regression.png"
 
 What is `logistic regression`? 🤷‍♂️
 
-If you're interested read on, if you're not, see yourself out. 🚪
+If you're interested read on, if you're not ... well there's no harm in giving it a go!
 
 This article is the second in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
@@ -100,7 +100,7 @@ Taking the above formula we can re-arrange to show that it is equivalent to mode
 
 **The cost function**
 
-We define below the `cost function` $J$ (a.k.a. `error` or `loss`) as the `cross entropy` which is also known as the `log loss`. For one sample $\mathbf{x}$ and corresponding $y$:
+We define below the `cost function` denoted as $J$ (a.k.a. `error` or `loss`) as the `cross entropy` which is also known as the `log loss`. For one sample $\mathbf{x}$ and corresponding $y$:
 
 {{<formula class="responsive-math">}}
 \begin{align}
