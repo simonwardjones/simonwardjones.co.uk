@@ -79,7 +79,7 @@ In order to keep this as accessible as possible to people less familiar with mat
 
 **The model**
 
-If we let $y$ represent a single continuous target variable and $x_1,\dots,x_n$ (where $n \in \mathbb{N}$[^1]) represent the feature values. Then the linear model can be written as 
+If we let $y$ represent a single continuous target variable and $x_1,\dots,x_n$ (where $n \in \mathbb{N}$[^1] and $x_0 = 1$) represent the feature values. Then the linear model can be written as 
 
 
 {{<formula class="responsive-math">}}
@@ -135,14 +135,14 @@ Now we can write the gradient as:
 \nabla_{\boldsymbol{\beta}} J
 &=
 \begin{bmatrix}
-    \frac{\partial J}{\partial\beta_1} \\
+    \frac{\partial J}{\partial\beta_0} \\
     \vdots \\
     \frac{\partial J}{\partial\beta_n}
 \end{bmatrix} \\
 &=
 \begin{bmatrix}
        -\frac{1}{m}\sum^{m}_{j=1}
-           \left(y^j-\sum^{n}_{i=0}\beta_ix_i^j\right)x^j_1\\
+           \left(y^j-\sum^{n}_{i=0}\beta_ix_i^j\right)x^j_0\\
        \vdots \\
        -\frac{1}{m}\sum^{m}_{j=1}
            \left(y^j-\sum^{n}_{i=0}\beta_ix_i^j\right)x^j_n\\
@@ -154,22 +154,22 @@ We could calculate the above gradient using the sums defined but it is more effi
 
 **Vectorise**
 
-For this we define the `design matrix` $\mathbf{X}$ by stacking the $m$ training examples on top of each other, so each row of $\mathbf{X}$ represents one training example and the columns represent the different features. We also define $\mathbf{y}$ the vector of target values by stacking the $m$ target variables on top of each other. Finally we also define the vector of $n$ coefficients $\boldsymbol{\beta}$. Where:[^2]
+For this we define the `design matrix` $\mathbf{X}$ by stacking the $m$ training examples on top of each other, so each row of $\mathbf{X}$ represents one training example and the columns represent the different features. We also define $\mathbf{y}$ the vector of target values by stacking the $m$ target variables on top of each other. Finally we also define the vector of $n+1$ coefficients $\boldsymbol{\beta}$. Where:[^2]
 
-{{<formula class="responsive-math-1">}}
-\mathbf{X}\in\mathbb{R}^{m\times n},
+{{<formula class="responsive-math-2">}}
+\mathbf{X}\in\mathbb{R}^{m\times (n+1)},
 \quad \mathbf{y}\in\mathbb{R}^{m\times 1},
-\quad \boldsymbol{\beta}\in\mathbb{R}^{n\times1}
+\quad \boldsymbol{\beta}\in\mathbb{R}^{(n+1)\times1}
 {{</formula>}}
 
 Or more visually
 
 {{<formula class="responsive-math-1">}}
 \mathbf{X}=\begin{bmatrix}
-    x_1^1  & x_2^1  & \dots  & x_n^1  \\
-    x_1^2  & x_2^2  & \dots  & x_n^2  \\
-    \vdots & \vdots & \ddots & \vdots \\
-    x_1^m  & x_2^m  & \dots  & x_n^m  \\
+    1 & x_1^1  & x_2^1  & \dots  & x_n^1  \\
+    1 & x_1^2  & x_2^2  & \dots  & x_n^2  \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    1 & x_1^m  & x_2^m  & \dots  & x_n^m  \\
 \end{bmatrix}
 {{</formula>}}
 
@@ -180,7 +180,7 @@ and
     y_1\\y_2\\\vdots\\y_m
 \end{bmatrix} \quad
 \boldsymbol{\beta} = \begin{bmatrix}
-    \beta_1\\\beta_2\\\vdots\\\beta_m
+    \beta_0\\\beta_1\\\vdots\\\beta_n
 \end{bmatrix}
 {{</formula>}}
 
@@ -190,13 +190,13 @@ Now if we take the above gradient we derived above and re-write it splitting the
 \nabla_{\boldsymbol{\beta}} J
 =-\frac{1}{m}
 \begin{bmatrix}
-       \sum^{m}_{j=1}y^jx^j_1\\
+       \sum^{m}_{j=1}y^jx^j_0\\
        \vdots \\
        \sum^{m}_{j=1}y^jx^j_n\\
 \end{bmatrix}+
 \frac{1}{m}
 \begin{bmatrix}
-       \sum^{m}_{j=1}\sum^{n}_{i=0}\beta_ix_i^jx^j_1\\
+       \sum^{m}_{j=1}\sum^{n}_{i=0}\beta_ix_i^jx^j_0\\
        \vdots \\
        \sum^{m}_{j=1}\sum^{n}_{i=0}\beta_ix_i^jx^j_n
 \end{bmatrix}\\
@@ -311,4 +311,4 @@ Thanks for reading! 👏 Please get in touch with any questions, mistakes or imp
 **Footnotes**
 
 [^1]: $\mathbb{N}$ means the natural numbers i.e. $0,1,2,3,\dots$ and $\in$ means "in", so $n\in\mathbb{N}$ is notation for $n$ is in $0,1,2,3,\dots$.
-[^2]: $\mathbb{R}$ represents any real value e.g. -2.5, 1367.324, $\pi$, ... there are a lot!  $\mathbb{R}^{n\times m}$ is a matrix with $n$ rows and $m$ columns. So $\boldsymbol{\beta}\in\mathbb{R}^{n\times1}$ means $\boldsymbol{\beta}$ is a vector of length $n$. $\mathbf{y}\in\mathbb{R}^{m\times 1}$ means y is a vector of length $m$. $\mathbf{X}\in\mathbb{R}^{m\times n}$ means $\mathbf{X}$ is a matrix with m rows and n columns.
+[^2]: $\mathbb{R}$ represents any real value e.g. -2.5, 1367.324, $\pi$, ... there are a lot!  $\mathbb{R}^{n\times m}$ is a matrix with $n$ rows and $m$ columns. So $\boldsymbol{\beta}\in\mathbb{R}^{(n+1)\times1}$ means $\boldsymbol{\beta}$ is a vector of length $n+1$. $\mathbf{y}\in\mathbb{R}^{m\times 1}$ means y is a vector of length $m$. $\mathbf{X}\in\mathbb{R}^{m\times (n+1)}$ means $\mathbf{X}$ is a matrix with $m$ rows and $(n+1)$ columns.
