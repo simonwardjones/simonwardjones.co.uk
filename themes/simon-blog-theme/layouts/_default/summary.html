@@ -1,0 +1,17 @@
+<div class="col-md-6 py-2">
+    <div class="card flex-row">
+        <!-- uncomment the below for icons -->
+        <!-- {{ with .Params.image }}<img src="/{{.}}" alt="" class="cover-img">{{ end }} -->
+        <div class="card-body py-2">
+            <h5 class="card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h5>
+            <div class="card-subtitle small">{{.Date.Format "2006-01-02"}}</div>
+            <p class="card-text">{{ .Summary }}</p>
+            {{ if .Truncated }}
+            <!-- This <div> includes a read more link, but only if the summary is truncated... -->
+            <div>
+                <a href="{{ .RelPermalink }}">Read More…</a>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</div>

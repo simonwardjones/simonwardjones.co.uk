@@ -1,32 +1,32 @@
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        {{ block "title" . }}
-        {{ .Site.Title }}
-        {{ end }}
-    </title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="{{ index .Site.Params "twitter_handle" }}" />
-    <meta name="twitter:title" content="{{ .Title }}" />
-    <meta name="twitter:description" content="{{ .Summary }}" />
-    <meta name="twitter:image:src" content="{{ with .Params.image }}{{$.Site.BaseURL}}{{ . }}{{ end }}" />
+<!-- open graph (facebook) tags -->
+<meta property="og:title" content="{{ .Title }}" />
+<meta property="og:description" content="{{ .Summary }}" />
+<meta property="og:url" content="{{ .Permalink }}" />
+{{ with .Params.image }}<meta property="og:image" content="{{$.Site.BaseURL}}{{ . }}" />{{ end }}
 
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+<!-- twitter tags -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="{{ index .Site.Params "twitter_handle" }}" />
+<meta name="twitter:title" content="{{ .Title }}" />
+<meta name="twitter:description" content="{{ .Summary }}" />
+{{ with .Params.image }}<meta name="twitter:image" content="{{$.Site.BaseURL}}{{ . }}"/>{{ end }}
 
-    <!-- Loop through webpack assets here to get css (js in footer) -->
-    {{ range .Site.Data.manifest  }}
-    {{ if strings.HasSuffix . "css" }}
-    <link rel="stylesheet" type="text/css" href="/{{.}}">
-    {{ end }}
-    {{ end }}
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
 
-    <!-- tracking -->
-    {{ if not (in (.Site.BaseURL | string) "localhost") }}
-        {{ template "_internal/google_analytics_async.html" . }}
-    {{ end }}
-</head>
+<!-- Loop through webpack assets here to get css (js in footer) -->
+{{ range .Site.Data.manifest  }}
+{{ if strings.HasSuffix . "css" }}
+<link rel="stylesheet" type="text/css" href="/{{.}}">
+{{ end }}
+{{ end }}
+
+<!-- tracking -->
+{{ if not (in (.Site.BaseURL | string) "localhost") }}
+{{ template "_internal/google_analytics_async.html" . }}
+{{ end }}
