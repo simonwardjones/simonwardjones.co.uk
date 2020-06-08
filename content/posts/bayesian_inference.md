@@ -8,6 +8,7 @@ menu:
     # weight: 1 # bring to top with high weight
     parent: Posts
 summary: Explaining the basics of bayesian inference with the example of flipping a coin 💰
+image: "img/bayes.png"
 ---
 
 ## Introduction
@@ -69,9 +70,16 @@ We assume that $\theta$ ~ $Beta(a,b)$. In our example of the coin this graph mak
 
 Bayes' law says 
 
+sa
+
 $$
 P(A|B) = \frac{P(B|A)P(A)}{P(B)}
 $$
+
+sa
+
+sa
+
 
 Using this we can say that the posterior probability is proportional to the product of the Likelihood and the Prior, or
 

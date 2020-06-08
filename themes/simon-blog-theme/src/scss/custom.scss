@@ -33,7 +33,13 @@ mjx-container {
 
 .card {
     height: 100%;
+    
+    .cover-img {
+        width: 25%;
+        object-fit: cover;
+    }
 }
+
 
 pre {
     padding-left: 4px;
@@ -56,7 +62,8 @@ pre {
         font-size: .75em;
     }
 
-    .table th, .table td {
+    .table th,
+    .table td {
         padding-left: 4px;
         padding-right: 4px;
     }

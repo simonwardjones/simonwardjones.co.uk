@@ -8,7 +8,8 @@ menu:
     parent: 'Posts'
     # weight: 20
     name: "Probability Distributions"
-summary: A visual 👀 tour of probability distributions 
+summary: A visual 👀 tour of probability distributions
+image: "img/probability_distributions.png"
 ---
 
 
