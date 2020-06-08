@@ -31,11 +31,11 @@ In `regression` (for example `linear regression` - as discussed in the previous 
 
 Again it is much easier to explain with an example. Let's say we are trying to predict whether a student 👨‍🎓 is going to pass an exam. As with linear regression we use the input `features` to predict the result. In this case let's say we know the students I.Q. 🧠 and how many hours ⏱ of revision they have done. We use these features to make a prediction.
 
-In linear regression we used a `linear combination` of the features to make a prediction, but this doesn't work when trying to predict a binary outcome. Remember a linear combination is just the sum of the each feature scaled by a coefficient representing how important they are.
+In linear regression we used a `linear combination` of the features to make a prediction, but this doesn't work when trying to predict a binary outcome. Remember a linear combination is just the sum of the each feature scaled by a coefficient representing how important the feature is.
 
 Logistic regression works instead by predicting a probability of success ✅ but a probability has to be between $0$ and $1$! In order that the prediction is between $0$ and $1$ logistic regression takes the linear combination and `transforms` (think squeezes) it to be between 0 and 1.
 
-Logistic regression takes the combination of the features and coefficients and transforms them to be between $0$ and $1$ so that large values have a high probability and small values have a low probability (in case of predicting whether a student will pass an exam we expect students with a high combined I.Q. and revision time to have a high chance of passing). The exact detail of this transformation are quite technical but it uses the `sigmoid function` as plotted below (notice the large values have high probability and vice versa).
+Logistic regression takes the combination of the features and coefficients and transforms them to be between $0$ and $1$ so that large values have a high probability and small values have a low probability (in case of predicting whether a student will pass an exam we expect students with a high combined I.Q. and revision time to have a high chance of passing). The exact details of this transformation are quite technical but it uses the `sigmoid function` as plotted below (notice the large $x$ values have high probability and vice versa).
 
 For our example we would likely predict a student has passed if the logistic model says they have more than a $0.5$ probability of passing. This step of converting the probability to an outcome is called a `decision rule`.
 
