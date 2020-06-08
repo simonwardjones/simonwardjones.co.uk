@@ -1,7 +1,7 @@
 ---
 title: "Logistic Regression"
 date: 2020-06-07T18:30:08+01:00
-draft: true
+draft: false
 mathjax: true
 menu:
   main:
@@ -61,7 +61,7 @@ It does this by iteratively changing the coefficients to reduce the error. The s
 
 **The model**
 
-If we let $y$ represent a the discrete target variable where $y\in0,1$  and $x_1,\dots,x_n$ (where $n \in \mathbb{N}$[^1] and $x_0 = 1$) represent the feature values. Then the logistic model can be written as 
+If we let $y$ represent the discrete target variable where $y\in0,1$  and $x_1,\dots,x_n$ represent the feature values (where $n \in \mathbb{N}$[^1] and $x_0 = 1$). Then the logistic model can be written as 
 
 {{<formula class="responsive-math">}}
 \begin{aligned}
@@ -70,13 +70,13 @@ If we let $y$ represent a the discrete target variable where $y\in0,1$  and $x_1
 \end{aligned}
 {{</formula>}}
 
-Where $\sigma$ is the sigmoid function defines as:
+Where $\sigma$ is the sigmoid function defined as:
 
 {{<formula class="responsive-math">}}
 \sigma(x) = \frac{1}{1+e^{-x}}
 {{</formula>}}
 
-So
+So the logistic model is:
 
 {{<formula class="responsive-math">}}
 \hat{y} = \frac{1}{1+e^{-\sum^{n}_{i=0}\beta_ix_i}}
@@ -86,7 +86,7 @@ A hat above a variable is often used to represent a prediction of the true value
 
 **Different formulation**
 
-Taking the above formula we can re-arrange to show that it is equivalent to modelling the log of the odds as a linear combination of the features. The natural logarithm of the log odds is also know as the `logit`. This is why logistic regression is also know as the `logit model`
+Taking the above formula we can re-arrange to show that it is equivalent to modelling the log of the odds as a linear combination of the features. The natural logarithm of the log odds is also know as the `logit`. This is why logistic regression is also know as the `logit model`.
 
 {{<formula class="responsive-math">}}
 \begin{aligned}
@@ -100,7 +100,7 @@ Taking the above formula we can re-arrange to show that it is equivalent to mode
 
 **The cost function**
 
-We define below the `cost function` $J$ (a.k.a. `error` or `loss`)as the `cross entropy` which is also known as the `log loss`. For one sample $\mathbf{x}$ and $y$
+We define below the `cost function` $J$ (a.k.a. `error` or `loss`) as the `cross entropy` which is also known as the `log loss`. For one sample $\mathbf{x}$ and corresponding $y$:
 
 {{<formula class="responsive-math">}}
 \begin{align}
@@ -284,8 +284,99 @@ where
 \mathbf{\hat{y}} = \sigma(\mathbf{X}\mathbf{\boldsymbol{\beta}})
 {{</formula>}}
 
+Now that we have derived the gradient formula 🎉 let's implement gradient descent in python 🐍 to iteratively step towards the optimal coefficients.
 
 **Python implementation**
+
+We will build the implementation in an object oriented fashion defining a class for Logistic regression. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/logistic_regression.py).
+
+```python
+
+class LogisticRegression():
+
+```
+
+Next we define the __init__ method on the class setting the `learning rate`. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
+
+
+```python
+
+def __init__(self, learning_rate=0.05):
+    self.learning_rate = learning_rate
+    print('Creating logistic model instance')
+
+```
+
+We also define the sigmoid function
+
+```python
+
+def sigmoid(self, x):
+    return 1 / (1 + np.exp(-x))
+
+```
+
+Here we define a method to predict the probability of success given the samples $X$:
+
+```python
+
+def predict_proba(self, X):
+    y_pred = self.sigmoid(X @ self.beta)
+    return y_pred
+
+```
+
+Similarly we define a method to predict the outcome target variable $y$ using a the decision rule described above:
+
+```python
+
+def predict(self, X, descision_prob=0.5):
+    y_pred = self.predict_proba(X)
+    return (y_pred > descision_prob) * 1
+
+```
+
+Next let's define a method `fit` to implement gradient descent. This function calculates the `cost` and `gradient` at each iteration of gradient descent.
+
+```python
+
+def fit(self, X, y, n_iter=1000):
+    m, n = X.shape
+    print(f'fitting with m={m} samples'
+          f' with n={n-1} features\n')
+    self.beta = np.zeros(shape=(n, 1))
+    self.costs = []
+    self.betas = [self.beta]
+    for iteration in range(n_iter):
+        y_pred = self.predict_proba(X)
+        cost = (-1 / m) * (
+            (y.T @ np.log(y_pred)) +
+            ((np.ones(shape=y.shape) - y).T @ np.log(
+                np.ones(shape=y_pred.shape) - y_pred))
+        )
+        self.costs.append(cost[0][0])
+        gradient = (1 / m) * X.T @ (y_pred - y)
+        self.beta = self.beta - (
+            self.learning_rate * gradient)
+        self.betas.append(self.beta)
+
+```
+
+And that's it. Here’s an example use of the class:
+
+```python
+
+logistic_regression = LogisticRegression()
+logistic_regression.fit(X, y)
+
+logistic_regression.predict(example_X)
+
+```
+
+
+Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
+
+
 
 **Footnotes**
 
