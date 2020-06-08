@@ -1,0 +1,36 @@
+<div class="chart">
+    <div class="row">
+        <div class="col-sm-12">
+            <div id="sigmoid-container"></div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate-path@2.1.2/build/d3-interpolate-path.min.js"></script>
+<script src="/js/lineChart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.3/jstat.min.js"></script>
+
+
+<script type="text/javascript">
+
+    let sigmoidChart = (function betaChart() {
+        var data = generateSigmoidSeries(-5, 5)
+        function sigmoid(x){
+            return 1 / (1 + Math.exp(-x))
+        }
+        function generateSigmoidSeries(min, max) {
+            let N = 500
+            let step = (max - min) / N
+            let x = d3.range(min, max, step)
+            let y = x.map(sigmoid)
+            return [{ id: 'Sigmoid', values: d3.zip(x, y) }]
+        }
+        // create new chart using Chart constructor
+        const element = document.querySelector('#sigmoid-container')
+        const chart = new LineChart(element, data, { duration: 500 });
+        return chart
+    })()
+
+</script>
