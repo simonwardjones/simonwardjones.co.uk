@@ -3,6 +3,7 @@ title: "Simon Ward-Jones"
 date: 2020-05-15T12:12:20+01:00
 draft: false
 mathjax: false
+summary: Simon Ward-Jones' personal website - all things data science 
 ---
 
 Welcome to my website. I am a Data Scientist living and working in London (when Coronavirus is all done). This site is very much still a work in progress but I will use it to share some of my little hacks, projects and things I find interesting. Mostly this will be all things data-science!
