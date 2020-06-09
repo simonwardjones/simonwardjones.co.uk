@@ -217,6 +217,7 @@ Now we can write the gradient as:
 
 We could calculate the above gradient using the sums defined but it is more efficient for implementing if we `vectorise` the calculation.
 
+**Vectorise**
 
 For this we define the `design matrix` $\mathbf{X}$ by stacking the $m$ training examples on top of each other, so each row of $\mathbf{X}$ represents one training example and the columns represent the different features. We also define $\mathbf{y}$ the vector of target values by stacking the $m$ target variables on top of each other. Finally we also define the vector of $n+1$ coefficients $\boldsymbol{\beta}$. Where:[^2]
 
