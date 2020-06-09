@@ -8,7 +8,7 @@ menu:
     parent: 'Posts'
     # weight: 20
     name: "Linear Regression"
-summary: "From zero to Linear Regression"
+summary: "From zero to linear regression"
 image: "img/linear_regression.png"
 ---
 
