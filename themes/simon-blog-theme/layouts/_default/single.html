@@ -7,8 +7,9 @@
       <div class="subheading mb-4">
         <div class="small mb-2" id="date-words"> {{ .Date.Format "2 Jan 2006" }} - {{ .WordCount }} Words </div>
         {{ with .Params.summary }}
-        <div class="">{{ . }}</div>
+        <div class="mb-1">{{ . }}</div>
         {{ end }}
+        {{ partial "follow.html" .}}
       </div>
       <br>
       {{ .Content }}

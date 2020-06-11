@@ -26,6 +26,7 @@ $social-button-size: 200px;
     -webkit-transition: all 0.35s cubic-bezier(0.31, -0.105, 0.43, 1.59);
     transition: all 0.35s cubic-bezier(0.31, -0.105, 0.43, 1.59);
 }
+
 .social-button .fab,
 .social-button .fa {
     font-size: 6em;
@@ -38,6 +39,7 @@ $social-button-size: 200px;
     font-size: 13px;
     color: var(--orange);
 }
+
 .social-detail-phone {
     font-size: 16px;
     color: var(--red);
@@ -46,11 +48,13 @@ $social-button-size: 200px;
 // Usage in example for medium viewport:
 @include media-breakpoint-down(md) {
     $social-button-size: 120px;
+
     .social-button {
         width: $social-button-size * 1.2;
         height: $social-button-size;
         padding-top: $social-button-size / 5;
     }
+
     .social-button .fab,
     .social-button .fa {
         font-size: 4em;
@@ -58,10 +62,12 @@ $social-button-size: 200px;
         -webkit-transform: scale(0.8);
         transform: scale(0.8);
     }
+
     .social-detail-email {
         font-size: 9px;
         color: var(--orange);
     }
+
     .social-detail-phone {
         font-size: 12px;
         color: var(--red);
@@ -85,72 +91,95 @@ $social-button-size: 200px;
 .social-button.facebook:before {
     background-color: #3b5998;
 }
+
 .social-button.facebook .fab {
     color: #3b5998;
 }
+
 .social-button.twitter:before {
     background-color: #3cf;
 }
+
 .social-button.twitter .fab {
     color: #3cf;
 }
+
 .social-button.google:before {
     background-color: #dc4a38;
 }
+
 .social-button.google .fab {
     color: #dc4a38;
 }
+
 .social-button.dribbble:before {
     background-color: #f26798;
 }
+
 .social-button.dribbble .fab {
     color: #f26798;
 }
+
 .social-button.skype:before {
     background-color: #00aff0;
 }
+
 .social-button.skype .fa {
     color: #00aff0;
 }
+
 .social-button.linkedin:before {
     background-color: #00a0dc;
 }
+
 .social-button.linkedin .fab {
     color: #00a0dc;
 }
+
 .social-button.instagram:before {
     background-color: #c13584;
 }
+
 .social-button.instagram .fab {
     color: #c13584;
 }
+
 .social-button.youtube:before {
     background-color: #cd201f;
 }
+
 .social-button.youtube .fab {
     color: #cd201f;
 }
+
 .social-button.behance:before {
     background-color: #1769ff;
 }
+
 .social-button.behance .fab {
     color: #1769ff;
 }
+
 .social-button.github:before {
     background-color: #6cc644;
 }
+
 .social-button.github .fab {
     color: #6cc644;
 }
+
 .social-button.phone:before {
     background-color: var(--red);
 }
+
 .social-button.phone .fa {
     color: var(--red);
 }
+
 .social-button.email:before {
     background-color: var(--orange);
 }
+
 .social-button.email .fa {
     color: var(--orange);
 }
@@ -163,6 +192,7 @@ $social-button-size: 200px;
     -webkit-transform: rotate(45deg) scale(2);
     transform: rotate(45deg) scale(2);
 }
+
 .social-button:focus .fab,
 .social-button:hover .fab,
 .social-button:focus .fa,
@@ -178,4 +208,7 @@ $social-button-size: 200px;
     text-decoration: none;
 }
 
-
+#follow-button {
+    color: white;
+    background: #3cf;
+}

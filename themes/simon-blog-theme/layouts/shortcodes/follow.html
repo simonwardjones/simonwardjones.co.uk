@@ -1,0 +1,5 @@
+<a id="follow-button" class="btn btn-sm mb-3" title="Follow {{ $.Site.Params.twitter_handle }} on Twitter"
+href="https://twitter.com/intent/follow?original_referer={{ .Page.Permalink}};ref_src=twsrc%5Etfw&amp;region=follow_link&amp;screen_name={{ replace .Site.Params.twitter_handle "@" ""}}&amp;tw_p=followbutton">
+<span class="label"><i class="fab fa-twitter"></i> Follow <b>{{ $.Site.Params.twitter_handle }}</b>
+</span>
+</a>
