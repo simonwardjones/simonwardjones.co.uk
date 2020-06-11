@@ -115,3 +115,5 @@ Try varying $\mu$ and $\sigma^2$ to see the impact on the Log-Normal distributio
 {{< lognormal_distribution >}}
 
 ---
+
+{{< end_post >}}

@@ -304,11 +304,9 @@ linear_regression.predict(X_new)
 
 ```
 
-
 Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
 
-
-**Footnotes**
+{{< end_post >}}
 
 [^1]: $\mathbb{N}$ means the natural numbers i.e. $0,1,2,3,\dots$ and $\in$ means "in", so $n\in\mathbb{N}$ is notation for $n$ is in $0,1,2,3,\dots$.
 [^2]: $\mathbb{R}$ represents any real value e.g. -2.5, 1367.324, $\pi$, ... there are a lot!  $\mathbb{R}^{n\times m}$ is a matrix with $n$ rows and $m$ columns. So $\boldsymbol{\beta}\in\mathbb{R}^{(n+1)\times1}$ means $\boldsymbol{\beta}$ is a vector of length $n+1$. $\mathbf{y}\in\mathbb{R}^{m\times 1}$ means y is a vector of length $m$. $\mathbf{X}\in\mathbb{R}^{m\times (n+1)}$ means $\mathbf{X}$ is a matrix with $m$ rows and $(n+1)$ columns.

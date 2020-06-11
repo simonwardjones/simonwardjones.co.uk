@@ -97,3 +97,5 @@ The below plot allows you to vary your prior belief with $a$ and $b$ and view th
 <h2>Beta prior on Bernoulli Distribution</h2>
 
 {{< beta_prior_posterior_chart >}}
+
+{{< end_post >}}

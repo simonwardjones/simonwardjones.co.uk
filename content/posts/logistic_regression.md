@@ -11,6 +11,7 @@ summary: "From zero to logistic regression"
 image: "img/logistic_regression.png"
 ---
 
+
 What is `logistic regression`? 🤷‍♂️
 
 If you're interested read on, if you're not ... well there's no harm in giving it a go!
@@ -378,8 +379,8 @@ logistic_regression.predict(example_X)
 Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
 
 
+{{< end_post >}}
 
-**Footnotes**
 
 
 [^1]: $\mathbb{N}$ means the natural numbers i.e. $0,1,2,3,\dots$ and $\in$ means "in", so $n\in\mathbb{N}$ is notation for $n$ is in $0,1,2,3,\dots$.
