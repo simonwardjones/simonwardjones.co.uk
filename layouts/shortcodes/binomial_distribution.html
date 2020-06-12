@@ -8,7 +8,7 @@
         </form>
         <form class="col-md-6" id="binomial-n-form">
             <div class="form-group m-0">
-                Number of trials $n$ = <label for="binomial-n" class="slider-label"></label>6</label>
+                Number of trials $n$ = <label for="binomial-n" class="slider-label">6</label>
                 <input type="range" min=0 max=100 value=6 step=1 class="range-slider" id="binomial-n">
             </div>
         </form>
@@ -32,7 +32,8 @@
         let nSlider = d3.select("#binomial-n")
         nSlider.on("input", function () {
             var n = this.value
-            d3.select('[for="binomial-n"]').text(n)
+            console.log(n)
+            d3.select('[for="binomial-n"]').text(`${n}`)
             delayUpdate('n')
         })
         var data = generateBinomial(6, 0.5)
