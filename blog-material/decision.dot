@@ -1,0 +1,49 @@
+digraph Tree {
+    graph [
+        fontname="Roboto-Light"
+    ]
+    node [
+        fontsize=30
+        margin="0.4"
+        fontname="Roboto-Light"
+        colorscheme=paired9
+        style="filled,rounded"
+        shape=record
+    ]
+    edge [
+        fontsize=30
+        fontname="Roboto-Light"
+    ]
+    question1[
+        label="⏱?\nDid the student do more\n than 5 hours study?\n(100 students)"
+        fillcolor=1
+        color=2
+    ]
+    question2_1[
+        label="🧠?\nIs the students I.Q\nmore than 100?\n(70 students)"
+        fillcolor=1
+        color=2
+    ]
+    question2_2[
+        label="🧠?\nIs the students I.Q\n more than 100?\n(30 students)"
+        fillcolor=1
+        color=2
+    ]
+    node [
+        margin="0.1,0.2"
+        fillcolor=3
+        color=4
+    ]
+    out1[label="👨‍🎓 ✅ ❌\n20 students\n18 Passes\n2 Fails"]
+    out2[label="👨‍🎓 ✅ ❌\n50 students\n40 Passes\n10 Fails"]
+    out3[label="👨‍🎓 ✅ ❌\n5 students\n4 Passes\n1 Fails"]
+    out4[label="👨‍🎓 ✅ ❌\n25 students\n10 Passes\n15 Fails"]
+
+    question1 -> question2_1[label=" Yes"]
+    question1 -> question2_2[label=" No"]
+
+    question2_1 -> out1[label=" Yes"]
+    question2_1 -> out2[label=" No"]
+    question2_2 -> out3[label=" Yes"]
+    question2_2 -> out4[label=" No"]
+}
