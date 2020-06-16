@@ -46,6 +46,16 @@ pre {
     overflow-x: scroll;
 }
 
+code {
+    overflow-x: scroll;
+}
+
+.decision-graph {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: 30%;
+    margin-left: 30%;
+}
 
 @include media-breakpoint-down(sm) {
     $columns: 5;
@@ -67,6 +77,11 @@ pre {
     .table td {
         padding-left: 4px;
         padding-right: 4px;
+    }
+
+    .decision-graph {
+        margin-left: 0px;
+        margin-right: 0px;
     }
 }
 
