@@ -24,6 +24,13 @@
 mjx-container {
     overflow-x: scroll;
     padding-top: 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+mjx-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 // homepage name in big
