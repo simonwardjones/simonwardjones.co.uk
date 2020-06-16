@@ -38,11 +38,11 @@ A `decision tree` is also a supervised learning algorithm and can be used for ei
 
 Let's use the example of trying to predict whether a student 👨‍🎓 is going to pass an exam to explain.
 
-A decision tree works by splitting the training data into buckets (a.k.a `leaves`) by asking a series of questions. Imagine we have 100 training examples from the same exam last year where we know the students I.Q. 🧠, how many hours ⏱ of revision they did and whether they passed the exam. We can split them based on whether they did more than 5 hours revision and  whether their I.Q. is above 100. It easier to see this decision tree in the diagram below:
+A decision tree works by splitting the training data into buckets (a.k.a `leaves`) by asking a series of questions. Imagine we have 100 training examples from the same exam last year where we know the student's I.Q. 🧠, how many hours ⏱ of revision they did and whether they passed the exam. We can split them based on whether they did more than 5 hours revision and  whether their I.Q. is above 100. It is easier to see this decision tree in the diagram below:
 
 {{< decision_example >}}
 
-Now given a new student taking the exam this year we can predict whether they will pass using the decision tree and the students `feature` values. We work out which `leaf` the new student would end up in by asking the questions in the decision tree. Our prediction is made using the most common result of the training data in the the same `leaf`.
+Now given a new student taking the exam this year we can predict whether they will pass using the decision tree and the student's `feature` values. We work out which `leaf` the new student would end up in by asking the questions in the decision tree. Our prediction is made using the most common result of the training data in the the same `leaf`.
 
 For example if a student has an I.Q. 🧠 of 110 and did 8 hours of revision ⏱ we would answer yes to both questions in the decision tree. Looking at this `leaf` we see that 18/20 students in the training data passed so we would predict this student will also pass. We can go further and say there is a 18/20 = 90% chance that they will pass.
 
@@ -56,7 +56,7 @@ When building the decision tree ideally we want to split the training data into 
 
 There are different ways to define the `impurity` but one of the most common is `gini impurity`. The gini impurity of a leaf is equal to the probability that two randomly selected training examples from the leaf have different results. 
 
-The diagram below helps to visualise the gini impurity. The group of hexagons represents a leaf in the decision tree. Each hexagon represents a students result where blue is a pass and red is a fail. They all start off blue but you can click the hexagons to change them to red and see the impact on the impurity value shown below. The two sliders allow you to change the size of the hexagons and how many there are. You can see when all the hexagons are blue, the impurity is 0.
+The diagram below helps to visualise the gini impurity. The group of hexagons represents a leaf in the decision tree. Each hexagon represents a student's result where blue is a pass and red is a fail. They all start off blue but you can click the hexagons to change them to red and see the impact on the impurity value shown below. The two sliders allow you to change the size of the hexagons and how many there are. You can see when all the hexagons are blue, the impurity is 0.
 
 
 {{< gini >}}
@@ -176,7 +176,7 @@ def fit(self, X, y):
 
 The key method to look into is the `recursive_split` method on the `TreeNode`. This method recursively "grows" the tree by splitting the data to reduce impurity the most. The function finds the best split using the `find_best_split` method. If there is a split found, two children nodes are created - left and right. Finally the `recursive_split` method is called on each of the new children nodes to continue "growing" the tree.
 
-Note the depth of the children node is incremented, otherwise the tree settings such as `min_samples_split` are passed to the children nodes.
+Note the depth of the children nodes are incremented, otherwise the tree settings such as `min_samples_split` are passed to the children nodes.
 
 ```python
 
@@ -219,7 +219,7 @@ def recursive_split(self):
 
 ```
 
-The `find_best_split` method loops through each feature and each unique value of that feature checking for the best candidate split (i.e. the split that reduces the impurity the most)
+The `find_best_split` method loops through each feature and each unique value of that feature checking for the best candidate split (i.e. the split that reduces the impurity the most).
 
 The method first checks if we have reached the max depth or if the number of samples is less than `min_samples_split`. In either case no further split is allowed and the function returns.
 

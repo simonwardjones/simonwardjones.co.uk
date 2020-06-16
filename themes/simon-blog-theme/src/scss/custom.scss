@@ -43,11 +43,12 @@ mjx-container {
 
 pre {
     padding-left: 4px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
-code {
-    overflow-x: scroll;
+pre code {
+    overflow-x: auto;
+    word-wrap: normal;
 }
 
 .decision-graph {
