@@ -87,7 +87,16 @@ A hat above a variable is often used to represent a prediction of the true value
 
 **Different formulation**
 
-Taking the above formula we can re-arrange to show that it is equivalent to modelling the log of the odds as a linear combination of the features. The natural logarithm of the log odds is also know as the `logit`. This is why logistic regression is also know as the `logit model`.
+The `odds` of an event with probability $p$ is defined as the chance of the event happening divided by the chance of the event not happening:
+
+{{<formula class="responsive-math">}}
+\frac{p}{1-p}
+{{</formula>}}
+
+Taking the above formula for $\hat{y}$ we can re-arrange to show that it is equivalent to modelling the log of the odds as a linear combination of the features. 
+
+
+The logarithm of the odds is also know as the `logit`. This is why logistic regression is also know as the `logit model`.
 
 {{<formula class="responsive-math">}}
 \begin{aligned}
