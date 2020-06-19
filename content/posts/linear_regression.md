@@ -18,20 +18,20 @@ If you're interested read on, if you're not, see yourself out. 🚪
 
 This article is the first of a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works 🤞
+    - Most people should be able to follow this section and learn how the algorithm works
   2. [**The nitty gritty**]({{< relref "#the-nitty-gritty" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python 🐍
+    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 ---
 
 ## The idea and key concepts
 
 
-`Regression` is any algorithm that takes a collection of inputs and predicts an output. I'll forgive you if you still don't follow.
+`Regression` is any algorithm that takes a collection of inputs and predicts an output.
 
 Let's give an example and this should make much more sense. Let's say we are trying to predict how much a house 🏡 will sell for in a desirable area of North London. We may know a few facts about the house e.g. the square footage of the house 🏠, the square footage of the garden 🌳 and whether there is a garage 🚙.
 
-In machine learning we call these facts `variables` or `features`. Intuitively we may value the house using a combination of these features. 🏠🌳🚙
+In machine learning we call these facts `variables` or `features`. Intuitively we may value the house using a combination of these features.
 
 Linear regression uses a `linear combination` of the features to predict the output. This just means summing up each feature value multiplied by a number (called a `coefficient`) to represent how important that feature is e.g
 
@@ -55,7 +55,7 @@ In this example the house price is calculated as £$1000$ for each square foot o
 
 Now that's how the linear regression model works! The question now is how do you choose the coefficients for the features, in our example the $1000$ the $50$ and the $1000$? 🤷‍♂️
 
-A common type of machine learning algorithm called `supervised learning algorithms` find these parameters using `training data`. Training data is just examples where you already know the answer. In our case it is a list of houses where we know both the house features 🏠🌳🚙 and the house prices 💰in advance. Here is an example of three training examples with the model predictions:
+A common type of machine learning algorithm called `supervised learning algorithms` find these parameters using `training data`. Training data is just examples where you already know the answer. In our case it is a list of houses where we know both the house features and the house prices in advance. Here is an example of three training examples with the model predictions:
 
 {{< table "table table-striped" >}}
 | House size 🏠 | Garden size 🌳 | Garage? 🚙 | True House Price 💰 | Predicted house price 💰 |

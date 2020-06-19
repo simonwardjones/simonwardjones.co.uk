@@ -18,9 +18,9 @@ If you're interested read on, if you're not ... well there's no harm in giving i
 
 This article is the second in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works 🤞
+    - Most people should be able to follow this section and learn how the algorithm works
   2. [**The nitty gritty**]({{< relref "#the-nitty-gritty" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python 🐍
+    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 Click [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`. If you have already read that congratulations!
 
@@ -30,7 +30,7 @@ Click [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to 
 
 In `regression` (for example `linear regression` - as discussed in the previous article) we predict a continuous output such as house prices where the correct answer can be any number. `Logistic regression` is part of a family of machine learning algorithms called `classification algorithms`. These are used to predict the outcome from a discrete set of `categories`. Logistic regression in particular is used when we are trying to predict a binary outcome, by this we mean a $1$ or a $0$, think success ✅ or failure ❌.
 
-Again it is much easier to explain with an example. Let's say we are trying to predict whether a student 👨‍🎓 is going to pass an exam. As with linear regression we use the input `features` to predict the result. In this case let's say we know the students I.Q. 🧠 and how many hours ⏱ of revision they have done. We use these features to make a prediction.
+Again it is much easier to explain with an example. Let's say we are trying to predict whether a student is going to pass an exam. As with linear regression we use the input `features` to predict the result. In this case let's say we know the students I.Q. 🧠 and how many hours ⏱ of revision they have done. We use these features to make a prediction.
 
 In linear regression we used a `linear combination` of the features to make a prediction, but this doesn't work when trying to predict a binary outcome. Remember a linear combination is just the sum of the each feature scaled by a coefficient representing how important the feature is.
 
