@@ -29,11 +29,11 @@ This article is the first of a series covering fundamental machine learning algo
 
 `Regression` is any algorithm that takes a collection of inputs and predicts an output.
 
-Let's give an example and this should make much more sense. Let's say we are trying to predict how much a house 🏡 will sell for in a desirable area of North London. We may know a few facts about the house e.g. the square footage of the house 🏠, the square footage of the garden 🌳 and whether there is a garage 🚙.
+Let's say we are trying to predict how much a house 🏡 will sell for in a desirable area of North London. We may know a few facts about the house e.g. the square footage of the house 🏠, the square footage of the garden 🌳 and whether there is a garage 🚙.
 
 In machine learning we call these facts `variables` or `features`. Intuitively we may value the house using a combination of these features.
 
-Linear regression uses a `linear combination` of the features to predict the output. This just means summing up each feature value multiplied by a number (called a `coefficient`) to represent how important that feature is e.g
+Linear regression uses a `linear combination` of the features to predict the output. This just means summing up each feature value multiplied by a number (a `coefficient`) to represent how important that feature is e.g
 
 {{<formula class="responsive-math-unfold">}}
 \begin{aligned}
@@ -43,7 +43,7 @@ Linear regression uses a `linear combination` of the features to predict the out
 \end{aligned}
 {{</formula>}}
 
-In this example the house price is calculated as £$1000$ for each square foot of the house plus $£50$ for each foot in the garden plus $£1000$ if there is a garage. If we took a nice $600$ square foot property with a small $500$ square foot garden and no garage our linear regression model would predict the house is worth $£625,000$.
+In this example the house price is calculated as $£1000$ for each square foot of the house plus $£50$ for each foot in the garden plus $£1000$ if there is a garage. If we took a nice $600$ square foot property with a small $500$ square foot garden and no garage our linear regression model would predict the house is worth $£625,000$.
 
 {{<formula class="responsive-math-4">}}
 \begin{aligned}
@@ -65,9 +65,28 @@ A common type of machine learning algorithm called `supervised learning algorith
 | 660          | 200           | Garage    | £0.72m             | £0.671m                 |
 {{</table>}}
 
-Linear regression is a `supervised` learning algorithm which means it works out the best coefficients using the training data. It does this by iteratively changing the coefficients to reduce the error between the predictions and the true house prices. The specifics of this is process is more complex (detailed in the next section).
+We want to chooses the coefficients to `minimise the average error` when predicting the house price for all the training examples. This `average error` also known as `cost` can be defined in different ways.
 
-In short the linear regression algorithm chooses the coefficients to `minimise the average error` when predicting the house price for all the training examples.
+To better visualise the error associated with a prediction it is easier to see in a graph. To make the visualisation easier let's assume that we only know one feature - the house size - for each training example. 
+
+The linear regression model in this case can be written as:
+
+{{<formula class="responsive-math-2">}}
+\text{House Price} = \text{Price per Sq. ft.} * \text{Size}
+{{</formula>}}
+
+Below I have plotted 20 example houses in green showing the price on the y-axis and the house size (in square feet) on the x-axis. I have also plotted the line of best fit (the linear regression model) with the predictions marked as black circles. The red lines shows the absolute error between the predictions and the true house price.
+
+
+You can vary the price per square foot (the coefficient in the model) to see how this impacts the average error.
+
+{{< linear_regression >}}
+
+The best coefficients - that minimise the error - can be found by solving an equation called the `normal equation` or by `gradient descent`. 
+
+Gradient descent works by iteratively changing the coefficients to reduce the error between the predictions and the true house prices. The specifics of this process requires more maths and is detailed in the next section. I haven't gone into the normal equations in this post.
+
+In short the linear regression algorithm chooses the coefficients to `minimise the average error` when predicting the house prices for all the training examples.
 
 And that's linear regression!
 
