@@ -65,7 +65,7 @@ A common type of machine learning algorithm called `supervised learning algorith
 | 660          | 200           | Garage    | £0.72m             | £0.671m                 |
 {{</table>}}
 
-We want to chooses the coefficients to `minimise the average error` when predicting the house price for all the training examples. This `average error` also known as `cost` can be defined in different ways.
+We want to chooses the coefficients to `minimise the average error` when predicting the house price for all the training examples. This `average error` is also known as the `cost` and can be defined in different ways.
 
 To better visualise the error associated with a prediction it is easier to see in a graph. To make the visualisation easier let's assume that we only know one feature - the house size - for each training example. 
 
