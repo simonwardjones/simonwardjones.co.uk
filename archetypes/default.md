@@ -6,8 +6,8 @@ mathjax: false
 menu:
   main:
     parent: 'Posts'
-    # weight: 20
     name: "{{ replace .Name "_" " " | title }}"
 summary: "Check out my article on {{ replace .Name "_" " " | title }}"
+image: "img/{{ .Name }}.png"
 ---
 
