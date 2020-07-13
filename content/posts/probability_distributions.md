@@ -42,7 +42,7 @@ The Binomial distribution with parameters n and p is the discrete probability di
 
 The shorthand $X \sim B(n, p)$ is used to indicate that the random variable $X$ has the Binomial distribution with parameters $n, p$ - where $p$ is the chance of success on an individual trial where $0 < p < 1$ and $n$ is the number of trials. We can write the probability mass function as
 $$
-P(X=k) = {n \choose k}p^k(1 - p)^{1 - k}\qquad \text{for }k\in \\{0,\dots,n\\}
+P(X=k) = {n \choose k}p^k(1 - p)^{n - k}\qquad \text{for }k\in \\{0,\dots,n\\}
 $$
 For intuition a Binomial distribution can be used to represent the number of heads in a series of $n$ coin flips.
 
