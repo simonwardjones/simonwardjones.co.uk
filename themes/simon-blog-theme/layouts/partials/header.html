@@ -16,7 +16,7 @@
           {{ .Name }}
         </a>
         <div class="dropdown-menu " aria-labelledby="navbarDropdownMenuLink">
-          {{ range .Children }}
+          {{ range sort .Children ".Page.Date" "desc" }}
           <a class="dropdown-item {{if or ($currentPage.IsMenuCurrent "main" .) ($currentPage.HasMenuCurrent "main" .) }}active{{end}}"
             href="{{.URL}}">{{ .Name }}</a>
           {{ end }}

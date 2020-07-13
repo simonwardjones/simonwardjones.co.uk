@@ -1,0 +1,7 @@
+<figure class="text-center">
+    {{ if .IsNamedParams }}
+    <img src="{{.Get "src" }}" alt="" class="responsive-img">
+    {{ else }}
+    <img src="{{.Get 0}}" alt="" class="responsive-img">
+    {{ end }}
+</figure>

@@ -65,6 +65,10 @@ pre code {
     margin-left: 30%;
 }
 
+.responsive-img {
+    max-width: 100%;
+}
+
 @include media-breakpoint-down(sm) {
     $columns: 5;
 
