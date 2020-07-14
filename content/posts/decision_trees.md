@@ -133,13 +133,13 @@ First we define the __init__ method on the class setting the various parameters 
 ```python
 
 def __init__(self,
-                max_depth=2,
-                min_samples_split=2,
-                min_samples_leaf=1,
-                n_classes=2,
-                max_features=None,
-                impurity='gini',
-                is_classifier=True):
+             max_depth=2,
+             min_samples_split=2,
+             min_samples_leaf=1,
+             n_classes=2,
+             max_features=None,
+             impurity='gini',
+             is_classifier=True):
     self.max_depth = max_depth
     self.min_samples_split = min_samples_split
     self.min_samples_leaf = min_samples_leaf
