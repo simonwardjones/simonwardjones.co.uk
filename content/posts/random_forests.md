@@ -31,9 +31,8 @@ Great if you have already read these!
 
 ## The idea and key concepts
 
-Check this material out: https://towardsdatascience.com/an-implementation-and-explanation-of-the-random-forest-in-python-77bf308a9b76
 
-In the last post we saw how a decision tree can classify data using a series of questions in order to group "similar" data together, where the prediction is made using the most common label of the training data in the same leaf of the tree. We introduced the idea of `impurity` and how this is used to find the optimum questions to include in the decision tree.
+In the last post we saw how a decision tree can classify data using a series of questions in order to group similar data together. We saw how a prediction is made using the most common label of the training data in the same leaf of the tree as the sample we are predicting. We introduced the idea of `impurity` and how this is used to find the optimum questions to include in the decision tree.
 
 We looked specifically at predicting whether a student will pass an exam based on their I.Q. and how much revision they did as in the tree below.
 
@@ -44,13 +43,13 @@ We looked specifically at predicting whether a student will pass an exam based o
 
 A single decision tree provides great flexibility and can learn complex relationships between features and the target variable. However with this flexibility comes the issue of potentially overfitting the training data.
 
-Overfitting occurs when the tree (or more generally when any model) is too finely tuned to the specific training data that was used. Overfitting is characterised by great to almost perfect performance on the training data but poor performance on new "unseen" data. Flexible models such as decision trees often have high `variance`, this is because the questions or parameters that define the tree often vary significantly on changing the training data.
+Overfitting occurs when the tree (or more generally when any model) is too finely tuned to the specific training data that was used. Overfitting is characterised by great to almost perfect performance on the training data but poor performance on new "unseen" data. Flexible models such as decision trees suffering from overfitting are said to have high `variance`. This is because the questions or parameters that define the model often vary significantly when changing the training data.
 
 With more inflexible models (such as linear regression) with more assumptions on the relationships between features and the target variable we often have another problem - high `bias`. Bias (or `underfitting`) occurs when the model is too simple to capture the true relationships between the features and the target variable.
 
-Often in machine learning we need to balance the flexibility of the model so that we do not overfit and vice versa that we do not underfit. This is often referred to as bias-variance trade-off. There are various approaches that have been developed to address this issue.
+Often in machine learning we need to balance the flexibility of the model so that we do not overfit and vice versa so that we do not underfit. This is often referred to as bias-variance trade-off. There are various approaches that have been developed to address this issue.
 
-When considering decision trees a simple way to reduce the flexibility of the model is to reduce the max depth of the tree. This simple step can often reduce the overfitting issue but if the depth is reduced too far the model can end up to simple with high bias!
+When considering decision trees a simple way to reduce the flexibility of the model is to reduce the max depth of the tree. This simple step can often reduce the overfitting issue but if the depth is reduced too far the model can end up too simple with high bias!
 
 
 **How a random forest reduces variance and overfitting**
@@ -59,7 +58,7 @@ In order to reduce the variance without introducing bias we could use multiple t
 
 {{< image src="/img/random_forest.png" >}}
 
-A random forest trains multiple decision trees to reduce the variance but has two further extensions
+A random forest does this but has two further extensions:
 
   1. **Randomise the training data**
   2. **Randomise the features used when splitting**
@@ -72,15 +71,20 @@ Each tree is built (or "grown") using a random `bootstrap` sample of the data. A
 
 **Randomise the features used when splitting**
 
-Normally when building a decision tree at each split the feature and splitting value are chosen to decrease the impurity the most. In a decision tree the feature is chosen from all the available features.In a random forest only a random subset of features are considered - hence the name `random` forest. Typically the number of features considered is equal to the square root of the total number of features
+When building a decision tree at each split the feature and splitting value are chosen to decrease the impurity the most. In a decision tree the feature is chosen from all the available features.In a random forest only a random subset of features are considered - hence the name `random` forest. Typically the number of features considered is equal to the square root of the total number of features.
 
-$$\text{# Features Used} = \sqrt{\text{# Total Features}}$$
+{{<formula class="responsive-math-2">}}
+\text{# Features Used} = \sqrt{\text{# Total Features}}
+{{</formula>}}
 
 
-**Random forest in practice**
+**Random forest summary**
 
- - train multiple trees
- - make a prediction as the average of the individual trees
+So in summary a random forest builds a collection of decision trees where each tree is trained on a bootstrap sample and when building only a random subset of features are considered at each split. Both of these steps help to reduce the variance of the model without oversimplifying causing high bias.
+
+To make a prediction using a random forest you predict the probability of success from each tree and then average the result.
+
+The number of trees to include in the forest is a parameter you choose when building the model.
 
 And that's it!
 
@@ -88,75 +92,35 @@ And that's it!
 
 ## The nitty gritty
 
-**The model**
-
-Let the data at node $m$ be represented by $Q$. For a split $\theta = (j,t_m)$ consisting of feature with index $j$ and threshold value $t_m$ the impurity $G$ of the split is given by
-
-{{<formula class="responsive-math-3">}}
-G(Q,\theta) = 
-    \frac{n_{left}}{N_m}G(Q_{left}(\theta)) + 
-    \frac{n_{right}}{N_m}G(Q_{right}(\theta))
-{{</formula>}}
-
-Where the data $(x_i,y_i)$ is in $Q_{left}$ if $x_{i,j} <= t_m$ else $(x_i,y_i)$ is in $Q_{right}$. We define $n_{left}$ and $n_{right}$ as the number of training samples in $Q_{left}$ and $Q_{right}$ respectively.
-
-**Classification**
-
-If there are a set of classes $C$, often $C=\{0,1\}$, then for a given data set $Q$ the gini impurity is defined as 
-
-{{<formula class="responsive-math">}}
-G(Q) = \sum_{c\in{C}} p_c(1-p_c)
-{{</formula>}}
-
-where $p_c$ is the probability of class $c$ in $Q$
-
-{{<formula class="responsive-math">}}
-p_c = \frac{1}{N_Q}\sum_{x\in{Q}}\mathbb{1}(y_{class} = c)
-{{</formula>}}
-
-where $N_Q = |Q|$
-
-
-**Regression**
-
-In regression, with a continuous target variable $y$, the mean square error is often used as the impurity.
-
-{{<formula class="responsive-math">}}
-G(Q) = \frac{1}{N_Q}\sum_{y_i\in Q}(y_i - \bar{y})^{2}
-{{</formula>}}
-
-where $\bar{y}$ is the mean value of $y$ in the node $Q$
-
-{{<formula class="responsive-math">}}
-\bar{y} = \frac{1}{N_Q}\sum_{y_i\in Q}y_i
-{{</formula>}}
-
-🎉 Now let's implement a decision tree in python 🐍 
-
----
 
 **Python implementation**
 
-We will build the implementation in an object oriented fashion defining a class for a decision tree. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/decision_tree.py).
+As previously we will build the implementation in an object oriented fashion defining a class for the random forest. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/random_forest.py).
 
 ```python
 
-class DecisionTree():
+class RandomForest():
 
 ```
 
-First we define the __init__ method on the class setting the various parameters for the tree. The `max depth` governs how deep the tree can be. The `min_samples_split` defines a minimum number of samples for a node to be considered for a split. The `min_samples_leaf` defines the minimum number of samples allowed in a leaf. A split candidate leading to less samples in a node than the `min_samples_leaf` will be rejected. The `max_features` parameter governs how many features are considered when splitting a node, by default this is all the features. The `impurity` is the setting for which impurity function to use - I have only implemented `'gini'` and `'mse'` (mean square error) for now. Finally the `is_classifier` flag is used to denote whether the decision tree is to be used for regression or classification.
+First we define the __init__ method on the class setting the various parameters for each tree as in the previous article. 
+
+
+However we also define the number of trees in the forest as `n_trees`. The parameter `bootstrap` defines whether to use a bootstrap sample, True by default. The `max_features` parameter governs how many random features are considered when splitting a node, by default this the square root of the total number of features as explained above.
+
 
 ```python
 
 def __init__(self,
-                max_depth=2,
-                min_samples_split=2,
-                min_samples_leaf=1,
-                n_classes=2,
-                max_features=None,
-                impurity='gini',
-                is_classifier=True):
+             max_depth=2,
+             min_samples_split=2,
+             min_samples_leaf=1,
+             n_classes=2,
+             max_features='sqrt',
+             impurity='gini',
+             is_classifier=True,
+             n_trees=10,
+             bootstrap=True):
     self.max_depth = max_depth
     self.min_samples_split = min_samples_split
     self.min_samples_leaf = min_samples_leaf
@@ -165,152 +129,68 @@ def __init__(self,
     self.impurity = impurity
     self.is_classifier = is_classifier
 
+    self.n_trees = n_trees
+    self.bootstrap = bootstrap
     self.is_fitted = False
-    self.tree = None
+    self.trees = []
+    np.random.seed(1)
 
 ```
 
-The fit method below builds the tree. Most of the hard work is actually done by another class called `TreeNode`. The TreeNode instances represent one node of the decision tree. We will look more at this class below.
+The fit method below builds `n_trees` decision trees storing them in the `trees` attribute. Most of the hard work is actually done by the `DecisionTree` class from the previous article.
 
 ```python
 
 def fit(self, X, y):
     y_shape = (X.shape[0], 1)
     data = np.concatenate((X, y.reshape(y_shape)), axis=1)
-    self.tree = TreeNode(
-        data=data,
-        max_depth=self.max_depth,
-        min_samples_split=self.min_samples_split,
-        min_samples_leaf=self.min_samples_leaf,
-        n_classes=self.n_classes,
-        max_features=self.max_features,
-        impurity=self.impurity,
-        is_classifier=self.is_classifier)
-    self.tree.recursive_split()
+    for i, data in enumerate(self._samples(data)):
+        tree = DecisionTree(
+            max_depth=self.max_depth,
+            min_samples_split=self.min_samples_split,
+            min_samples_leaf=self.min_samples_leaf,
+            n_classes=self.n_classes,
+            max_features=self.max_features,
+            impurity=self.impurity,
+            is_classifier=self.is_classifier)
+        logger.info(f'Fitting tree {i}')
+        tree.fit(X, y)
+        self.trees.append(tree)
     self.is_fitted = True
 
 ```
 
-The key method to look into is the `recursive_split` method on the `TreeNode`. This method recursively "grows" the tree by splitting the data to reduce impurity the most. The function finds the best split using the `find_best_split` method. If there is a split found, two children nodes are created - left and right. Finally the `recursive_split` method is called on each of the new children nodes to continue "growing" the tree.
-
-Note the depth of the children nodes are incremented, otherwise the tree settings such as `min_samples_split` are passed to the children nodes.
+Next we will look at the `_samples` method that is used to create the bootstrap samples.
 
 ```python
 
-def recursive_split(self):
-    self.find_best_split()
-    if self.best_feature_index is not None:
-        logger.info(f'Splitting tree on feature_index '
-                    f'{self.best_feature_index} and feature_split_val '
-                    f'{self.best_feature_split_val:.2f}')
-        left, right = self.split(
-            feature_index=self.best_feature_index,
-            feature_split_val=self.best_feature_split_val,
-            only_y=False)
-        del self.data
-        self.left = TreeNode(
-            data=left,
-            max_depth=self.max_depth,
-            min_samples_split=self.min_samples_split,
-            min_samples_leaf=self.min_samples_leaf,
-            n_classes=self.n_classes,
-            max_features=self.max_features,
-            depth=self.depth + 1,
-            impurity=self.impurity,
-            is_classifier=self.is_classifier)
-        self.right = TreeNode(
-            data=right,
-            max_depth=self.max_depth,
-            min_samples_split=self.min_samples_split,
-            min_samples_leaf=self.min_samples_leaf,
-            n_classes=self.n_classes,
-            max_features=self.max_features,
-            depth=self.depth + 1,
-            impurity=self.impurity,
-            is_classifier=self.is_classifier)
-        self.left.recursive_split()
-        self.right.recursive_split()
+def _samples(self, data):
+    n_rows = data.shape[0]
+    for _ in range(self.n_trees):
+        if not self.bootstrap:
+            yield data
+        else:
+            random_rows = np.random.choice(
+                np.arange(n_rows),
+                size=n_rows,
+                replace=True)
+            yield data[random_rows, :]
+
+```
+
+Finally we will look at the `predict_proba` method used to predict the class probabilities of a new sample by averaging the probabilities from each tree.
+
+```python
+
+def predict_proba(self, data):
+    if self.is_classifier:
+        return np.argmax(self.predict_proba(data), axis=-1)
     else:
-        logger.info('Reached max depth or no splits reduce impurity')
-        self.is_leaf = True
+        return np.stack(
+            list(tree.predict(data) for tree in self.trees),
+            axis=-1).mean(axis=-1)
 
 ```
-
-The `find_best_split` method loops through each feature and each unique value of that feature checking for the best candidate split (i.e. the split that reduces the impurity the most).
-
-The method first checks if we have reached the max depth or if the number of samples is less than `min_samples_split`. In either case no further split is allowed and the function returns.
-
-```python
-
-def find_best_split(self):
-    if self.depth == self.max_depth:
-        return
-    if self.data.shape[0] < self.min_samples_split:
-        logger.info(f"{self} can't split as samples < min_samples_split")
-        return None
-    if self.node_impurity == 0:
-        logger.info(f"Can't improve as node pure")
-        return None
-    n_features = self.data.shape[1] - 1
-    all_feature_indices = np.arange(n_features)
-    if self.max_features == 'sqrt':
-        features_to_check = np.random.choice(
-            all_feature_indices,
-            size=np.sqrt(n_features).astype(int))
-    else:
-        features_to_check = all_feature_indices
-    logger.info(f'Checking features {features_to_check}')
-    for feature_index in features_to_check:
-        for feature_split_val in np.unique(self.data[:, feature_index]):
-            self.check_split(feature_index, feature_split_val)
-    self.split_attempted = True
-
-```
-
-The `check_split` method updates the current best split if the candidate split is better. The method first splits the data into groups using `self.split` and then checks the `min_samples_leaf` condition after splitting. It calculates the impurity of the split and then if this is less than best split already found and less than the current node impurity the `best_feature_index`, the `best_feature_split_val` and the `best_split_impurity` values are updated.
-
-```python
-
-def check_split(self, feature_index, feature_split_val):
-        groups = self.split(feature_index, feature_split_val)
-    if any(len(group) < self.min_samples_leaf for group in groups):
-        logger.debug(
-            f"Can't split node on feature {feature_index} with split "
-            f"val {feature_split_val} due to min_samples_leaf condition")
-        return None
-    split_impurity = self.calculate_impurity(groups)
-    best_current_impurity = (
-        10**10 if self.best_split_impurity is None
-        else self.best_split_impurity)
-    if ((split_impurity < best_current_impurity) and
-            (split_impurity < self.node_impurity)):
-        logger.debug(
-            f'Found new best split with feature_split_val='
-            f'{feature_split_val} for feature_index = {feature_index} '
-            f'and split_impurity = {split_impurity:.2f}')
-        self.best_feature_index = feature_index
-        self.best_feature_split_val = feature_split_val
-        self.best_split_impurity = split_impurity
-
-```
-
-Finally, now that we have a fitted tree, let's look at the method `predict_row_proba` on the `TreeNode` class used to predict the class probabilities of one new sample. The method iteratively walks the tree until a leaf is reached. At this point the probability of each class is simply the proportion of training data in each class in that leaf (the class counts are stored in the `self.value` property of the leaf node).
-
-```python
-
-def predict_row_proba(self, row):
-    if self.is_leaf:
-        group_size = self.value.sum()
-        class_probs = self.value / group_size
-        return class_probs
-    elif row[self.best_feature_index] <= self.best_feature_split_val:
-        return self.left.predict_row_proba(row)
-    else:
-        return self.right.predict_row_proba(row)
-
-```
-
-There are a few more methods on the two classes, but I think that covers the main idea!
 
 Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
 
