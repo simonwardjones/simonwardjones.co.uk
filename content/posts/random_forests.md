@@ -21,9 +21,9 @@ This article is the fourth in a series covering fundamental machine learning alg
     - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 Click
-- [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`.
-- [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`.
-- [here]({{< relref "decision_trees.md" >}}) if you missed `From zero to Decision Tree`.
+- [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`
+- [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`
+- [here]({{< relref "decision_trees.md" >}}) if you missed `From zero to Decision Tree`
 
 Great if you have already read these!
 

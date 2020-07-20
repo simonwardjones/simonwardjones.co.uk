@@ -23,8 +23,8 @@ This article is the third in a series covering fundamental machine learning algo
     - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 Click
-- [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`.
-- [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`. 
+- [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`
+- [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`
 
 If you have already read these congratulations!
 
