@@ -34,9 +34,9 @@ Again it is much easier to explain with an example. Let's say we are trying to p
 
 In linear regression we used a `linear combination` of the features to make a prediction, but this doesn't work when trying to predict a binary outcome. Remember a linear combination is just the sum of the each feature scaled by a coefficient representing how important the feature is.
 
-Logistic regression works instead by predicting a probability of success ✅ but a probability has to be between $0$ and $1$! In order that the prediction is between $0$ and $1$ logistic regression takes the linear combination and `transforms` (think squeezes) it to be between 0 and 1.
+Logistic regression works instead by predicting a probability of success ✅ but a probability has to be between $0$ and $1$! In order that the prediction is between $0$ and $1$ logistic regression takes the linear combination and `transforms` it to be between 0 and 1.
 
-Logistic regression takes the combination of the features and coefficients and transforms them to be between $0$ and $1$ so that large values have a high probability and small values have a low probability (in case of predicting whether a student will pass an exam we expect students with a high combined I.Q. and revision time to have a high chance of passing). The exact details of this transformation are quite technical but it uses the `sigmoid function` as plotted below (notice the large $x$ values have high probability and vice versa).
+Logistic regression takes the combination of the features and coefficients and transforms them to be between $0$ and $1$ so that large values have a high probability and small values have a low probability (in case of predicting whether a student will pass an exam we expect students with a high combined I.Q. and revision time to have a high chance of passing). The transformation uses the `sigmoid function` as plotted below (notice the large $x$ values have high probability and vice versa).
 
 For our example we would likely predict a student has passed if the logistic model says they have more than a $0.5$ probability of passing. This step of converting the probability to an outcome is called a `decision rule`.
 
@@ -54,7 +54,7 @@ Like linear regression, logistic regression is a `supervised learning algorithm`
 | 90     | 8                | ✅ Pass       | ✅ Pass           |
 {{</table>}}
 
-It does this by iteratively changing the coefficients to reduce the error. The specifics of this is process is more complex (detailed in the next section).
+It does this by iteratively changing the coefficients to reduce the error. The specifics of this is process are detailed in the next section.
 
 ---
 
