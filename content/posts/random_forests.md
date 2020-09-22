@@ -17,7 +17,7 @@ What is a `random forest`? 🤷‍♂️
 This article is the fourth in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
     - Most people should be able to follow this section and learn how the algorithm works
-  2. [**The nitty gritty**]({{< relref "#the-nitty-gritty" >}})
+  2. [**The maths**]({{< relref "#the-maths" >}})
     - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 Click
@@ -90,7 +90,7 @@ And that's it!
 
 ---
 
-## The nitty gritty
+## The maths
 
 
 **Python implementation**

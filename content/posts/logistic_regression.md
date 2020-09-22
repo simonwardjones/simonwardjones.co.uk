@@ -19,7 +19,7 @@ If you're interested read on, if you're not ... well there's no harm in giving i
 This article is the second in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
     - Most people should be able to follow this section and learn how the algorithm works
-  2. [**The nitty gritty**]({{< relref "#the-nitty-gritty" >}})
+  2. [**The maths**]({{< relref "#the-maths" >}})
     - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 Click [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`. If you have already read that congratulations!
@@ -58,7 +58,7 @@ It does this by iteratively changing the coefficients to reduce the error. The s
 
 ---
 
-## The nitty gritty
+## The maths
 
 **The model**
 

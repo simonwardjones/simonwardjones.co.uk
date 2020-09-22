@@ -19,7 +19,7 @@ If you're interested read on, if you're not, see yourself out. 🚪
 This article is the first of a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
     - Most people should be able to follow this section and learn how the algorithm works
-  2. [**The nitty gritty**]({{< relref "#the-nitty-gritty" >}})
+  2. [**The maths**]({{< relref "#the-maths" >}})
     - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
 
 ---
@@ -92,7 +92,7 @@ And that's linear regression!
 
 ---
 
-## The nitty gritty
+## The maths
 
 In order to keep this as accessible as possible to people less familiar with mathematical concepts and notation I will include footnotes to explain where I think it may help.
 
