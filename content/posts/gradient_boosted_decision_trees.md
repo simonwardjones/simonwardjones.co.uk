@@ -368,9 +368,206 @@ class GradientBoostedDecisionTree():
 
 ```
 
-First we define the __init__ method on the class setting the various parameters for each tree as in the previous article. 
+First we define the \_\_init\_\_ method on the class setting the various parameters for each tree as in the previous article.
+
+```python
+
+def __init__(self,
+              max_depth=2,
+              min_samples_split=2,
+              min_samples_leaf=1,
+              n_classes=2,
+              max_features=None,
+              is_classifier=True,
+              n_trees=10,
+              learning_rate=0.1):
+    """Gradient boosted decision tree model
+
+    The trees are grown sequentially and fitted to the negative 
+    gradient of the cost function with respect to the raw predicted
+    values at the previous stage. 
+
+    Note I use the term raw_predictions as raw predicted values 
+    must be transformed to find the probability estimates in the 
+    case of classification.
+
+    In practice these gradients are equal to the residual.
+
+    The raw predictions for a stage are made by adding the new delta
+    model (multiplied by the learning rate) to the raw predictions
+    from the previous stage
+
+    Parameters:
+    ----------
+    max_depth: int
+        The maximum depth allowed when "growing" a tree
+    min_samples_split: int
+        The minimum number of samples required to allow a split at a
+        node
+    min_samples_leaf: int
+        The minimum number of samples allowed in a leaf. A split
+        candidate leading to less samples in a node than the
+        min_samples_leaf will be rejected
+    n_classes: int, optional, default 2
+        Number of classes in a classification setting. Ignored when
+        self.is_classifier = False
+    max_features: int, optional, default None
+        If set to 'sqrt' then only a random subset of features are
+        used to split at each node, the number of features used in
+        this case is sqrt(n_features).
+        Else all the features are considered when splitting at each
+        node
+    is_classifier: bool, optional, default True
+        Is the model used as part of a classification problem
+        or a regression problem. Should be set to True if
+        classification, False if regression
+    n_trees: int, optional, default 10
+        Number of trees, equivalently gradient steps
+    learning_rate: float, optional, default 0.05
+        The learning rate parameter controlling the gradient descent
+        step size
+    """
+    self.max_depth = max_depth
+    self.min_samples_split = min_samples_split
+    self.min_samples_leaf = min_samples_leaf
+    self.n_classes = n_classes
+    self.max_features = max_features
+    self.is_classifier = is_classifier
+
+    self.n_trees = n_trees
+    self.learning_rate = learning_rate
+    self.is_fitted = False
+    np.random.seed(1)
+    self.trees_to_fit = 1 if n_classes <= 2 else n_classes
+    self.trees = [
+        [None for _ in range(self.trees_to_fit)]
+        for _ in range(self.n_trees)]
+    #  trees has shape (n_trees, n_classes)
+
+```
+
+The trees property is initialised with `None` values but has shape (n_trees, n_classes). During fitting these are replaced with the weak learners discussed above.
+
+The best method to start with is the `fit` method.
+
+```python
+
+def fit(self, X, y):
+    if self.is_classifier:
+        y = y.astype(int)
+    self.init_f_0(X, y)
+    prev_stage_raw_predictions = self.f_0_prediction(X)
+    for stage in range(self.n_trees):
+        negative_gradient = self.negative_gradient(
+            y, prev_stage_raw_predictions)
+        self.fit_stage(X, negative_gradient, stage=stage)
+        delta_model = self.predict_delta_model(X, stage=stage)
+        prev_stage_raw_predictions = prev_stage_raw_predictions + \
+            (self.learning_rate * delta_model)
+
+```
+
+The fit method first trains an initial prediction $f_0$ using the `init_f_0` method. Then the initial raw predictions $\hat{y}$ are calculated as `f_0_prediction(X)`. I refer to $\hat{y}$ as raw predictions to distinguish between $\hat{y}$ and $\hat{p}$. The `fit` method then loops through for each gradient step, first calulating the negative gradient (i.e. the residual) using the `negative_gradient` method then fitting a delta model to the negative gradient using a call to the `fit_stage` method, then finally the raw predictions are updated using the delta model (calculated using the `predict_delta_model` method) and the learning rate.
+
+We will now go through each of the helper methods in turn. Firstly we inspect the `init_f_0` method.
+
+```python
+
+def init_f_0(self, X, y):
+    y = y.reshape(-1)
+    if not self.is_classifier:
+        self.regression_f_0_tree = self.get_tree()
+        self.regression_f_0_tree.fit(X, y)
+    if self.is_classifier and self.n_classes == 2:
+        self.f_0 = np.log(y.sum() / (y.shape[0] - y.sum()))
+    if self.is_classifier and self.n_classes > 2:
+        self.f_0 = np.log(
+            np.bincount(y, minlength=self.n_classes) / y.shape[0])[None, :]
+
+```
+
+The $f_0$ value is different for regression and classification. In the case of regression the initialisation is often just the mean of the target variable. In my implementation above I fitted a first tree model as $f_0$. In the case of classification (with two classes) the $f_0$ prediction is initialised as the logit of the average probability of success in the training data. For the extension to the multi class setting we initalise the kth class raw prediction as the log of the average probability of observing the kth class.
+
+Having initialised the first model we use it to come up with an initial raw_prediction using the `f_0_prediction`  method.
 
 
+```python
+
+def f_0_prediction(self, X):
+    n = X.shape[0]
+    if not self.is_classifier:
+        return self.regression_f_0_tree.predict(X).reshape(n, 1)
+    if self.is_classifier and self.n_classes == 2:
+        return np.repeat(self.f_0, n).reshape(n, 1)
+    if self.is_classifier and self.n_classes > 2:
+        return np.repeat(self.f_0, n, axis=0)
+
+```
+
+In the case of regression the $f_0$ prediction is made by calling the `predict` method of the `regression_f_0_tree` (fitted in the `init_f_0` method). In the case of classification the fixed `f_0` values (again calculated in `init_f_0`) are repeated for each training example.
+
+Next we look at the  `negative_gradient` method used to return the negative gradient of the loss with respect to $\hat{y}$.
+
+```python
+
+def negative_gradient(self, y, prev_stage_raw_predictions):
+    if self.is_classifier and self.n_classes > 2:
+        y = np.eye(self.n_classes)[y.reshape(-1)]
+    else:
+        y = y.reshape(y.shape[0], 1)
+    return y - self.convert_raw_predictions(prev_stage_raw_predictions)
+
+```
+
+Again the `negative_gradient` method varies for regression and classification. In the case of multi class classification with more than two classes, the $y$ values are one hot encoded so $y$ is a matrix with shape (`n`, `n_classes`) where `n` is the number of training examples. The method returns the residuals between the true value $y$ and the prediction.
+
+The prediction value is calculated by transforming the `raw_predictions` using the `convert_raw_predictions` method. For regression this method just returns the raw predictions, however for classification this returns the probabilities $\hat{p}$. As seen above in the mathematical details the raw_predictions are transformed into probabilities using the Sigmoid function in the case of two class classification, and the Softmax function in the case of three of more classes.
+
+```python
+
+def convert_raw_predictions(self, raw_predictions):
+    if not self.is_classifier:
+        return raw_predictions
+    if self.is_classifier and self.n_classes == 2:
+        return expit(raw_predictions)
+    if self.is_classifier and self.n_classes > 2:
+        return np.exp(
+            raw_predictions - logsumexp(raw_predictions, axis=1)[:, None])
+
+```
+
+Having initialised the raw predictions and calculated the gradient we then fit the next sequential weak learner ($f_n$) to the gradient using the `fit_stage` method. The stage here indicates what boosting stage we are training in order to keep track of the individual delta models.
+
+```python
+
+def fit_stage(self, X, negative_gradient, stage=0):
+    logger.info(f'Fitting stage {stage}')
+    trees_to_fit = 1 if self.n_classes <= 2 else self.n_classes
+    for class_k in range(trees_to_fit):
+        target = negative_gradient[:, class_k]
+        tree = self.get_tree()
+        tree.fit(X, target)
+        self.trees[stage][class_k] = tree
+
+```
+
+The `fit_stage` method fits weak learners with the params as defined in the \_\_init\_\_. In the case of regression and two class classification the method fits one tree to the negative gradient. In the case of multi class classification, one tree is fitted to the negative gradient of each class.
+
+Having fitted the stage we then use the `predict_delta_model` to return the prediction of the negative gradient at this stage.
+
+```python
+
+def predict_delta_model(self, X, stage=0):
+    class_gradient_step = []
+    for class_k, model in enumerate(self.trees[stage]):
+        k_gradient_step = model.predict(X).reshape(-1)
+        class_gradient_step.append(k_gradient_step)
+    gradient_step = np.stack(class_gradient_step, axis=-1)
+    return gradient_step
+
+```
+
+There are more methods defined for inference such as `predict` and `predict_proba` but this post is long enough!
 
 **Further reading**
 
