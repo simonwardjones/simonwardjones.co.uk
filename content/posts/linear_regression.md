@@ -251,7 +251,7 @@ class LinearRegression():
 
 ```
 
-Next we define the __init__ method on the class setting the `learning rate`. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
+Next we define the \_\_init\_\_ method on the class setting the `learning rate`. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
 
 ```python
 

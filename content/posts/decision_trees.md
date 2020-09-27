@@ -128,7 +128,7 @@ class DecisionTree():
 
 ```
 
-First we define the __init__ method on the class setting the various parameters for the tree. The `max depth` governs how deep the tree can be. The `min_samples_split` defines a minimum number of samples for a node to be considered for a split. The `min_samples_leaf` defines the minimum number of samples allowed in a leaf. A split candidate leading to less samples in a node than the `min_samples_leaf` will be rejected. The `max_features` parameter governs how many features are considered when splitting a node, by default this is all the features. The `impurity` is the setting for which impurity function to use - I have only implemented `'gini'` and `'mse'` (mean square error) for now. Finally the `is_classifier` flag is used to denote whether the decision tree is to be used for regression or classification.
+First we define the \_\_init\_\_ method on the class setting the various parameters for the tree. The `max depth` governs how deep the tree can be. The `min_samples_split` defines a minimum number of samples for a node to be considered for a split. The `min_samples_leaf` defines the minimum number of samples allowed in a leaf. A split candidate leading to less samples in a node than the `min_samples_leaf` will be rejected. The `max_features` parameter governs how many features are considered when splitting a node, by default this is all the features. The `impurity` is the setting for which impurity function to use - I have only implemented `'gini'` and `'mse'` (mean square error) for now. Finally the `is_classifier` flag is used to denote whether the decision tree is to be used for regression or classification.
 
 ```python
 

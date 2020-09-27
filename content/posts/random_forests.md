@@ -103,7 +103,7 @@ class RandomForest():
 
 ```
 
-First we define the __init__ method on the class setting the various parameters for each tree as in the previous article. 
+First we define the \_\_init\_\_ method on the class setting the various parameters for each tree as in the previous article. 
 
 
 However we also define the number of trees in the forest as `n_trees`. The parameter `bootstrap` defines whether to use a bootstrap sample, True by default. The `max_features` parameter governs how many random features are considered when splitting a node, by default this the square root of the total number of features as explained above.
