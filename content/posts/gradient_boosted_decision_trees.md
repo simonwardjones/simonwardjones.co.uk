@@ -146,7 +146,7 @@ Instead of differentiating the loss with respect to $\mathbf{\theta}$ we can dif
 
 Equivalently we update $F_{m-1}$ by adding another "delta model" $f_{m+1}$
 
-{{<formula class="responsive-math">}}
+{{<formula class="responsive-math-1">}}
 \hat{y}_i = F_m(\mathbf{x}_i) + f_{m+1}(\mathbf{x}_i) \quad\forall j \in {1,\dots,n} 
 {{</formula>}}
 
@@ -190,7 +190,7 @@ Then predictions $\hat{y} = F_m(x)$
 
 Suppose our iterative model was $\hat{y}_i = F_m(x_i)$ where the $\hat{y}_i$ directly represented the probability $x_i$ is in class 1. i.e. $P(x_i \in C_1)$ where $C_1$ represents class 1.  
 
-Then the delta model doesn't make sense as we would be directly adding to a probability value. As in logistic regression it is often the case to fit the model to a transformation of probability.
+In this case the delta model doesn't make sense as we would be directly adding to a probability value. As in logistic regression it is often the case to fit the model to a transformation of probability.
 
 We define a model 
 $$
@@ -209,7 +209,7 @@ where $\hat{p}$ represents the probability of being in class 1, $\hat{y}$ is som
 
 Note $\hat{p}\in[0,1],\quad \hat{y}\in(-\infty,\infty),\quad y\in\{0,1\}$
 
-With this set up the model F is additive. Hence in the classification setting the gradient boosted decision tree predicts $\hat{y}$ as a sum of multiple delta models. The probability values are then calculated by transforming $\hat{y}$ using the sigmoid function (a.k.a the expit function).
+Hence in the classification setting the gradient boosted decision tree predicts $\hat{y}$ as a sum of multiple delta models. The probability values are then calculated by transforming $\hat{y}$ using the sigmoid function (a.k.a the expit function).
 
 We will use the following fact later on
 
@@ -222,9 +222,9 @@ We will use the following fact later on
 \end{align}
 {{</formula>}}
 
-In the case of classification we define the loss function as cross entropy
+In the case of classification we define the loss function as cross entropy and noting the previous fact we simplify the expression.
 
-{{<formula class="responsive-math">}}
+{{<formula class="responsive-math-4">}}
 \begin{align}
 \mathcal{L}(\hat{y}) &= \frac{1}{n}\sum_{i=1}^{n}\left(
     -y_i\log(\hat{p}_i)-(1-y_i)\log(1-\hat{p}_i)
@@ -245,24 +245,28 @@ In order to choose $f_{m+1}$ we fit to $-\eta\frac{\partial\mathcal{L}}{\partial
 
 
 {{<formula class="responsive-math">}}
+\begin{align}
 \frac{\partial\mathcal{L}}{\partial{\hat{y}_i}}
-= \frac{1}{n}\left(-y_i + \frac{e^{\hat{y}}}{e^{\hat{y}}+1} \right)
-= \frac{1}{n}\left(\hat{p}_i - y_i \right)
+&= \frac{1}{n}\left(-y_i + \frac{e^{\hat{y}}}{e^{\hat{y}}+1} \right)\\
+&= \frac{1}{n}\left(\hat{p}_i - y_i \right)
+\end{align}
 {{</formula>}}
 
 hence 
 
 {{<formula class="responsive-math">}}
+\begin{align}
 -\frac{\partial\mathcal{L}}{\partial{\hat{y}_i}}
-= \frac{1}{n}\left(y_i - \hat{p}_i \right)
-= \frac{1}{n}\left(y_i - \sigma(\hat{y}_i) \right)
+&= \frac{1}{n}\left(y_i - \hat{p}_i \right)\\
+&= \frac{1}{n}\left(y_i - \sigma(\hat{y}_i) \right)
+\end{align}
 {{</formula>}}
 
 where $\sigma$ is the sigmoid function. Note this is the residual again!
 
 How the process looks again:
 
-we define initial values
+First define initial values
 $f_0(x) = \log\left(\frac{\sum{y_i\in C_1}}{\sum{y_i\notin C_1}}\right)$ then set $F_0(x) = f_0(x)$  
 We fit $f_1(x)\sim (y-\sigma(F_0(x)))$ then $F_1(x) = F_0(x) + \eta f_1(x)$  
 We fit $f_2(x)\sim (y-\sigma(F_1(x)))$ then $F_2(x) = F_1(x) + \eta f_2(x)$  
@@ -292,17 +296,17 @@ and we define
 
 Once again we use Cross entropy but for multi class setting
 
-$$
+{{<formula class="responsive-math-3">}}
 \mathcal{L}(F^1,\dots,F^K) 
 = -\frac{1}{n}\sum_{i=1}^{n}\sum_{k=1}^{K}\mathbb{1}(y_i\in C^k)\log(\hat{p}_i^k)
-$$
+{{</formula>}}
 
 Let $y^k$ be the indicator variable for class k, then
 
-{{<formula class="responsive-math">}}
+{{<formula class="responsive-math-4 responsive-math-unfold">}}
 \begin{align}
-\mathcal{L}(F^1,\dots,F^K) 
-&= -\frac{1}{n}\sum_{i=1}^{n}\sum_{k=1}^{K}y^k_i\log\left(
+&\mathcal{L}(F^1,\dots,F^K) 
+= -\frac{1}{n}\sum_{i=1}^{n}\sum_{k=1}^{K}y^k_i\log\left(
 \frac{e^{F^k(x_i)}}{\sum_{i=j}^{K}e^{F_j(x_i)}}\right)\\
 &= -\frac{1}{n}\sum_{i=1}^{n}\sum_{k=1}^{K}y^k_i\log\left(
 \frac{e^{\hat{y}_i^k}}{\sum_{j=1}^{K}e^{\hat{y}^j_i}}\right)\\
@@ -336,7 +340,7 @@ We initialise $f_0$ as
 f_0(x)^k = \log\left(\frac{\sum{y_i\in C_k}}{\sum{y_i\notin C_k}}\right)
 {{</formula>}}
 
-Then sequentially fit $f_1^k,f_2^k,f_3^k,\dots, f_m^k$ against the residuals for each class $k$ to calculate additive models $F_1^k,F_2^k,F_3^k,\dots, F_m^k$
+Then sequentially fit $f_1^k,f_2^k,\dots, f_m^k$ against the residuals for each class $k$ to calculate additive models $F_1^k,F_2^k,\dots, F_m^k$
 such that $\forall k\in\{1,\dots, K\}$
 {{<formula class="responsive-math">}}
 \begin{align}
@@ -504,7 +508,7 @@ def f_0_prediction(self, X):
 
 ```
 
-In the case of regression the $f_0$ prediction is made by calling the `predict` method of the `regression_f_0_tree` (fitted in the `init_f_0` method). In the case of classification the fixed `f_0` values (again calculated in `init_f_0`) are repeated for each training example.
+In the case of regression the $f_0$ prediction is made by calling the `predict` method of the `regression_f_0_tree` (fitted in the `init_f_0` method). In the case of classification the constant `f_0` values (again calculated in `init_f_0`) are repeated for each training example.
 
 Next we look at the  `negative_gradient` method used to return the negative gradient of the loss with respect to $\hat{y}$.
 
@@ -567,11 +571,11 @@ def predict_delta_model(self, X, stage=0):
 
 ```
 
-There are more methods defined for inference such as `predict` and `predict_proba` but this post is long enough!
+There are a few more methods defined for inference such as `predict` and `predict_proba` but this post is long enough!
 
 **Further reading**
 
-Honestly these three are excellent resources:
+Honestly these three are excellent resources for understanding gradient boosting:
  - [Understanding Gradient Boosting as gradient descent - Nicolus Hug](http://nicolas-hug.com/blog/gradient_boosting_descent)
  - [Understanding Gradient Boosting Tree for Binary Classification - Zepu Zhang](http://zpz.github.io/blog/gradient-boosting-tree-for-binary-classification/)
  - [How to explain gradient boosting - Terence Parr and Jeremy Howard](https://explained.ai/gradient-boosting/index.html)
