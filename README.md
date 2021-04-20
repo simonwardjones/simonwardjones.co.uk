@@ -1,8 +1,36 @@
 # simonwardjones.co.uk
+
 Personal website
+
+This personal website is built with the Hugo static site generator.
+
+# Useful commands
+
+Build and serve pages (including drafts -D)
+
+```
+hugo -D serve
+```
 
 
 # Theme details
+
+The theme (see `simon-blog-theme`) is found in the themes folder. To install the theme dependencies use (make sure to be in the theme directory):
+
+```
+npm install
+```
+
+To run the theme in dev mode:
+```
+npm run dev
+```
+
+To build theme
+```
+npm run build
+```
+
 
 ## Webpack
 

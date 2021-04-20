@@ -5,5 +5,3 @@ draft: false
 menu: main
 mathjax: true
 ---
-
-Check out all my posts below
