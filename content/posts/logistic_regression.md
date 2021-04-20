@@ -9,6 +9,9 @@ menu:
     name: "Logistic Regression"
 summary: "From zero to logistic regression"
 image: "img/logistic_regression.png"
+categories:
+  - Machine Learning
+  - Linear Models
 ---
 
 

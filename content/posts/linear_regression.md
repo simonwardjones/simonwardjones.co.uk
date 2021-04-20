@@ -10,6 +10,9 @@ menu:
     name: "Linear Regression"
 summary: "From zero to linear regression"
 image: "img/linear_regression.png"
+categories:
+  - Machine Learning
+  - Linear Models
 ---
 
 What is `linear regression` 🤷‍♂️?

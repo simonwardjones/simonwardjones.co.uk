@@ -9,6 +9,8 @@ menu:
     parent: Posts
 summary: Explaining the basics of bayesian inference with the example of flipping a coin 💰
 image: "img/bayes.png"
+categories:
+  - Probability and Statistics
 ---
 
 ## Introduction

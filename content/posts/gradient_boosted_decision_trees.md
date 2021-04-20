@@ -9,6 +9,9 @@ menu:
     name: "Gradient Boosted Decision Trees"
 summary: "From zero to gradient boosted decision trees"
 image: "img/gradient_boosted_decision_tree.png"
+categories:
+  - Machine Learning
+  - Decision trees
 ---
 
 

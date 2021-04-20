@@ -9,6 +9,9 @@ menu:
     name: "Decision Trees"
 summary: "From zero to decision tree"
 image: "img/decision_tree.png"
+categories:
+  - Machine Learning
+  - Decision trees
 ---
 
 

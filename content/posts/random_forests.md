@@ -9,6 +9,9 @@ menu:
     name: "Random forests"
 summary: "From zero to random forest"
 image: "img/random_forest.png"
+categories:
+  - Machine Learning
+  - Decision trees
 ---
 
 
