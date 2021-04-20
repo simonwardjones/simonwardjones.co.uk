@@ -45,6 +45,7 @@ mjx-container::-webkit-scrollbar {
     .cover-img {
         width: 25%;
         object-fit: cover;
+        max-height: 150px;
     }
 }
 
