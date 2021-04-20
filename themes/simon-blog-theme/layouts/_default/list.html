@@ -1,22 +1,39 @@
 {{ define "main" }}
 <main class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <header>
-        <h1 class="mt-4">{{.Title}}</h1>
-      </header>
-      <!-- "{{.Content}}" pulls from the markdown content of the corresponding _index.md -->
-      <div class="subheading">
-        {{.Content}}
-      </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <header>
+                <h1 class="mt-4">{{.Title}}</h1>
+            </header>
+            <!-- "{{.Content}}" pulls from the markdown content of the corresponding _index.md -->
+            <div class="subheading">
+                {{.Content}}
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="row">
-    <!-- Ranges through content/posts/*.md -->
-    {{ range .Pages }}
-      {{ .Render "summary"}}
-    {{ end }}
-  </div>
+    <div class="d-flex">
+        <div class="py-2">
+            {{ if eq .Page.Title "Posts"}}
+            <a href="/posts"><span class="badge badge-pill badge-primary over">all</span></a>
+            {{else}}
+            <a href="/posts"><span class="badge badge-pill badge-secondary over">all</span></a>
+            {{end}}
+            {{ range .Site.Taxonomies.categories }}
+            {{ if eq .Page.Title $.Title}}
+            <a href="{{.Page.RelPermalink }}">
+                <span class="badge badge-pill badge-primary over">{{.Page.Title}}</span></a>
+            {{ else }}
+            <a href="{{.Page.RelPermalink }}">
+                <span class="badge badge-pill badge-secondary over">{{.Page.Title}}</span></a>
+            {{end}}
+            {{ end }}
+        </div>
+    </div>
+    <div class="row">
+        <!-- Ranges through content/posts/*.md -->
+        {{ range .Pages }}
+        {{ .Render "summary"}}
+        {{ end }}
+    </div>
 </main>
 {{ end }}
