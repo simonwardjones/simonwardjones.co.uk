@@ -1,20 +1,22 @@
 {{ define "main" }}
 
 <article class="container">
-  <div class="row mb-3">
-    <div class="col-sm-12">
-      <h1 class='display-4 my-4'>{{ .Title }}</h1>
-      <div class="subheading mb-4">
-        <div class="small mb-2" id="date-words"> {{ .Date.Format "2 Jan 2006" }} - {{ .WordCount }} Words </div>
-        {{ with .Params.summary }}
-        <div class="mb-1">{{ . }}</div>
-        {{ end }}
-        {{ partial "follow.html" .}}
-      </div>
-      <br>
-      {{ .Content }}
+    <div class="row mb-3">
+        <div class="col-sm-12">
+            <h1 class='display-4 my-4'>{{ .Title }}</h1>
+            <div class="d-flex flex-row">
+                <div class=".flex-shrink-1">
+                    <div class="small mb-2" id="date-words"> {{ .Date.Format "2 Jan 2006" }} - {{ .WordCount }} Words
+                    </div>
+                    {{ with .Params.summary }}
+                    <div class="mb-1">{{ . }}</div>
+                    {{ end }}
+                </div>
+            </div>
+            <br>
+            {{ .Content }}
+        </div>
     </div>
-  </div>
 </article>
 
 {{ end }}

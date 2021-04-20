@@ -41,7 +41,7 @@ mjx-container::-webkit-scrollbar {
 
 .card {
     height: 100%;
-    
+
     .cover-img {
         width: 25%;
         object-fit: cover;
@@ -102,4 +102,9 @@ pre code {
     .responsive-math-unfold mjx-mtr {
         display: inline;
     }
+}
+
+.over {
+    z-index: 1;
+    position: relative;
 }
