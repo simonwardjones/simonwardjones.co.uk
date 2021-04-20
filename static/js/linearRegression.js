@@ -56,7 +56,6 @@ class RegressionExample {
             this.updateStyles();
             return;
         }
-        this.log(data)
         this.hasData = true;
         this.updateDataColors();
         this.updateSVG();
@@ -239,7 +238,7 @@ class RegressionExample {
             line = d3
                 .line()
                 .x((d) => this.xScale(d[0]))
-                .y((d) => this.yScale(d[1]));
+                .y((d) => this.yScale(d[1]))
         } else {
             line = d3
                 .line()
@@ -303,7 +302,9 @@ class RegressionExample {
             .attr("cy", (d) => this.yScale(d[1]))
             .attr("r", 3)
             .attr("fill", "#28a745");
-        const modelY = this.X.map((x) => x * this.data[0].gradient + this.data[0].intercept);
+        const modelY = this.X.map(
+            (x) => x * this.data[0].gradient + this.data[0].intercept
+        );
         const errorLinePoints = d3.zip(this.X, modelY);
         const errorLines = d3.zip(errorLinePoints, d3.zip(this.X, this.Y));
         this.error = 0;
@@ -340,7 +341,6 @@ class RegressionExample {
         var format = d3.format(this.options.yFormat);
         const errorLabel = document.querySelector("#errorLabel");
         errorLabel.innerHTML = this.options.unit + format(this.error);
-        console.log();
     }
 
     /* Creat color wheel*/

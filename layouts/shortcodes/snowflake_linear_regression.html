@@ -45,7 +45,7 @@
 
 
         function getModelLine(gradient, intercept) {
-            const x = d3.range(1, 20, 1)
+            const x = d3.range(1, 21, 1)
             const y = x.map(x => x * gradient + intercept)
             const dataValues = d3.zip(x, y)
             return [{ id: 'Linear-Model', values: dataValues, gradient: gradient, intercept: intercept }]
