@@ -19,7 +19,7 @@ categories:
 
 ### A brief introduction to linear regression
 
-A simple linear regression model is a linear regression model where there is only one independent variable $x$. The dependent variable $y$ is modelled as a linear function of $x$. More simply put the relationship between $x$ and $y$ is described as a straight line with slope (a.k.a gradient $\beta$) and intercept $\alpha$. 
+A simple linear regression model is a linear regression model where there is only one independent variable $x$. The dependent variable $y$ is modelled as a linear function of $x$. More simply put the relationship between $x$ and $y$ is described as a straight line with slope $\beta$ (a.k.a gradient) and intercept $\alpha$. 
 
 {{<formula class="formular" >}}
 y=\alpha + \beta x
