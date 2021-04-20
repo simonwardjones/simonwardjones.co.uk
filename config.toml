@@ -1,9 +1,13 @@
+
 baseURL = "https://simonwardjones.co.uk/"
 languageCode = "en-GB"
 title = "Simon Ward-Jones"
 theme = "simon-blog-theme"
 googleAnalytics = "UA-168219404-1"
 enableRobotsTXT = true
+
+[taxonomies]
+category = "categories"
 
 [params]
 formspree = "https://formspree.io/xrgyqgjw"
