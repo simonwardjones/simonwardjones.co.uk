@@ -1,0 +1,21 @@
+{{ define "main" }}
+<main class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <header>
+                <h1 class="mt-4">{{.Title}}</h1>
+            </header>
+            <!-- "{{.Content}}" pulls from the markdown content of the corresponding _index.md -->
+            <div class="subheading">
+                {{.Content}}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Ranges through content/posts/*.md -->
+        {{ range .Pages }}
+        {{ .Render "summary"}}
+        {{ end }}
+    </div>
+</main>
+{{ end }}
