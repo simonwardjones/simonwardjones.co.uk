@@ -7,7 +7,7 @@
             </div>
         </form>
         <div class="col-sm-12">
-            <h5 >Average error <span id="errorLabel"></span></h4>
+            <h5>Average error <span id="errorLabel"></span></h4>
         </div>
         <div class="col-sm-12">
             <div id="regression-chart-container"></div>
@@ -37,7 +37,7 @@
             const x = d3.range(500, 1500, 1)
             const y = x.map(x => x * pricePerSquareFoot)
             const dataValues = d3.zip(x, y)
-            return [{ id: 'Linear-Model', values: dataValues, gradient: pricePerSquareFoot }]
+            return [{ id: 'Linear-Model', values: dataValues, gradient: pricePerSquareFoot, intercept: 0 }]
         }
 
         const pricePerSquareFoot = 1000
@@ -68,7 +68,51 @@
 
         // create new chart using Chart constructor
         const element = document.querySelector('#regression-chart-container')
-        const chart = new RegressionExample(element, data, { duration: 0 , startYAtZero:true });
+        const X = [
+            508.61115057,
+            1198.08008362,
+            1161.75711837,
+            1104.85702007,
+            1231.23559394,
+            536.13678177,
+            1017.83263422,
+            968.3797697,
+            972.11614135,
+            1240.81003384,
+            842.76964254,
+            1026.95566596,
+            1269.59270905,
+            966.27518453,
+            660.02325357,
+            771.55916762,
+            770.45860788,
+            736.21210819,
+            1444.86123946,
+            810.62003301,
+        ];
+        const Y = [
+            626959.65607979,
+            1129946.67272542,
+            992072.80162306,
+            1067678.90743027,
+            1286403.11000961,
+            652411.25911178,
+            1012154.20715036,
+            1051531.34645414,
+            861581.01235994,
+            1223473.70980439,
+            1089188.4840377,
+            1269155.39760372,
+            1422681.34120847,
+            940690.26073101,
+            806487.032751,
+            687943.40712721,
+            644192.84255111,
+            544357.04316407,
+            1436155.05615286,
+            914218.39969812,
+        ];
+        const chart = new RegressionExample(element, data, { duration: 0, startYAtZero: true, xAxisLabel: "Square feet", yAxisLabel: "Square feet" }, X, Y);
         return chart
     })()
 
