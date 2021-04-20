@@ -1,0 +1,94 @@
+<div class="chart pb-4">
+    <div class="row controls">
+        <form class="col-md-6" id="regression-gradient-form">
+            <div class="form-group m-0">
+                Slope $\beta$ : <label for="regression-gradient" class="slider-label">4</label>
+                <input type="range" min=-5 max=10 value=4 step=0.1 class="range-slider" id="regression-gradient">
+            </div>
+        </form>
+        <form class="col-md-6" id="regression-intercept-form">
+            <div class="form-group m-0">
+                Intercept $\alpha$ : <label for="regression-intercept" class="slider-label">3</label>
+                <input type="range" min=-5 max=20 value=3 step=0.1 class="range-slider" id="regression-intercept">
+            </div>
+        </form>
+        <div class="col-sm-12">
+            <h5>Average error <span id="errorLabel"></span></h4>
+        </div>
+        <div class="col-sm-12">
+            <div id="regression-chart-container"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate-path@2.1.2/build/d3-interpolate-path.min.js"></script>
+<script src="/js/linearRegression.js"></script>
+
+<script type="text/javascript">
+
+
+    let linearRegressionExampleChart = (function linearRegression() {
+        // sliders set up
+        let gradientSlider = d3.select("#regression-gradient")
+        gradientSlider.on("input", function () {
+            var gradient = this.value
+            d3.select('[for="regression-gradient"]').text(gradient)
+            delayUpdate('regression-gradient')
+        })
+        let interceptSlider = d3.select("#regression-intercept")
+        interceptSlider.on("input", function () {
+            var intercept = this.value
+            d3.select('[for="regression-intercept"]').text(intercept)
+            delayUpdate('regression-intercept')
+        })
+
+
+        function getModelLine(gradient, intercept) {
+            const x = d3.range(1, 20, 1)
+            const y = x.map(x => x * gradient + intercept)
+            const dataValues = d3.zip(x, y)
+            return [{ id: 'Linear-Model', values: dataValues, gradient: gradient, intercept: intercept }]
+        }
+
+        const gradient = 4
+        const intercept = 3
+        var data = getModelLine(gradient, intercept)
+
+
+        /*
+        When calling update directly from the slider
+        callback the slide becomes slow. To overcome this
+        instead we run the update on a separate thread using a
+        setTimeout. 
+        We store the reference to the callback timer so
+        so that if the update was called in the last 10 millisecond
+        we terminate the previous timer.
+        */
+        let timers = {}
+        function delayUpdate(name) {
+            clearTimeout(timers[name])
+            timers[name] = setTimeout(update, 10)
+        }
+
+        function update() {
+            let gradient = parseFloat(d3.select('#regression-gradient').node().value)
+            let intercept = parseFloat(d3.select('#regression-intercept').node().value)
+            chart.log(`[Regression example] Updating with gradient = ${gradient}, intercept = ${intercept}`)
+            let data = getModelLine(gradient, intercept)
+            chart.update(data)
+        }
+
+        // create new chart using Chart constructor
+        const element = document.querySelector('#regression-chart-container')
+        X = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        Y = [
+            -5.940727153, -6.435786057, 12.874649301, 35.910490613, 40.969651455, 27.466977488, 28.339904759, 48.022369501,
+            36.211253796, 55.04814023, 64.601433039, 49.319886277, 58.617754859, 68.895865026, 70.615746183, 67.422903544,
+            72.129222486, 73.571506718, 60.757254712, 79.604543856
+        ]
+        const chart = new RegressionExample(element, data, { duration: 0, startYAtZero: true, unit: '', yFormat: '.2f', debug: true }, X, Y);
+        return chart
+    })()
+
+</script>
