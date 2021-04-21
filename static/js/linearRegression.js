@@ -238,7 +238,7 @@ class RegressionExample {
             line = d3
                 .line()
                 .x((d) => this.xScale(d[0]))
-                .y((d) => this.yScale(d[1]))
+                .y((d) => this.yScale(d[1]));
         } else {
             line = d3
                 .line()
@@ -340,7 +340,9 @@ class RegressionExample {
     updateError() {
         var format = d3.format(this.options.yFormat);
         const errorLabel = document.querySelector("#errorLabel");
-        errorLabel.innerHTML = this.options.unit + format(this.error);
+        if (errorLabel) {
+            errorLabel.innerHTML = this.options.unit + format(this.error);
+        }
     }
 
     /* Creat color wheel*/
