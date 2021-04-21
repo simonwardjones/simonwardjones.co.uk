@@ -1,5 +1,9 @@
 <div class="chart pb-4">
     <div class="row controls">
+
+        <div class="col-sm-12">
+            <div id="regression-chart-container"></div>
+        </div>
         <form class="col-md-6" id="regression-gradient-form">
             <div class="form-group m-0">
                 Slope $\beta$ : <label for="regression-gradient" class="slider-label">4</label>
@@ -12,12 +16,81 @@
                 <input type="range" min=-5 max=20 value=3 step=0.1 class="range-slider" id="regression-intercept">
             </div>
         </form>
-        <div class="col-sm-12">
-            <h5>Average error <span id="errorLabel"></span></h4>
-        </div>
-        <div class="col-sm-12">
-            <div id="regression-chart-container"></div>
-        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>Statistic</th>
+                <th>Formula</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Sum of square errors (SSE)</td>
+                <td>$\sum (y_i - \hat{y}_i)^2$</td>
+                <td id='sse'>100</td>
+            </tr>
+            <tr>
+                <td>Sum of square deviation of model from mean (SSM)</td>
+                <td>$\sum (\hat{y}_i - \bar{y})^2$</td>
+                <td id='ssm'>100</td>
+            </tr>
+            <tr>
+                <td>r squared (Coefficient of determination)</td>
+                <td>$1 - \frac{SSE}{SST}$</td>
+                <td id='r-squared'>100</td>
+            </tr>
+            <tr>
+                <td>Sample size (number of data points) (<a href="#regr_count">REGR_COUNT<a />)</td>
+                <td>$n$</td>
+                <td id='n'>10</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-center">The following stats are for the optimal regression line</td>
+            </tr>
+            <tr>
+                <td>Mean of $x$ (<a href="#regr_avgx-and-regr_avgy">REGR_AVGX<a />)</td>
+                <td>$\bar{x} = \frac{1}{n}\sum{x_i}$</td>
+                <td id='x-bar'>100</td>
+            </tr>
+            <tr>
+                <td>Mean of $y$ (<a href="#regr_avgx-and-regr_avgy">REGR_AVGY<a />)</td>
+                <td>$\bar{y} = \frac{1}{n}\sum{y_i}$</td>
+                <td id='y-bar'>100</td>
+            </tr>
+            <tr>
+                <td>$S_{XX}$ (<a href="#regr_sxx-regr_syy-and-regr_sxy">REGR_SXX<a />)</td>
+                <td>$\sum (x_i - \bar{x})^2$</td>
+                <td id='sxx'>100</td>
+            </tr>
+            <tr>
+                <td>$S_{YY}$ (<a href="#regr_sxx-regr_syy-and-regr_sxy">REGR_SYY<a />)</td>
+                <td>$\sum (y_i - \bar{y})^2$</td>
+                <td id='syy'>100</td>
+            </tr>
+            <tr>
+                <td>$S_{XY}$ (<a href="#regr_sxx-regr_syy-and-regr_sxy">REGR_SXY<a />)</td>
+                <td>$\sum (x_i - \bar{x})(y_i - \bar{y})$</td>
+                <td id='sxy'>100</td>
+            </tr>
+            <tr>
+                <td>Optimal gradient $\beta$  (<a href="#regr_slope-regr_intercept-and-regr_r2">REGR_SLOPE<a />)</td>
+                <td>$\frac{S_{XY}}{S_{XX}}$</td>
+                <td id='beta'>100</td>
+            </tr>
+            <tr>
+                <td>Optimal intercept $\alpha$ (<a href="#regr_slope-regr_intercept-and-regr_r2">REGR_INTERCEPT<a />)</td>
+                <td>$\bar{y} - \beta\bar{x}$</td>
+                <td id='alpha'>100</td>
+            </tr>
+            <tr>
+                <td>Optimal r squared - for line with $\alpha$ and $\beta$  (<a href="#regr_slope-regr_intercept-and-regr_r2">REGR_R2<a />)</td>
+                <td>$\frac{S_{XY}^2}{S_{XX}S_{YY}}$</td>
+                <td id='optimal-r-squared'>100</td>
+            </tr>
+            <tr>
+                <td>Correlation</td>
+                <td>$\frac{S_{XY}}{\sqrt{S_{XX}S_{YY}}}$</td>
+                <td id='corr'>100</td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -29,17 +102,14 @@
 
 
     let linearRegressionExampleChart = (function linearRegression() {
+
         // sliders set up
         let gradientSlider = d3.select("#regression-gradient")
         gradientSlider.on("input", function () {
-            var gradient = this.value
-            d3.select('[for="regression-gradient"]').text(gradient)
             delayUpdate('regression-gradient')
         })
         let interceptSlider = d3.select("#regression-intercept")
         interceptSlider.on("input", function () {
-            var intercept = this.value
-            d3.select('[for="regression-intercept"]').text(intercept)
             delayUpdate('regression-intercept')
         })
 
@@ -51,10 +121,9 @@
             return [{ id: 'Linear-Model', values: dataValues, gradient: gradient, intercept: intercept }]
         }
 
-        const gradient = 4
-        const intercept = 3
+        const gradient = parseFloat(d3.select('#regression-gradient').node().value)
+        const intercept = parseFloat(d3.select('#regression-intercept').node().value)
         var data = getModelLine(gradient, intercept)
-
 
         /*
         When calling update directly from the slider
@@ -71,24 +140,84 @@
             timers[name] = setTimeout(update, 10)
         }
 
+        function stats(x, y, gradient, intercept) {
+            let yHat = x.map(x => (x * gradient) + intercept)
+            let sum = (a, b) => a + b
+            let xBar = x.reduce(sum) / x.length
+            let yBar = y.reduce(sum) / y.length
+
+            let SSM = yHat.map(yHat => Math.pow(yHat - yBar, 2)).reduce(sum)
+            let SSE = d3.zip(y, yHat).map(y_yHat => Math.pow(y_yHat[0] - y_yHat[1], 2)).reduce(sum)
+            let SST = y.map(y => Math.pow(y - yBar, 2)).reduce(sum)
+            let rSquared = 1 - (SSE / SST)
+
+            let SXX = x.map(x => Math.pow(x - xBar, 2)).reduce(sum)
+            let SYY = y.map(y => Math.pow(y - yBar, 2)).reduce(sum)
+            let SXY = d3.zip(x, y).map(xy => (xy[0] - xBar) * (xy[1] - yBar)).reduce(sum)
+
+            let beta = SXY / SXX
+            let alpha = yBar - beta * xBar
+            let optimalRSquared = (SXY * SXY) / (SXX * SYY)
+            let corr = SXY / Math.sqrt(SXX * SYY)
+
+            let precision = 2
+            d3.select('#sse').text(SSE.toFixed(precision))
+            d3.select('#ssm').text(SSM.toFixed(precision))
+            d3.select('#r-squared').text(rSquared.toFixed(precision))
+
+            d3.select('#x-bar').text(xBar.toFixed(precision))
+            d3.select('#y-bar').text(yBar.toFixed(precision))
+            d3.select('#sxx').text(SXX.toFixed(2))
+            d3.select('#syy').text(SYY.toFixed(2))
+            d3.select('#sxy').text(SXY.toFixed(2))
+            d3.select('#beta').text(beta.toFixed(2))
+            d3.select('#alpha').text(alpha.toFixed(2))
+            d3.select('#optimal-r-squared').text(optimalRSquared.toFixed(2))
+            d3.select('#corr').text(corr.toFixed(2))
+            console.log(`setting xbar = ${xBar}`)
+
+            return {
+                SXX: SXX, SYY: SYY, SXY: SXY,
+                alpha: alpha, beta: beta,
+                optimalRSquared: optimalRSquared,
+                corr: corr,
+                SSM: SSM, SSE: SSE, SST: SST,
+                rSquared: rSquared
+            }
+        }
+
         function update() {
             let gradient = parseFloat(d3.select('#regression-gradient').node().value)
             let intercept = parseFloat(d3.select('#regression-intercept').node().value)
+            d3.select('[for="regression-gradient"]').text(gradient)
+            d3.select('[for="regression-intercept"]').text(intercept)
             chart.log(`[Regression example] Updating with gradient = ${gradient}, intercept = ${intercept}`)
             let data = getModelLine(gradient, intercept)
+            stats(X, Y, gradient, intercept)
             chart.update(data)
         }
 
         // create new chart using Chart constructor
         const element = document.querySelector('#regression-chart-container')
-        X = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-        Y = [
-            -5.940727153, -6.435786057, 12.874649301, 35.910490613, 40.969651455, 27.466977488, 28.339904759, 48.022369501,
-            36.211253796, 55.04814023, 64.601433039, 49.319886277, 58.617754859, 68.895865026, 70.615746183, 67.422903544,
-            72.129222486, 73.571506718, 60.757254712, 79.604543856
+        const X = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        const Y = [
+            -5.940727153,
+            -6.435786057,
+            12.874649301,
+            35.910490613,
+            40.969651455,
+            27.466977488,
+            28.339904759,
+            48.022369501,
+            36.211253796,
+            55.04814023
         ]
         const chart = new RegressionExample(element, data, { duration: 0, startYAtZero: true, unit: '', yFormat: '.2f', debug: true }, X, Y);
+        stats(X, Y, gradient, intercept)
         return chart
     })()
+
+
+
 
 </script>
