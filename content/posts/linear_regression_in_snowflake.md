@@ -226,7 +226,7 @@ from temp_table;
 
 The functions above allow you to quickly calculate regression values in snowflake and understand the relationships between columns - but remember correlation is not causation and all that.
 
-For more about linear regression see my other linear regression article [here]({{< relref "linear_regression.md" >}}))
+For more about linear regression see my other linear regression article [here]({{< relref "linear_regression.md" >}})
 
 Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
 
