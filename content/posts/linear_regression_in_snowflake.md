@@ -37,7 +37,7 @@ The following chart visualises simple linear regression and allows you to vary t
 
 {{< snowflake_linear_regression >}}
 
-Before we get started with the sql functions let's make some toy data to play with! The following query generates the numbers from 1 to 10 for the x column and defines y as `4 * x` with some noise. We also added a few naughty rows with null values, this will help show off snowflakes functions above.
+Before we get started with the sql functions let's make some toy data to play with! The following query generates the numbers from 1 to 10 for the x column and defines y as `(4 * x) + 3` with some noise. We also added a few naughty rows with null values, this will help show off snowflakes functions above.
 
 ```sql
 create temporary table temp_table as (
