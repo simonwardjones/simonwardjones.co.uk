@@ -1,7 +1,7 @@
 ---
 title: "Linear Regression in Snowflake"
 date: 2021-04-20T17:01:59+01:00
-draft: true
+draft: false
 mathjax: true
 menu:
   main:
