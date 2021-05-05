@@ -72,15 +72,9 @@ We assume that $\theta$ ~ $Beta(a,b)$. In our example of the coin this graph mak
 
 Bayes' law says 
 
-sa
-
 $$
 P(A|B) = \frac{P(B|A)P(A)}{P(B)}
 $$
-
-sa
-
-sa
 
 
 Using this we can say that the posterior probability is proportional to the product of the Likelihood and the Prior, or
