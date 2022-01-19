@@ -52,3 +52,7 @@ Favicon and Icons
 - Icons are provided with fonts awesome https://fontawesome.com/icons?d=gallery&m=free
 
 Checking emojis compatibility - https://www.emojibase.com/emojilist/money
+
+## npm
+ 
+Currently using version 14
