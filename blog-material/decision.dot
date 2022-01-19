@@ -15,17 +15,17 @@ digraph Tree {
         fontname="Roboto-Light"
     ]
     question1[
-        label="⏱?\nDid the student do more\n than 5 hours study?\n(100 students)"
+        label="Did the student do more\n than 5 hours study?\n(100 students)"
         fillcolor=1
         color=2
     ]
     question2_1[
-        label="🧠?\nIs the students I.Q\nmore than 100?\n(70 students)"
+        label="Is the students I.Q\nmore than 100?\n(70 students)"
         fillcolor=1
         color=2
     ]
     question2_2[
-        label="🧠?\nIs the students I.Q\n more than 100?\n(30 students)"
+        label="Is the students I.Q\n more than 100?\n(30 students)"
         fillcolor=1
         color=2
     ]
@@ -34,10 +34,10 @@ digraph Tree {
         fillcolor=3
         color=4
     ]
-    out1[label="👨‍🎓 ✅ ❌\n20 students\n18 Passes\n2 Fails"]
-    out2[label="👨‍🎓 ✅ ❌\n50 students\n40 Passes\n10 Fails"]
-    out3[label="👨‍🎓 ✅ ❌\n5 students\n4 Passes\n1 Fails"]
-    out4[label="👨‍🎓 ✅ ❌\n25 students\n10 Passes\n15 Fails"]
+    out1[label="20 students\n18 Passes\n2 Fails"]
+    out2[label="50 students\n40 Passes\n10 Fails"]
+    out3[label="5 students\n4 Passes\n1 Fails"]
+    out4[label="25 students\n10 Passes\n15 Fails"]
 
     question1 -> question2_1[label=" Yes"]
     question1 -> question2_2[label=" No"]
