@@ -47,7 +47,7 @@ P(D|\theta)
 \end{align}
 
 
-The $\theta$ that maximises this likelihood is called the maximum likelihood estimator denoted $\theta_{ML}$ (which makes sense 🤪).
+The $\theta$ that maximises this likelihood is called the maximum likelihood estimator denoted $\theta_{ML}$.
 
 Maximising the likelihood in practise is achieved by maximising the log of the likelihood and the result is  the average of the observed data
 
@@ -57,7 +57,7 @@ $$
 
 In our example we have seen three heads so $x_1=x_2=x_3=1$ and then $\theta_{ML} = 1$. Therefore having seen three heads in a row we estimate the probability of seeing a fourth as $P(X=1)=\theta_{ML} = 1$. 
 
-Not exactly a genius prediction... 🤭
+Not exactly a genius prediction...
 
 This is where bayesian inference comes in and the concept of having a prior opinion (like tossing a heads probably has a probability near 1/2)
 

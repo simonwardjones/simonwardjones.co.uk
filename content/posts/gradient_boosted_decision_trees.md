@@ -14,22 +14,17 @@ categories:
   - Decision trees
 ---
 
-
-What is a `gradient boosted decision tree`? 🤷‍♂️
-
 This article is the fifth in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works
+    - how the algorithm works.
   2. [**The maths**]({{< relref "#the-maths" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
+    - derivations followed by an implementation in Python.
 
 Click
 - [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`
 - [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`
 - [here]({{< relref "decision_trees.md" >}}) if you missed `From zero to Decision Tree`
 - [here]({{< relref "random_forests.md" >}}) if you missed `From zero to Random Forest`
-
-Great if you have already read these!
 
 ---
 
@@ -79,15 +74,15 @@ For the first house our initial prediction $f_0$ was £0.82m (using the mean) an
 
 {{< table "table table-striped" >}}
 |     | True House Price 💰 | Initial Prediction $f_0$ | Predicted Error $f_1$ | Prediction $F_1 =f_0 + f_1$ |
-| --- | ------------------ | ------------------------ | --------------------- | ---------------------- |
-| 1   | £1m                | £0.82m                   | £0.17m                | £0.99m                 |
-| 2   | £0.75m             | £0.82m                   | -£0.09m               | £0.73m                 |
-| 3   | £0.72m             | £0.82m                   | -£0.1m                | £0.71m                 |
+| --- | ------------------ | ------------------------ | --------------------- | --------------------------- |
+| 1   | £1m                | £0.82m                   | £0.17m                | £0.99m                      |
+| 2   | £0.75m             | £0.82m                   | -£0.09m               | £0.73m                      |
+| 3   | £0.72m             | £0.82m                   | -£0.1m                | £0.71m                      |
 {{</table>}}
 
 **Additive model**
 
-Now we have a second prediction $F_1$ we can continue in a sequential manner, again calculating the error of our second prediction $e_2$ and training a tree $f_2$ to predict this second error. Then once again we add this second predicted error to the second prediction to get a third prediction $F_2 = F_1 + f_2$ and so on. As the models are summed together this approach is known as an `aditive model`. In general we have 
+Now we have a second prediction $F_1$ we can continue in a sequential manner, again calculating the error of our second prediction $e_2$ and training a tree $f_2$ to predict this second error. Then once again we add this second predicted error to the second prediction to get a third prediction $F_2 = F_1 + f_2$ and so on. As the models are summed together this approach is known as an `additive model`. In general we have 
 $$F_m =  F_{m-1} + f_m$$ 
 Where the next prediction $F_m$ is made up of the current prediction $F_{m-1}$ and the prediction of the error $f_m \sim e_m =y - F_{m-1}$ at this stage. In general the number of `weak learners` is a `hyper parameter` you have to choose.
 

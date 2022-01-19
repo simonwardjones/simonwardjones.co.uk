@@ -14,22 +14,15 @@ categories:
   - Decision trees
 ---
 
-
-What is a `decision tree`? 🤷‍♂️
-
-If you're interested read on, if you're not ... well this one is surprisingly intuitive, go on treat yourself, read on!
-
 This article is the third in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works
+    - how the algorithm works.
   2. [**The maths**]({{< relref "#the-maths" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
+    - derivations followed by an implementation in Python.
 
 Click
 - [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`
 - [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`
-
-If you have already read these congratulations!
 
 ---
 
@@ -39,21 +32,21 @@ So far we have seen `linear regression` introducing the idea of `regression` (pr
 
 A `decision tree` is also a supervised learning algorithm and can be used for either regression or for classification!
 
-Let's use the example of trying to predict whether a student 👨‍🎓 is going to pass an exam to explain.
+Let's use the example of trying to predict whether a student is going to pass an exam to explain.
 
-A decision tree works by splitting the training data into buckets (a.k.a `leaves`) by asking a series of questions. Imagine we have 100 training examples from the same exam last year where we know the student's I.Q. 🧠, how many hours ⏱ of revision they did and whether they passed the exam. We can split them based on whether they did more than 5 hours revision and  whether their I.Q. is above 100. It is easier to see this decision tree in the diagram below:
+A decision tree works by splitting the training data into buckets (a.k.a `leaves`) by asking a series of questions. Imagine we have 100 training examples from the same exam last year where we know the student's I.Q., how many hours of revision they did and whether they passed the exam. We can split them based on whether they did more than 5 hours revision and  whether their I.Q. is above 100. It is easier to see this decision tree in the diagram below:
 
 {{< decision_example >}}
 
 Now given a new student taking the exam this year we can predict whether they will pass using the decision tree and the student's `feature` values. We work out which `leaf` the new student would end up in by asking the questions in the decision tree. Our prediction is made using the most common result of the training data in the the same `leaf`.
 
-For example if a student has an I.Q. 🧠 of 110 and did 8 hours of revision ⏱ we would answer yes to both questions in the decision tree. Looking at this `leaf` we see that 18/20 students in the training data passed so we would predict this student will also pass. We can go further and say there is a 18/20 = 90% chance that they will pass.
+For example if a student has an I.Q. of 110 and did 8 hours of revision we would answer yes to both questions in the decision tree. Looking at this `leaf` we see that 18/20 students in the training data passed so we would predict this student will also pass. We can go further and say there is a 18/20 = 90% chance that they will pass.
 
 Now we know how to use a decision tree to make predictions we can look at how to build the tree. Which questions should we ask when splitting the data?
 
 **Impurity**
 
-When building the decision tree ideally we want to split the training data into leaves so that the students in each leaf either all passed ✅ or all failed ❌; that way we know if another student ends up being in the same `leaf` they are very likely to have the same result. In reality this perfect split might not be possible but we want to get as close as we can. The `impurity` of a leaf quantifies how mixed it is. If we looked in our example above, the 1st group has 18 passes and only 2 fails so has a low `impurity`.
+When building the decision tree ideally we want to split the training data into leaves so that the students in each leaf either all passed or all failed; that way we know if another student ends up being in the same `leaf` they are very likely to have the same result. In reality this perfect split might not be possible but we want to get as close as we can. The `impurity` of a leaf quantifies how mixed it is. If we looked in our example above, the 1st group has 18 passes and only 2 fails so has a low `impurity`.
 
 **Gini impurity**
 
@@ -64,11 +57,9 @@ The diagram below helps to visualise the gini impurity. The group of hexagons re
 
 {{< gini >}}
 
-We said above that ideally we want to have low impurity in the leaves of the decision tree, i.e. a low chance that two random students in a leaf have different results. The decision tree is built so that each split decreases the average impurity.
+Ideally we want to have low impurity in the leaves of the decision tree, i.e. a low chance that two random students in a leaf have different results. The decision tree is built so that each split decreases the average impurity.
 
-The algorithm checks splitting the data based on each different feature and each different feature value in the training data in order to find the best split. The best split is the one that decreases the impurity the most. The number of layers in the tree (or `depth`) is a parameter you get to choose when building the tree.
-
-And that's it!
+The algorithm checks splitting the data based on each different feature and each different feature value in the training data in order to find the best split. The best split is the one that decreases the impurity the most. The number of layers in the tree (or `depth`) is a parameter you choose when building the tree.
 
 ---
 
@@ -298,7 +289,7 @@ def predict_row_proba(self, row):
 
 There are a few more methods on the two classes, but I think that covers the main idea!
 
-Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
+Thanks for reading! Please get in touch with any questions, mistakes or improvements.
 
 
 {{< end_post >}}

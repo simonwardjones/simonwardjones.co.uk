@@ -15,29 +15,25 @@ categories:
 ---
 
 
-What is `logistic regression`? 🤷‍♂️
-
-If you're interested read on, if you're not ... well there's no harm in giving it a go!
-
 This article is the second in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works
+    - how the algorithm works.
   2. [**The maths**]({{< relref "#the-maths" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
+    - derivations followed by an implementation in Python.
 
-Click [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`. If you have already read that congratulations!
+Click [here]({{< relref "linear_regression.md" >}}) if you missed `Linear Regression`.
 
 ---
 
 ## The idea and key concepts
 
-In `regression` (for example `linear regression` - as discussed in the previous article) we predict a continuous output such as house prices where the correct answer can be any number. `Logistic regression` is part of a family of machine learning algorithms called `classification algorithms`. These are used to predict the outcome from a discrete set of `categories`. Logistic regression in particular is used when we are trying to predict a binary outcome, by this we mean a $1$ or a $0$, think success ✅ or failure ❌.
+In `regression` (for example `linear regression` - as discussed in the previous article) we predict a continuous output such as house prices where the correct answer can be any number. `Logistic regression` is part of a family of machine learning algorithms called `classification algorithms`. These are used to predict the outcome from a discrete set of `categories`. Logistic regression in particular is used when we are trying to predict a binary outcome, by this we mean a $1$ or a $0$, think success or failure.
 
-Again it is much easier to explain with an example. Let's say we are trying to predict whether a student is going to pass an exam. As with linear regression we use the input `features` to predict the result. In this case let's say we know the students I.Q. 🧠 and how many hours ⏱ of revision they have done. We use these features to make a prediction.
+Again it is much easier to explain with an example. Let's say we are trying to predict whether a student is going to pass an exam. As with linear regression we use the input `features` to predict the result. In this case let's say we know the students I.Q. and how many hours of revision they have done. We use these features to make a prediction.
 
-In linear regression we used a `linear combination` of the features to make a prediction, but this doesn't work when trying to predict a binary outcome. Remember a linear combination is just the sum of the each feature scaled by a coefficient representing how important the feature is.
+In linear regression we used a `linear combination` of the features to make a prediction, but this doesn't work when trying to predict a binary outcome.
 
-Logistic regression works instead by predicting a probability of success ✅ but a probability has to be between $0$ and $1$! In order that the prediction is between $0$ and $1$ logistic regression takes the linear combination and `transforms` it to be between 0 and 1.
+Logistic regression works instead by predicting a probability of success but a probability has to be between $0$ and $1$! In order that the prediction is between $0$ and $1$ logistic regression takes the linear combination and `transforms` it to be between 0 and 1.
 
 Logistic regression takes the combination of the features and coefficients and transforms them to be between $0$ and $1$ so that large values have a high probability and small values have a low probability (in case of predicting whether a student will pass an exam we expect students with a high combined I.Q. and revision time to have a high chance of passing). The transformation uses the `sigmoid function` as plotted below (notice the large $x$ values have high probability and vice versa).
 
@@ -47,7 +43,7 @@ For our example we would likely predict a student has passed if the logistic mod
 
 {{< sigmoid_function >}}
 
-Like linear regression, logistic regression is a `supervised learning algorithm` which means it uses `training data` to find the best coefficients. The Logistic regression algorithm chooses the coefficients to minimise the average error between the predicted results and the true results for the training data:
+The Logistic regression algorithm chooses the coefficients to minimise the average error between the predicted results and the true results for the training data:
 
 {{< table "table table-striped" >}}
 | I.Q. 🧠 | Hours revision ⏱ | Exam result? | Predicted result |
@@ -57,7 +53,7 @@ Like linear regression, logistic regression is a `supervised learning algorithm`
 | 90     | 8                | ✅ Pass       | ✅ Pass           |
 {{</table>}}
 
-It does this by iteratively changing the coefficients to reduce the error. The specifics of this is process are detailed in the next section.
+It does this by iteratively changing the coefficients to reduce the error.
 
 ---
 
@@ -86,7 +82,7 @@ So the logistic model is:
 \hat{y} = \frac{1}{1+e^{-\sum^{n}_{i=0}\beta_ix_i}}
 {{</formula>}}
 
-A hat above a variable is often used to represent a prediction of the true value. Here the y hat represents the logistic model prediction of the `probability` of success.
+Here the y hat represents the logistic model prediction of the `probability` of success.
 
 **Different formulation**
 
@@ -280,7 +276,7 @@ Now if we take the above gradient we derived above and re-write it splitting the
 \end{bmatrix}\\
 {{</formula>}}
 
-From this (I hope you can convince yourself, assuming you know matrix multiplication) we can write
+From this we can write
 {{<formula class="responsive-math">}}
 \begin{align}
 \nabla_{\boldsymbol{\beta}} J
@@ -298,7 +294,7 @@ where
 \mathbf{\hat{y}} = \sigma(\mathbf{X}\mathbf{\boldsymbol{\beta}})
 {{</formula>}}
 
-Now that we have derived the gradient formula 🎉 let's implement gradient descent in python 🐍 to iteratively step towards the optimal coefficients.
+Now that we have derived the gradient formula let's implement gradient descent in python to iteratively step towards the optimal coefficients.
 
 **Python implementation**
 
@@ -310,7 +306,7 @@ class LogisticRegression():
 
 ```
 
-Next we define the \_\_init\_\_ method on the class setting the `learning rate`. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
+Next we define the \_\_init\_\_ method on the class setting the `learning rate`. The gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
 
 
 ```python
@@ -376,7 +372,7 @@ def fit(self, X, y, n_iter=1000):
 
 ```
 
-And that's it. Here’s an example use of the class:
+Here’s an example use of the class:
 
 ```python
 
@@ -388,7 +384,7 @@ logistic_regression.predict(example_X)
 ```
 
 
-Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
+Thanks for reading! Please get in touch with any questions, mistakes or improvements.
 
 
 {{< end_post >}}

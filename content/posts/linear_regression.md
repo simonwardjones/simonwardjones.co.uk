@@ -15,28 +15,22 @@ categories:
   - Linear Models
 ---
 
-What is `linear regression` 🤷‍♂️?
-
-If you're interested read on, if you're not, see yourself out. 🚪
-
 This article is the first of a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works
+    - how the algorithm works.
   2. [**The maths**]({{< relref "#the-maths" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
+    - derivations followed by an implementation in Python.
 
 ---
 
 ## The idea and key concepts
 
 
-`Regression` is any algorithm that takes a collection of inputs and predicts an output.
+`Regression` is a set of statistical processes for estimating the relationships between a dependent variable and one or more independent variables.
 
-Let's say we are trying to predict how much a house 🏡 will sell for in a desirable area of North London. We may know a few facts about the house e.g. the square footage of the house 🏠, the square footage of the garden 🌳 and whether there is a garage 🚙.
+Let's say we are trying to predict how much a house will sell for in a desirable area of North London. We may know a few `features` or `independent variables` about the house e.g. the square footage of the house, the square footage of the garden and whether there is a garage.
 
-In machine learning we call these facts `variables` or `features`. Intuitively we may value the house using a combination of these features.
-
-Linear regression uses a `linear combination` of the features to predict the output. This just means summing up each feature value multiplied by a number (a `coefficient`) to represent how important that feature is e.g
+Linear regression uses a `linear combination` of the features to predict the output. This just means summing up each feature value multiplied by a  `coefficient` to represent how important that feature is e.g
 
 {{<formula class="responsive-math-unfold">}}
 \begin{aligned}
@@ -48,17 +42,9 @@ Linear regression uses a `linear combination` of the features to predict the out
 
 In this example the house price is calculated as $£1000$ for each square foot of the house plus $£50$ for each foot in the garden plus $£1000$ if there is a garage. If we took a nice $600$ square foot property with a small $500$ square foot garden and no garage our linear regression model would predict the house is worth $£625,000$.
 
-{{<formula class="responsive-math-4">}}
-\begin{aligned}
-\text{House Price} &= (£1000 * \text{🏠}) + (£50 * \text{🌳}) + (£1000 * \text{🚙 ?}) \\
-&= (£1000 * 600) + (£50 * 500) + (£1000 * 0)\\
-&= £625,000
-\end{aligned}
-{{</formula>}}
+Now that's how the linear regression model works! The question now is how do you choose the coefficients for the features, in our example the $1000$ the $50$ and the $1000$?
 
-Now that's how the linear regression model works! The question now is how do you choose the coefficients for the features, in our example the $1000$ the $50$ and the $1000$? 🤷‍♂️
-
-A common type of machine learning algorithm called `supervised learning algorithms` find these parameters using `training data`. Training data is just examples where you already know the answer. In our case it is a list of houses where we know both the house features and the house prices in advance. Here is an example of three training examples with the model predictions:
+In `supervised machine learning` algorithms these parameters are estimated using `training data`. Training data is just examples where you already know the answer. In our case it is a list of houses where we know both the house features and the house prices in advance. Here is an example of three training examples with the model predictions:
 
 {{< table "table table-striped" >}}
 | House size 🏠 | Garden size 🌳 | Garage? 🚙 | True House Price 💰 | Predicted house price 💰 |
@@ -87,17 +73,13 @@ You can vary the price per square foot (the coefficient in the model) to see how
 
 The best coefficients - that minimise the error - can be found by solving an equation called the `normal equation` or by `gradient descent`. 
 
-Gradient descent works by iteratively changing the coefficients to reduce the error between the predictions and the true house prices. The specifics of this process requires more maths and is detailed in the next section. I haven't gone into the normal equations in this post.
+Gradient descent works by iteratively changing the coefficients to reduce the error between the predictions and the true house prices. The specifics of this process is detailed in the next section. I haven't gone into the normal equations in this post.
 
 In short the linear regression algorithm chooses the coefficients to `minimise the average error` when predicting the house prices for all the training examples.
-
-And that's linear regression!
 
 ---
 
 ## The maths
-
-In order to keep this as accessible as possible to people less familiar with mathematical concepts and notation I will include footnotes to explain where I think it may help.
 
 **The model**
 
@@ -111,7 +93,7 @@ If we let $y$ represent a single continuous target variable and $x_1,\dots,x_n$ 
 \end{align}
 {{</formula>}}
 
-A hat above a variable is often used to represent a prediction of the true value. Here the y hat represents the linear model prediction.
+Here the y hat represents the linear model prediction.
 
 **The cost function**
 
@@ -224,7 +206,7 @@ Now if we take the above gradient we derived above and re-write it splitting the
 \end{bmatrix}\\
 {{</formula>}}
 
-From this (I hope you can convince yourself, assuming you know matrix multiplication) we can write
+From this we can write
 {{<formula class="responsive-math">}}
 \begin{align}
 \nabla_{\boldsymbol{\beta}} J
@@ -242,7 +224,7 @@ From this (I hope you can convince yourself, assuming you know matrix multiplica
 
 Where $\mathbf{\hat{y}} = \mathbf{X}\mathbf{\boldsymbol{\beta}}$ are the predictions of the linear model.
 
-Now that we have derived the gradient formula 🎉 let's implement gradient descent in python 🐍 to iteratively step towards the optimal coefficients.
+Now that we have derived the gradient formula let's implement gradient descent in python to iteratively step towards the optimal coefficients.
 
 **Python implementation**
 
@@ -254,7 +236,7 @@ class LinearRegression():
 
 ```
 
-Next we define the \_\_init\_\_ method on the class setting the `learning rate`. Remember the gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
+Next we define the \_\_init\_\_ method on the class setting the `learning rate`. The gradient tells you in which direction to change the coefficients. The gradient descent algorithm repeatedly updates the coefficients by stepping in the direction of `negative gradient`. The size of the step is governed by the learning rate.
 
 ```python
 
@@ -274,8 +256,8 @@ def cost(self, y, y_pred):
     return cost
 
 ```
-Next let's define a method to calculate the `gradient` of the `cost function`
 
+Next let's define a method to calculate the `gradient` of the `cost function`
 ```python
 
 def gradient(self, y, y_pred, X):
@@ -285,6 +267,7 @@ def gradient(self, y, y_pred, X):
     return gradient
 
 ```
+
 Before we define the `fit` method to implement `gradient descent` let's define one last method which predicts the target variable $y$ given the current coefficients and features $X$
 ```python
 
@@ -315,7 +298,7 @@ def fit(self, X, y, n_iter=1000):
 
 ```
 
-And that's it. Here’s an example use of the class:
+Here’s an example use of the class:
 
 ```python
 
@@ -326,7 +309,7 @@ linear_regression.predict(X_new)
 
 ```
 
-Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
+Thanks for reading! Please get in touch with any questions, mistakes or improvements.
 
 {{< end_post >}}
 

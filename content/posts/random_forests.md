@@ -15,20 +15,16 @@ categories:
 ---
 
 
-What is a `random forest`? 🤷‍♂️
-
 This article is the fourth in a series covering fundamental machine learning algorithms. Each post will be split into two parts
   1. [**The idea and key concepts**]({{< relref "#the-idea-and-key-concepts" >}})
-    - Most people should be able to follow this section and learn how the algorithm works
+    - how the algorithm works.
   2. [**The maths**]({{< relref "#the-maths" >}})
-    - This is for the interested reader and will include detailed mathematical derivations followed by an implementation in Python
+    - derivations followed by an implementation in Python.
 
 Click
 - [here]({{< relref "linear_regression.md" >}}) if you missed `From zero to Linear Regression`
 - [here]({{< relref "logistic_regression.md" >}}) if you missed `From zero to Logistic Regression`
 - [here]({{< relref "decision_trees.md" >}}) if you missed `From zero to Decision Tree`
-
-Great if you have already read these!
 
 ---
 
@@ -89,7 +85,6 @@ To make a prediction using a random forest you predict the probability of succes
 
 The number of trees to include in the forest is a parameter you choose when building the model.
 
-And that's it!
 
 ---
 
