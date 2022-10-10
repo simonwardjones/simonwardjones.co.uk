@@ -5,14 +5,16 @@
 <meta property="og:title" content="{{ .Title }}" />
 <meta property="og:description" content="{{ .Summary }}" />
 <meta property="og:url" content="{{ .Permalink }}" />
-{{ with .Params.image }}<meta property="og:image" content="{{$.Site.BaseURL}}{{ . }}" />{{ end }}
+{{ with .Params.image }}
+<meta property="og:image" content="{{$.Site.BaseURL}}{{ . }}" />{{ end }}
 
 <!-- twitter tags -->
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="{{ index .Site.Params "twitter_handle" }}" />
+<meta name="twitter:site" content="{{ index .Site.Params " twitter_handle" }}" />
 <meta name="twitter:title" content="{{ .Title }}" />
 <meta name="twitter:description" content="{{ .Summary }}" />
-{{ with .Params.image }}<meta name="twitter:image" content="{{$.Site.BaseURL}}{{ . }}"/>{{ end }}
+{{ with .Params.image }}
+<meta name="twitter:image" content="{{$.Site.BaseURL}}{{ . }}" />{{ end }}
 
 <!-- canonical -->
 <link rel="canonical" href="{{ .Permalink }}" />
@@ -22,9 +24,9 @@
 <link rel="manifest" href="/site.webmanifest">
 
 <!-- Loop through webpack assets here to get css (js in footer) -->
-{{ range .Site.Data.manifest  }}
-{{ if strings.HasSuffix . "css" }}
+{{ range .Site.Data.manifest }}
 <link rel="stylesheet" type="text/css" href="/{{.}}">
+{{ if strings.HasSuffix . "css" }}
 {{ end }}
 {{ end }}
 
