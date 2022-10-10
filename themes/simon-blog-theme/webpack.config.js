@@ -4,6 +4,7 @@ const path = require('path');
 // Clean webpack deletes old build artefacts
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'production',
@@ -19,21 +20,17 @@ module.exports = {
         }),
         new WebpackManifestPlugin({
             fileName: '../data/manifest.json',
-        })
+        }),
+        new CleanWebpackPlugin(),
     ],
     module: {
         rules: [
             {
-                test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'fonts/'
-                        }
-                    }
-                ]
+                test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'fonts/[name][ext]',
+                }
             },
             {
                 test: /\.(scss)$/,

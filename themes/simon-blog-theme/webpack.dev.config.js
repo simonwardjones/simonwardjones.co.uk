@@ -21,23 +21,16 @@ module.exports = {
         new WebpackManifestPlugin({
             fileName: '../data/manifest.json',
         }),
-        new CleanWebpackPlugin({
-            dry: false
-        })
+        new CleanWebpackPlugin(),
     ],
     module: {
         rules: [
             {
-                test: /\.(svg|eot|woff|woff2|ttf)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: '/fonts/'
-                        }
-                    }
-                ]
+                test: /\.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'fonts/[name][ext]',
+                }
             },
             {
                 test: /\.(scss)$/,
