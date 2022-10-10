@@ -12,6 +12,7 @@ summary: A visual 👀 tour of probability distributions
 image: "img/probability_distributions.png"
 categories:
   - Probability and Statistics
+  - Visualisation
 ---
 
 

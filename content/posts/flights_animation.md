@@ -1,16 +1,16 @@
 ---
-title: "Flights-Animation"
+title: "Flights Animation"
 date: 2022-10-10T20:48:09+01:00
-draft: true
+draft: false
 mathjax: false
 menu:
   main:
     parent: 'Posts'
-    name: "Flights-Animation"
+    name: "Flights Animation"
 summary: "Check out my article on Flights-Animation"
-image: "img/flights-animation.png"
+image: "img/flights_animation.png"
 categories:
-  -
+  - Visualisation
 ---
 
 Having originally explored visualising all the flights I have every taken using python, first in matplotlib with basemap and then later using plotly and then folium I have always been a little disappointed with the results. 
