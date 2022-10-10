@@ -6,6 +6,6 @@ mathjax: false
 summary: Simon Ward-Jones' personal website - all things data science 
 ---
 
-Welcome to my website. I am a Data Scientist living and working in London. This site is always a work in progress but I will use it to share some of side projects and things I find interesting. Mostly this will be all things data-science!
+Hi There! I am Simon, a Data Scientist living and working in London.
 
-The website is still being built (using HUGO static site generator) so if you see a mistake let me know!
+Welcome to my website, which I am still building with the static site generator HUGO. You will find my side projects and a few exciting things from me -  mostly this will be all things data-science! If you see a mistake or error, please let me know!
