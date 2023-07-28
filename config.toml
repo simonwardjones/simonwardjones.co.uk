@@ -1,10 +1,10 @@
 
 baseURL = "https://simonwardjones.co.uk/"
-languageCode = "en-GB"
-title = "Simon Ward-Jones"
-theme = "simon-blog-theme"
-googleAnalytics = "UA-168219404-1"
 enableRobotsTXT = true
+googleAnalytics = "G-4D9QDJW5DC"
+languageCode = "en-GB"
+theme = "simon-blog-theme"
+title = "Simon Ward-Jones"
 
 [taxonomies]
 category = "categories"
@@ -14,10 +14,10 @@ formspree = "https://formspree.io/xrgyqgjw"
 twitter_handle = "@SimonWardJones"
 
 [social]
-linkedin="https://www.linkedin.com/in/simon-ward-jones-357b16aa"
 email = "simonwardjones16@gmail.com"
-phone = "+447545629774"
-github = "https://github.com/simonwardjones"
-twitter = "https://twitter.com/SimonWardJones"
 facebook = "https://www.facebook.com/simon.wardjones"
+github = "https://github.com/simonwardjones"
 instagram = "https://www.instagram.com/simonw_j/"
+linkedin = "https://www.linkedin.com/in/simon-ward-jones-357b16aa"
+phone = "+447545629774"
+twitter = "https://twitter.com/SimonWardJones"
