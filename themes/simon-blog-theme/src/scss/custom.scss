@@ -8,6 +8,7 @@
 }
 */
 
+
 // Nicer subheading in blog posts
 .subheading {
     border: medium;
@@ -28,7 +29,7 @@ mjx-container {
     -ms-overflow-style: none;
 }
 
-// fix scroll on windows 
+// fix scroll on windows
 mjx-container::-webkit-scrollbar {
     width: 0;
     height: 0;
@@ -51,8 +52,9 @@ mjx-container::-webkit-scrollbar {
 
 
 pre {
-    padding-left: 4px;
+    padding: 1.5em;
     overflow-x: auto;
+    padding: 15px;
 }
 
 pre code {
@@ -71,6 +73,7 @@ pre code {
     max-width: 100%;
 }
 
+
 @include media-breakpoint-down(sm) {
     $columns: 5;
 
@@ -80,9 +83,10 @@ pre code {
         }
     }
 
+    // Previous i set the margin to -15px to make it go to the edge on mobile
     pre {
-        margin-left: -15px;
-        margin-right: -15px;
+        // margin-left: -15px;
+        // margin-right: -15px;
         padding-left: 4px;
         font-size: .75em;
     }
