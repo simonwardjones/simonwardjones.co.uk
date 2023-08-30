@@ -15,7 +15,7 @@ categories:
   - Linear Models
 ---
 
-A simple linear regression model is a linear regression model where there is only one independent variable $x$. The dependent variable $y$ is modelled as a linear function of $x$. More simply put the relationship between $x$ and $y$ is described as a straight line with slope $\beta$ (a.k.a gradient) and intercept $\alpha$. 
+A simple linear regression model is a linear regression model where there is only one independent variable $x$. The dependent variable $y$ is modelled as a linear function of $x$. More simply put the relationship between $x$ and $y$ is described as a straight line with slope $\beta$ (a.k.a gradient) and intercept $\alpha$.
 
 {{<formula class="formular" >}}
 y=\alpha + \beta x
@@ -47,7 +47,7 @@ create temporary table temp_table as (
     from table(generator(rowcount => 20)) G
 
     union all
-    
+
     select
         *
     from values (null, 100), (50, null)
@@ -100,7 +100,7 @@ Similarly `REGR_VALY(y , x)` is equivalent to `case when x is not null then y el
 `REGR_COUNT` is similar to the normal sql `count` function but only returns the number of non null pairs (x, y). In terms of regression this can be used to calculate the sample size $n$. The following query calculates the same thing 3 times (starting to show how the functions in Snowflake help to simplify)
 
 ```sql
-select 
+select
     regr_count(y, x) as n,
     count(regr_valx(y, x)) as n_2,
     count(case when y is not null then x else null end) as n_3
@@ -135,7 +135,7 @@ with averages as (
         avg(case when x is not null then y else null end) as y_mean
     from temp_table
 )
-select 
+select
     sum(pow(case when y is not null then x else null end - x_mean, 2)) as sxx,
     sum(pow(case when x is not null then y else null end - y_mean, 2)) as syy,
     sum(
@@ -189,7 +189,7 @@ statistics as (
         sum(pow(case when y is not null then x else null end - x_mean, 2)) as sxx,
         sum(pow(case when x is not null then y else null end - y_mean, 2)) as syy,
         sum(
-            (case when y is not null then x else null end - x_mean) * 
+            (case when y is not null then x else null end - x_mean) *
             (case when x is not null then y else null end - y_mean)
         ) as sxy
     from temp_table
@@ -224,7 +224,7 @@ from temp_table;
 {{</table>}}
 
 
-The functions above allow you to quickly calculate regression values in snowflake and understand the relationships between columns - but remember correlation is not causation and all that.
+The functions above allow you to quickly calculate regression values in snowflake and understand the relationships between columns - but remember correlation is not causation s that.
 
 For more about linear regression see my other linear regression article [here]({{< relref "linear_regression.md" >}})
 

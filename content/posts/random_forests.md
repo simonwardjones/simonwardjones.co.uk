@@ -96,19 +96,16 @@ The number of trees to include in the forest is a parameter you choose when buil
 As previously we will build the implementation in an object oriented fashion defining a class for the random forest. For the full code (with doc strings) it's on github [here](https://github.com/simonwardjones/machine_learning/blob/master/machine_learning/random_forest.py).
 
 ```python
-
 class RandomForest():
-
 ```
 
-First we define the \_\_init\_\_ method on the class setting the various parameters for each tree as in the previous article. 
+First we define the \_\_init\_\_ method on the class setting the various parameters for each tree as in the previous article.
 
 
 However we also define the number of trees in the forest as `n_trees`. The parameter `bootstrap` defines whether to use a bootstrap sample, True by default. The `max_features` parameter governs how many random features are considered when splitting a node, by default this the square root of the total number of features as explained above.
 
 
 ```python
-
 def __init__(self,
              max_depth=2,
              min_samples_split=2,
@@ -132,13 +129,11 @@ def __init__(self,
     self.is_fitted = False
     self.trees = []
     np.random.seed(1)
-
 ```
 
 The fit method below builds `n_trees` decision trees storing them in the `trees` attribute. Most of the hard work is actually done by the `DecisionTree` class from the previous article.
 
 ```python
-
 def fit(self, X, y):
     y_shape = (X.shape[0], 1)
     data = np.concatenate((X, y.reshape(y_shape)), axis=1)
@@ -155,13 +150,11 @@ def fit(self, X, y):
         tree.fit(X, y)
         self.trees.append(tree)
     self.is_fitted = True
-
 ```
 
 Next we will look at the `_samples` method that is used to create the bootstrap samples.
 
 ```python
-
 def _samples(self, data):
     n_rows = data.shape[0]
     for _ in range(self.n_trees):
@@ -173,13 +166,11 @@ def _samples(self, data):
                 size=n_rows,
                 replace=True)
             yield data[random_rows, :]
-
 ```
 
 Finally we will look at the `predict_proba` method used to predict the class probabilities of a new sample by averaging the probabilities from each tree.
 
 ```python
-
 def predict_proba(self, data):
     if self.is_classifier:
         return np.argmax(self.predict_proba(data), axis=-1)
@@ -187,7 +178,6 @@ def predict_proba(self, data):
         return np.stack(
             list(tree.predict(data) for tree in self.trees),
             axis=-1).mean(axis=-1)
-
 ```
 
 Thanks for reading! 👏 Please get in touch with any questions, mistakes or improvements.
