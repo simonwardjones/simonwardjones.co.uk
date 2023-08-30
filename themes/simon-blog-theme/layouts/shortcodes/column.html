@@ -1,0 +1,5 @@
+<!-- pass the class into the dic -->
+{{ $class := (.Get "class") | default "col-md" }}
+<div class="{{ $class }}">
+    {{ .Inner }}
+</div>
