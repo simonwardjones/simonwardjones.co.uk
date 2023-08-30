@@ -54,5 +54,9 @@ Favicon and Icons
 Checking emojis compatibility - https://www.emojibase.com/emojilist/money
 
 ## npm
- 
+
 Currently using version 14
+
+## Info on Hugo
+
+`{{% shortcode %}}` vs `{{< shortcode >}}` - both these call the shortcode but the first processes the inner with page’s rendering processor
