@@ -4,9 +4,9 @@ date: 2023-08-24T22:01:08+01:00
 draft: false
 mathjax: false
 menu:
-main:
-parent: 'Posts'
-name: "SVG Colour Wheel"
+  main:
+    parent: 'Posts'
+    name: "SVG Colour Wheel"
 summary: "Making an SVG Colour Wheel"
 image: "img/svg_colour_wheel.svg"
 categories:
