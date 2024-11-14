@@ -14,7 +14,6 @@ categories:
   - Visualisation
 ---
 
-# Thompson Sampling
 ---
 
 A `multi-armed bandit` problem is one in which you are faced with a number of options (often called `arms` or `variants`
