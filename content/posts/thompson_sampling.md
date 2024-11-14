@@ -83,7 +83,7 @@ So the Thompson sampling algorithm can be boiled down to
 1. Initialise the priors $p(\theta_k) = \text{Beta}(a=1, b=1)$ for the conversion probability of each algorithm
 2. At each step
    1. **Sample the model**  $\hat{\theta}$ from the current prior $p(\theta_k)$
-   2. **Select the optional action** $x_k$ which correspond to the largest $\hat{\theta}$
+   2. **Select the optimal action** $x_k$ which correspond to the largest $\hat{\theta}$
    3. **Observe the outcome and update the prior distribution** $p(\theta_k)$ for the selected action $x_k$ using Bayes rule.
       In the bernoulli case update the beta distribution params as $a = a + y_k, b = b + 1 - y_k$
 
