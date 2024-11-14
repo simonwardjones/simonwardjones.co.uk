@@ -91,14 +91,7 @@ So the Thompson sampling algorithm can be boiled down to
 ### Thompson sampling simulation
 
 To take this example further let's run a simulation where somehow we actually know the true click through rate for each
-algorithm. We can then compare the performance of Thompson sampling to greedy sampling or a classic A/B test.
-
-Let's say that the click through rate for each algorithm is as follows:
- - Algorithm A: 0.1 or 10% of users click
- - Algorithm B: 0.2 or 20% of users click
- - Algorithm C (the control): 0.3 or 17% of users click
-
-We can simulate the performance of Thompson sampling. Select the True CTR for each algorithm and then simulate the process of Thompson sampling.
+algorithm. Select the True CTR for each algorithm and then simulate the process of Thompson sampling.
 
 {{< thompson_sampling >}}
 
