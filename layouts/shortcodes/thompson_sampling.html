@@ -1,0 +1,341 @@
+<div class="chart">
+    <div class="row controls">
+        <form class="col-md-4" id="algorithm-A">
+            <div class="form-group m-0">
+                <label for="algorithm-A" class="slider-label">Algorithm A conversion: 0.1</label>
+                <input type="range" min=0 max=1 value=.1 step=0.01 id="algorithm-A-prob" style="width: 100%">
+            </div>
+        </form>
+        <form class="col-md-4" id="algorithm-B">
+            <div class="form-group m-0">
+                <label for="algorithm-B" class="slider-label">Algorithm B conversion: 0.2</label>
+                <input type="range" min=0 max=1 value=.2 step=0.01 id="algorithm-B-prob" style="width: 100%">
+            </div>
+        </form>
+        <form class="col-md-4" id="algorithm-C">
+            <div class="form-group m-0">
+                <label for="algorithm-C" class="slider-label">Algorithm C conversion: 0.18</label>
+                <input type="range" min=0 max=1 value=.18 step=0.01 id="algorithm-C-prob" style="width: 100%">
+            </div>
+        </form>
+
+    </div>
+</div>
+<hr>
+<div class="row">
+    <form class="col d-flex pb-3" id="simulation-slider">
+        <button name="play_pause" type="button" style="margin-right: 0.4em; width: 100px" id="play-button">Play</button>
+        <button name="step" type="button" style="margin-right: 0.4em; width: 100px" id="step-button">Step</button>
+        <label style="display: flex; align-items: center; width: 100%">
+            <input name=i type=range min=0 max=1000 value=0 step=1 style="flex-grow:1">
+            <output name=o style="margin-left: 0.4em;">0 Steps</output>
+        </label>
+    </form>
+</div>
+<div class="row">
+    <div class="col-sm-12 pb-3">
+        Chart showing the distribution of conversion parameter $\theta_k$ for each algorithm A, B, C. The distribution
+        is updated using Thompson Sampling algorithm.
+    </div>
+    <div class="col-sm-12 pb-3" id="distribution-container"></div>
+    <!-- Below we have a table showing the counts of each algorithion and the clicks and the current mean theta -->
+    <div class="col-sm-12">
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>Algorithm</th>
+                    <th>Observations</th>
+                    <th>Clicks</th>
+                    <th>Modelled $\theta_k$</th>
+                    <th>True $\theta$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Algorithm A</td>
+                    <td id="algorithm-A-observations">0</td>
+                    <td id="algorithm-A-clicks">0</td>
+                    <td id="algorithm-A-theta">0.5</td>
+                    <td id="algorithm-A-true-theta">0.1</td>
+                </tr>
+                <tr>
+                    <td>Algorithm B</td>
+                    <td id="algorithm-B-observations">0</td>
+                    <td id="algorithm-B-clicks">0</td>
+                    <td id="algorithm-B-theta">0.5</td>
+                    <td id="algorithm-B-true-theta">0.2</td>
+                </tr>
+                <tr>
+                    <td>Algorithm C</td>
+                    <td id="algorithm-C-observations">0</td>
+                    <td id="algorithm-C-clicks">0</td>
+                    <td id="algorithm-C-theta">0.5</td>
+                    <td id="algorithm-C-true-theta">0.18</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate-path@2.1.2/build/d3-interpolate-path.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-random@3.0.1/dist/d3-random.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.3/jstat.min.js"></script>
+
+<script src="/js/lineChart.js"></script>
+
+
+<script type="text/javascript">
+
+    function PlayUtility(values, { initial = 0,
+        step_size = 1,
+        steps = null,
+        delay = null,
+        autoplay = true,
+        loop = true,
+        loopDelay = null } = {}) {
+
+        let form = document.getElementById('simulation-slider')
+
+        values = Array.from(values)
+        let current_id = initial
+        let frame = null;
+        let timer = null;
+        let interval = null;
+
+        function start() {
+            // console.log('start')
+            form.play_pause.textContent = "Pause";
+            if (delay === null) frame = requestAnimationFrame(tick);
+            else interval = setInterval(tick, delay);
+        }
+
+        function stop() {
+            form.play_pause.textContent = "Play";
+            if (frame !== null) cancelAnimationFrame(frame), frame = null;
+            if (timer !== null) clearTimeout(timer), timer = null;
+            if (interval !== null) clearInterval(interval), interval = null;
+        }
+
+        function running() {
+            return frame !== null || timer !== null || interval !== null;
+        }
+
+        function tick() {
+            // if last value
+            if (form.i.value == values.length - 1) {
+                if (!loop) {
+                    stop();
+                    return
+                }
+                if (loopDelay !== null) {
+                    if (frame !== null) cancelAnimationFrame(frame), frame = null;
+                    if (interval !== null) clearInterval(interval), interval = null;
+                    timer = setTimeout(() => (step(), start()), loopDelay);
+                    return;
+                }
+            }
+            if (delay === null) frame = requestAnimationFrame(tick);
+            step()
+        }
+
+        function step() {
+            let current_value = form.i.valueAsNumber
+            let next_value = (current_value + step_size + values.length) % values.length
+            // console.log(`current value: ${current_value}, next value: ${next_value}`)
+            form.i.valueAsNumber = next_value
+            form.i.dispatchEvent(new CustomEvent("input", { bubbles: true }));
+        }
+
+        function registerCallback(callback) {
+            d3.select(form.i).on("input", callback)
+        }
+
+        function onInputChange(event) {
+            // console.log('oninput callback', event)
+            if (event && event.isTrusted && running()) stop();
+            form.value = values[form.i.valueAsNumber];
+            form.o.value = `${form.i.valueAsNumber} Steps`;
+        }
+
+        d3.select(form.i).on("input.a", onInputChange);
+
+        onInputChange("manual");
+
+        form.play_pause.onclick = () => {
+            if (running()) return stop();
+            form.i.valueAsNumber = (form.i.valueAsNumber + step_size) % values.length;
+            form.i.dispatchEvent(new CustomEvent("input", { bubbles: true }));
+            start();
+        };
+        form.step.onclick = () => {
+            if (running()) return stop();
+            step();
+        };
+
+        if (autoplay) start();
+        else stop();
+
+        if (steps !== null) {
+            form.i.min = 0;
+            form.i.max = steps - 1;
+        }
+
+        return {
+            start: start,
+            stop: stop,
+            running: running,
+            step: step,
+            form: form,
+            registerCallback: registerCallback,
+            tick: tick,
+        }
+    }
+
+
+    const thompsonSamplingComponent = (function () {
+
+        // sliders set up
+        ['A', 'B', 'C'].forEach(id => {
+            // console.log(`#algorithm-${id}-prob setup callback`)
+            let slider = d3.select(`#algorithm-${id}-prob`)
+            slider.on("input.a", function () {
+                var value = this.value
+                d3.select(`[for="algorithm-${id}"]`).text(`Algorithm ${id.toUpperCase()} conversion: ${value}`)
+                delayUpdate(id)
+            })
+        })
+
+        let timers = {}
+        function delayUpdate(name) {
+            clearTimeout(timers[name])
+            timers[name] = setTimeout(update, 10)
+        }
+
+        function getFrameData(N) {
+            // Empty frameData
+            let frameData = []
+            // Get the base conversion probabilities
+            let a_prob = parseFloat(d3.select('#algorithm-A-prob').node().value)
+            let b_prob = parseFloat(d3.select('#algorithm-B-prob').node().value)
+            let c_prob = parseFloat(d3.select('#algorithm-C-prob').node().value)
+            // console.log(`[Thompson Sampling] a_prob: ${a_prob}, b_prob: ${b_prob}, c_prob: ${c_prob}`)
+            let conversions = generateUserConversionSeries(a_prob, b_prob, c_prob)
+            // Initialise the distribution parameters, plotData and observedAndClicks
+            let params = { A: [1, 1], B: [1, 1], C: [1, 1] }
+            let plotData = ['A', 'B', 'C'].map(id => {
+                let [alpha, beta] = params[id]
+                let values = generateBetaXYSeries(alpha, beta)
+                return { id: id, values: values }
+            }, {})
+            let observedAndClicks = { A: [0, 0], B: [0, 0], C: [0, 0] }
+
+            // append the initial frame data
+            frameData.push({ plotData, observedAndClicks, params })
+
+            // loop over N steps generating the beta distribution for each algorithm as well as the params
+            // through the thompson sampling algorithm
+            for (let i = 0; i < N - 1; i++) {
+                let sampledTheta = ['A', 'B', 'C'].reduce((acc, id) => {
+                    let [alpha, beta] = params[id]
+                    let theta = jStat.beta.sample(alpha, beta)
+                    acc[id] = theta
+                    return acc
+                }, {})
+                // select the best arm
+                let bestArm = Object.keys(sampledTheta).reduce((a, b) => sampledTheta[a] > sampledTheta[b] ? a : b)
+                let reward = conversions[i][bestArm]
+                // update counts and clicks, params and plotData for the best arm
+                observedAndClicks = { ...observedAndClicks, [bestArm]: [observedAndClicks[bestArm][0] + 1, observedAndClicks[bestArm][1] + reward] }
+                params = { ...params, [bestArm]: [params[bestArm][0] + reward, params[bestArm][1] + 1 - reward] }
+
+                let [alpha, beta] = params[bestArm]
+                let values = generateBetaXYSeries(alpha, beta)
+                plotData = plotData.map(d => d.id === bestArm ? { id: bestArm, values: values } : d)
+
+                frameData.push({ plotData, observedAndClicks, params })
+            }
+
+            return frameData
+        }
+
+        function generateUserConversionSeries(a_prob, b_prob, c_prob) {
+            let N = 1000
+            a_clicks = Array.from({ length: N }, d3.randomBernoulli(a_prob))
+            b_clicks = Array.from({ length: N }, d3.randomBernoulli(b_prob))
+            c_clicks = Array.from({ length: N }, d3.randomBernoulli(c_prob))
+            // convert to array of objects keyed with a, b, c
+            return d3.zip(a_clicks, b_clicks, c_clicks).map(([A, B, C]) => ({ A, B, C }))
+        }
+
+        function generateBetaXYSeries(alpha, beta) {
+            let N = 500
+            let step = 1 / N
+            let theta = d3.range(step, 1, step)
+            return theta.map(theta => [theta, jStat.beta.pdf(theta, alpha, beta)])
+        }
+
+        function updateTable(observedAndClicks, params) {
+            ['A', 'B', 'C'].forEach(id => {
+                let [observed, clicks] = observedAndClicks[id]
+                let [alpha, beta] = params[id]
+                let true_theta = parseFloat(d3.select(`#algorithm-${id}-prob`).node().value)
+                d3.select(`#algorithm-${id}-observations`).text(observed)
+                d3.select(`#algorithm-${id}-clicks`).text(clicks)
+                d3.select(`#algorithm-${id}-theta`).text((alpha / (alpha + beta)).toFixed(2))
+                d3.select(`#algorithm-${id}-true-theta`).text(true_theta)
+            })
+        }
+
+        function update(e) {
+            let frameId = playHandle.form.i.valueAsNumber
+            let newPlotData = frameData[frameId].plotData
+            console.log(`[Thompson Sampling] Updating with frameId = ${frameId}`)
+            updateTable(frameData[frameId].observedAndClicks, frameData[frameId].params)
+            chart.update(newPlotData)
+        }
+
+        function onConversionChange(e) {
+            console.log(`[Thompson Sampling] Conversion change event: ${e.target.id}`)
+            // update frame data from outer scope to new frame data
+            //playHandle.stop()
+            //playHandle.form.i.valueAsNumber = 0
+            newFrameData = getFrameData(N)
+            newFrameData.forEach((frame, i) => {
+                frameData[i] = frame
+            })
+            const initialPlotData = frameData[0].plotData
+            chart.update(initialPlotData)
+            updateTable(frameData[0].observedAndClicks, frameData[0].params)
+        }
+
+        // create new chart using Chart constructor
+        let N = 1001
+        let frameData = getFrameData(N)
+
+        let values = d3.range(0, N)
+        const settings = {
+            initial: 0,
+            step_size: 1,
+            steps: N,
+            autoplay: false,
+            loop: false,
+            loopDelay: 1000,
+            delay: 20
+        }
+        const playHandle = PlayUtility(values, settings)
+        chartElement = document.getElementById('distribution-container')
+        let initialPlotData = frameData[0].plotData
+        const chart = new LineChart(chartElement, initialPlotData, { duration: 20, startYAtZero: true });
+        // add event listener to call chart update on input change
+        playHandle.registerCallback(update)
+
+        d3.select("#algorithm-A-prob").on("input.b", onConversionChange)
+        d3.select("#algorithm-B-prob").on("input.b", onConversionChange)
+        d3.select("#algorithm-C-prob").on("input.b", onConversionChange)
+
+
+        return chart
+    })()
+
+</script>
