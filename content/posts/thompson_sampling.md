@@ -68,7 +68,7 @@ It makes sense that we wish to choose an action $x_k$ to maximise the expected r
 $$
 \underset{k}{\operatorname{argmax}} E[r_k(y_k)|x_k] = \underset{k}{\operatorname{argmax}} \int r_k(y_k)q_{\theta_k}(y_k|x_k)dy_k
 $$
-Which in the simple bernoulli case is just boils down to choosing the action with the highest $\theta_k$.
+Which in the simple bernoulli case boils down to choosing the action with the highest $\theta_k$.
 $$
 \underset{k}{\operatorname{argmax}} E[r_k(y_k)] = \underset{k}{\operatorname{argmax}} \theta_k
 $$
