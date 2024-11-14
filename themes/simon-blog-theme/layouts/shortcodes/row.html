@@ -1,1 +1,4 @@
-<div class="row">{{ .Inner }}</div>
+{{ $class := (.Get "class") | default "" }}
+<div class="row {{ $class }}">
+    {{ .Inner }}
+</div>

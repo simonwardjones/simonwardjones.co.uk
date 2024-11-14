@@ -3,7 +3,7 @@ title: "Bayesian Inference"
 date: 2017-03-06T10:10:42+01:00
 draft: false
 mathjax: true
-menu: 
+menu:
   main:
     # weight: 1 # bring to top with high weight
     parent: Posts
@@ -11,6 +11,7 @@ summary: Explaining the basics of bayesian inference with the example of flippin
 image: "img/bayes.png"
 categories:
   - Probability and Statistics
+  - Visualisation
 ---
 
 ## Introduction
@@ -37,9 +38,9 @@ For our simple coin example lets assume $n = 3$ and $k = 3$ so we have seen thre
 
 ### Frequentist estimation
 
-One method of estimating $\theta$ is to maximise the "likelihood" of having seen the data $D$. We can define that likelihood as 
+One method of estimating $\theta$ is to maximise the "likelihood" of having seen the data $D$. We can define that likelihood as
 
-\begin{align} 
+\begin{align}
 P(D|\theta)
 & = \prod_{i=1}^nP(X = x_i|\theta) \\\\
 & = \prod_{i=1}^n\theta^{x_i}(1-\theta)^{1-x_i} \\\\
@@ -55,7 +56,7 @@ $$
 \theta_{ML} = \frac{1}{n}\sum_{i=1}^nx_i
 $$
 
-In our example we have seen three heads so $x_1=x_2=x_3=1$ and then $\theta_{ML} = 1$. Therefore having seen three heads in a row we estimate the probability of seeing a fourth as $P(X=1)=\theta_{ML} = 1$. 
+In our example we have seen three heads so $x_1=x_2=x_3=1$ and then $\theta_{ML} = 1$. Therefore having seen three heads in a row we estimate the probability of seeing a fourth as $P(X=1)=\theta_{ML} = 1$.
 
 Not exactly a genius prediction...
 
@@ -70,7 +71,7 @@ In a bayesian setting we think of the parameter $\theta$ itself as a random vari
 
 We assume that $\theta$ ~ $Beta(a,b)$. In our example of the coin this graph makes sense as the density of $\theta$ (the probability of getting heads) is centred around a half (assuming you haven't changed the graph).
 
-Bayes' law says 
+Bayes' law says
 
 $$
 P(A|B) = \frac{P(B|A)P(A)}{P(B)}
@@ -83,7 +84,7 @@ $$
 P(\theta|D)\propto P(D|\theta)*P(\theta)
 $$
 
-Hence using Bayes' theorem we can calculate the posterior distribution of $\theta$ using our initial prior and the information gained from having seen the data $D = \{x_1,...,x_n\}$. The posterior Distribution can be shown to also follow a Beta distribution, specifically 
+Hence using Bayes' theorem we can calculate the posterior distribution of $\theta$ using our initial prior and the information gained from having seen the data $D = \{x_1,...,x_n\}$. The posterior Distribution can be shown to also follow a Beta distribution, specifically
 $$
 P(\theta|D) \sim Beta(a+k,b+n-k)
 $$
