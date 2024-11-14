@@ -243,7 +243,9 @@
                     return acc
                 }, {})
                 // select the best arm
-                let bestArm = Object.keys(sampledTheta).reduce((a, b) => sampledTheta[a] > sampledTheta[b] ? a : b)
+                let maxTheta = Math.max(...Object.values(sampledTheta));
+                let bestArms = Object.keys(sampledTheta).filter(id => sampledTheta[id] === maxTheta);
+                let bestArm = bestArms[Math.floor(Math.random() * bestArms.length)];
                 let reward = conversions[i][bestArm]
                 // update counts and clicks, params and plotData for the best arm
                 observedAndClicks = { ...observedAndClicks, [bestArm]: [observedAndClicks[bestArm][0] + 1, observedAndClicks[bestArm][1] + reward] }
