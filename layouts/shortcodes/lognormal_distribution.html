@@ -35,15 +35,15 @@
             d3.select('[for="ln-sigma"]').text(sigma)
             delayUpdate('sigma')
         })
-    
+
         var data = generateLogNormal(0.5, 0.5)
-    
-    
+
+
         /*
         When calling update directly from the slider
         callback the slide becomes slow. To overcome this
         instead we run the update on a separate thread using a
-        setTimeout. 
+        setTimeout.
         We store the reference to the callback timer so
         so that if the update was called in the last 10 millisecond
         we terminate the previous timer.
@@ -53,7 +53,7 @@
             clearTimeout(timers[name])
             timers[name] = setTimeout(update, 10)
         }
-    
+
         function update() {
             let mu = parseFloat(d3.select('#ln-mu').node().value)
             let sigma = parseFloat(d3.select('#ln-sigma').node().value)
@@ -61,7 +61,7 @@
             let data = generateLogNormal(mu, sigma)
             chart.update(data)
         }
-    
+
         function generateLogNormal(mu, sigma) {
             let N = 500
             let min = jStat.lognormal.inv(0.001, mu, sigma )
@@ -76,10 +76,10 @@
                 }
                 return y
             })
-    
+
             return [{ id: 'logNormal-distribution', values: d3.zip(x, y) }]
         }
-    
+
         // create new chart using Chart constructor
         const element = document.querySelector('#lognormal-chart-container')
         const chart = new LineChart(element, data, {duration:500});
