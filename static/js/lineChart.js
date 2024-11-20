@@ -32,6 +32,8 @@ class LineChart {
 
             // svgBackground: "salmon",
             startYAtZero: false,
+            minY: null,
+            maxY: null,
 
             lineWidth: "0.2em",
             curveLine: true,
@@ -56,6 +58,7 @@ class LineChart {
         this.updateSVG()
         this.updateStyles()
         this.updateScales()
+        this.updateConfidenceIntervals()
         this.updateAxis()
         this.updateLines()
         this.updateLegend()
@@ -143,6 +146,13 @@ class LineChart {
         if (this.options.startYAtZero && yExtent[0] > 0) {
             yExtent[0] = 0;
         };
+
+        if (this.options.minY !== null) {
+            yExtent[0] = this.options.minY
+        }
+        if (this.options.maxY !== null) {
+            yExtent[1] = this.options.maxY
+        }
 
         this.xScale = d3.scaleLinear()
             .range([0, this.width - (left + right)])
@@ -234,7 +244,7 @@ class LineChart {
                     update.transition()
                         .duration(this.options.duration)
                         .attrTween("d", d => {
-                            // Warning! selection.select propagates data so don't do 
+                            // Warning! selection.select propagates data so don't do
                             // this.plot.select !
                             var previous = d3.select(`.${this.chart_id}#${d.id}`).attr("d")
                             var current = line(d.values)
@@ -250,11 +260,55 @@ class LineChart {
                             .remove(),
                     )
             )
+    }
+    updateConfidenceIntervals() {
+        // if confidenceIntervals key in data then we plot confidence intervals
+        var area
+        if (this.options.curveLine) {
+            this.log('Using curve mode')
+            area = d3.area().curve(d3['curveNatural'])
+                .x(d => this.xScale(d[0]))
+                .y0(d => this.yScale(d[1]))
+                .y1(d => this.yScale(d[2]))
+        } else {
+            area = d3.area()
+                .x(d => this.xScale(d[0]))
+                .y0(d => this.yScale(d[1]))
+                .y1(d => this.yScale(d[2]))
+        }
+        this.plot.selectAll("path.confidence")
+            .data(this.data.filter(d => d.confidenceIntervals !== undefined), d => d.id)
+            .join(
+                enter => enter.append("path")
+                    .attr("class", `confidence ${this.chart_id}`)
+                    .attr("id", d => `confidence-${d.id}`)
+                    .attr("fill", d => this.getLineColor(d, true))
+                    .attr("opacity", 0.5)
+                    .attr("stroke", "none")
+                    .attr("d", d => area(d.confidenceIntervals)
+                    )
+                ,
+                update => update.call(update =>
+                    update.transition()
+                        .duration(this.options.duration)
+                        .attrTween("d", d => {
+                            // Warning! selection.select propagates data so don't do
+                            // this.plot.select !
+                            console.log('zz', `.${this.chart_id}#confidence-${d.id}`)
+                            var previous = d3.select(`.${this.chart_id}#confidence-${d.id}`)
+                            console.log(`previous`, previous)
+                            previous = previous.attr("d")
+                            var current = area(d.confidenceIntervals)
+                            return d3.interpolatePath(previous, current);
+                        })
+                )
+
+            )
 
     }
 
 
-    /* Creat color wheel*/
+    /* Create color wheel*/
     defaultColors() {
         return {
             blue: "#007bff",
@@ -293,9 +347,17 @@ class LineChart {
             this.dataColors = dataColors
         })
     }
+    // lighten the color for interval
+    getLighterColor(color) {
+        return d3.color(color).brighter(1).hex()
+    }
 
-    getLineColor(d) {
-        return d.lineColor || this.dataColors[d.id] || this.options.lineColor
+    getLineColor(d, interval = false) {
+        let color = d.lineColor || this.dataColors[d.id] || this.options.lineColor
+        if (interval) {
+            return this.getLighterColor(color)
+        }
+        return color
     }
 
     updateLegend() {
@@ -353,6 +415,6 @@ class LineChart {
 
 }
 
-// For a next version create base chart and 
+// For a next version create base chart and
 // then extend to other chart types e.g.
 // class LineChart extends Chart { }
