@@ -1,0 +1,137 @@
+<div class="row">
+    <div class="col-sm-12 pb-3" id="distribution-container"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate-path@2.1.2/build/d3-interpolate-path.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-random@3.0.1/dist/d3-random.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstat/1.9.3/jstat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/14.0.0/math.js"
+    integrity="sha512-Z4SWUL3xAVPPSOiBAYUjWdtZDmFU9mlM8CUJP+5PkU8qHUCA1uhI41Tzy+Znb6VeHFEM2+xcv+Hj8Ai4Hfs4CA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="/js/lineChart.js"></script>
+
+<script>
+
+
+    class disjointLinUCBAgent {
+        constructor(k, d, alpha) {
+            console.log(`Creating disjoint LinUCB agent with k = ${k} and d = ${d}, alpha = ${alpha}`)
+            this.k = k // number of arms
+            this.d = d // number of feature
+            this.alpha = alpha
+            this.name = "Disjoint LinUCB"
+            this.A = d3.range(k).map(d => math.identity(d))
+            this.b = d3.range(k).map(d => math.zeros(d))
+        }
+
+        theta() {
+            return this.A.map((A, i) => math.multiply(math.inv(A), this.b[i]))
+        }
+
+        expectedReward(context) {
+            return this.theta().map((theta, i) => math.multiply(math.transpose(theta), context))
+        }
+
+        standardError(context) {
+            return this.A.map((A, i) => {
+                let variance = math.multiply(
+                    math.transpose(context),
+                    math.multiply(math.inv(A), context)
+                )
+                return math.multiply(this.alpha, math.sqrt(variance))
+            })
+        }
+
+        selectArm(context) {
+            let standardErrors = this.standardError(context)
+            let expectedRewards = this.expectedReward(context)
+            let ucb = expectedRewards.map((expectedReward, i) => expectedReward + se[i])
+            let maxUCB = Math.max(...ucb);
+            let bestArms = ucb.map((value, index) => value === maxUCB ? index : -1).filter(index => index !== -1);
+            let arm = bestArms[Math.floor(Math.random() * bestArms.length)];
+            return arm
+        }
+
+        update(context, arm, reward) {
+            let A = this.A[arm]
+            let b = this.b[arm]
+            this.A[arm] = math.add(A, math.multiply(context, math.transpose(context)))
+            this.b[arm] = math.add(b, math.multiply(reward, context))
+        }
+    }
+
+
+
+    class Simulator {
+        constructor(agent, simulationData) {
+            this.agent = agent
+            this.simulationData = simulationData
+            // simulation data has context, and rewards for each arm
+            this.N = simulationData.length
+            this.t = 0 // current iteration
+            this.frameData = []
+
+            let observedAndClicks = simulationData.arms.map(arm => [0, 0])
+            let theta = agent.theta()
+
+        }
+
+        run() {
+            simulationData.foreach(data => {
+                let {context, rewards} = data
+                console.log(`context = ${context}`)
+            })
+        }
+    }
+
+
+    let data = [
+        { id: "Sports", values: [[20, 0.5], [60, 0.1]] },
+        { id: "Politics", values: [[20, 0.3], [60, 0.4]] },
+        { id: "Technology", values: [[20, 0.2], [60, 0.2]] },
+    ]
+
+    const chartElement = document.querySelector('#distribution-container')
+    const chart = new LineChart(chartElement, data, { duration: 500, startYAtZero: true, maxY: 1 });
+
+    let N = 1000 // number of iterations
+    let k = 3 // number of arms
+    let d = 2 // disjoint features
+
+    let simulationData = getSimulationData(N)
+    const alpha = 1 + Math.sqrt(Math.log(2 / 0.9) / 2)
+    console.log(`alpha = ${alpha}`)
+    console.log(`simulationData = `, simulationData)
+    const agent = new disjointLinUCBAgent(3, 2, alpha);
+    const simulator = new Simulator(agent, simulationData)
+
+    simulator.run()
+
+
+
+    // add type hint
+    function getSimulationData(N) {
+        // In each iteration we simulate a user and their age
+        // we then draw from the arm distributions to see if they would
+        // have clicked if shown the article
+        return d3.range(N).map(d => {
+            let userAge = d3.randomUniform(20, 60)()
+            let arms = ["Sports", "Politics", "Technology"]
+            let linearArms = [
+                age => .5 - (60 - age) * 0.01,
+                age => .3 + (60 - age) * 0.005,
+                age => .2
+            ]
+            let rewards = linearArms.map((arm, i) => {
+                let theta = arm(userAge)
+                let reward = d3.randomBernoulli(theta)()
+                return reward
+            })
+            return { context: [1, userAge], rewards: rewards }
+        })
+    };
+
+
+</script>
