@@ -1,21 +1,21 @@
 <div class="chart">
     <div class="row controls">
-        <form class="col-md-4" id="algorithm-A">
+        <form class="col-md-4" id="arm-A">
             <div class="form-group m-0">
-                <label for="algorithm-A" class="slider-label">Algorithm A conversion: 0.1</label>
-                <input type="range" min=0 max=1 value=.1 step=0.01 id="algorithm-A-prob" style="width: 100%">
+                <label for="arm-A" class="slider-label">arm A conversion: 0.1</label>
+                <input type="range" min=0 max=1 value=.1 step=0.01 id="arm-A-prob" style="width: 100%">
             </div>
         </form>
-        <form class="col-md-4" id="algorithm-B">
+        <form class="col-md-4" id="arm-B">
             <div class="form-group m-0">
-                <label for="algorithm-B" class="slider-label">Algorithm B conversion: 0.2</label>
-                <input type="range" min=0 max=1 value=.2 step=0.01 id="algorithm-B-prob" style="width: 100%">
+                <label for="arm-B" class="slider-label">arm B conversion: 0.2</label>
+                <input type="range" min=0 max=1 value=.2 step=0.01 id="arm-B-prob" style="width: 100%">
             </div>
         </form>
-        <form class="col-md-4" id="algorithm-C">
+        <form class="col-md-4" id="arm-C">
             <div class="form-group m-0">
-                <label for="algorithm-C" class="slider-label">Algorithm C conversion: 0.18</label>
-                <input type="range" min=0 max=1 value=.18 step=0.01 id="algorithm-C-prob" style="width: 100%">
+                <label for="arm-C" class="slider-label">arm C conversion: 0.18</label>
+                <input type="range" min=0 max=1 value=.18 step=0.01 id="arm-C-prob" style="width: 100%">
             </div>
         </form>
 
@@ -34,16 +34,16 @@
 </div>
 <div class="row">
     <div class="col-sm-12 pb-3">
-        Chart showing the distribution of conversion parameter $\theta_k$ for each algorithm A, B, C. The distribution
-        is updated using Thompson Sampling algorithm.
+        Chart showing the distribution of conversion parameter $\theta_k$ for each arm A, B, C. The distribution
+        is updated using Thompson Sampling.
     </div>
     <div class="col-sm-12 pb-3" id="distribution-container"></div>
-    <!-- Below we have a table showing the counts of each algorithion and the clicks and the current mean theta -->
+    <!-- Below we have a table showing the counts of each arm and the clicks and the current mean theta -->
     <div class="col-sm-12">
         <table class="table table-bordered table-sm">
             <thead>
                 <tr>
-                    <th>Algorithm</th>
+                    <th>arm</th>
                     <th>Observations</th>
                     <th>Clicks</th>
                     <th>Modelled $\theta_k$</th>
@@ -52,25 +52,25 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Algorithm A</td>
-                    <td id="algorithm-A-observations">0</td>
-                    <td id="algorithm-A-clicks">0</td>
-                    <td id="algorithm-A-theta">0.5</td>
-                    <td id="algorithm-A-true-theta">0.1</td>
+                    <td>arm A</td>
+                    <td id="arm-A-observations">0</td>
+                    <td id="arm-A-clicks">0</td>
+                    <td id="arm-A-theta">0.5</td>
+                    <td id="arm-A-true-theta">0.1</td>
                 </tr>
                 <tr>
-                    <td>Algorithm B</td>
-                    <td id="algorithm-B-observations">0</td>
-                    <td id="algorithm-B-clicks">0</td>
-                    <td id="algorithm-B-theta">0.5</td>
-                    <td id="algorithm-B-true-theta">0.2</td>
+                    <td>arm B</td>
+                    <td id="arm-B-observations">0</td>
+                    <td id="arm-B-clicks">0</td>
+                    <td id="arm-B-theta">0.5</td>
+                    <td id="arm-B-true-theta">0.2</td>
                 </tr>
                 <tr>
-                    <td>Algorithm C</td>
-                    <td id="algorithm-C-observations">0</td>
-                    <td id="algorithm-C-clicks">0</td>
-                    <td id="algorithm-C-theta">0.5</td>
-                    <td id="algorithm-C-true-theta">0.18</td>
+                    <td>arm C</td>
+                    <td id="arm-C-observations">0</td>
+                    <td id="arm-C-clicks">0</td>
+                    <td id="arm-C-theta">0.5</td>
+                    <td id="arm-C-true-theta">0.18</td>
                 </tr>
             </tbody>
         </table>
@@ -197,11 +197,11 @@
 
         // sliders set up
         ['A', 'B', 'C'].forEach(id => {
-            // console.log(`#algorithm-${id}-prob setup callback`)
-            let slider = d3.select(`#algorithm-${id}-prob`)
+            // console.log(`#arm-${id}-prob setup callback`)
+            let slider = d3.select(`#arm-${id}-prob`)
             slider.on("input.a", function () {
                 var value = this.value
-                d3.select(`[for="algorithm-${id}"]`).text(`Algorithm ${id.toUpperCase()} conversion: ${value}`)
+                d3.select(`[for="arm-${id}"]`).text(`arm ${id.toUpperCase()} conversion: ${value}`)
                 delayUpdate(id)
             })
         })
@@ -216,9 +216,9 @@
             // Empty frameData
             let frameData = []
             // Get the base conversion probabilities
-            let a_prob = parseFloat(d3.select('#algorithm-A-prob').node().value)
-            let b_prob = parseFloat(d3.select('#algorithm-B-prob').node().value)
-            let c_prob = parseFloat(d3.select('#algorithm-C-prob').node().value)
+            let a_prob = parseFloat(d3.select('#arm-A-prob').node().value)
+            let b_prob = parseFloat(d3.select('#arm-B-prob').node().value)
+            let c_prob = parseFloat(d3.select('#arm-C-prob').node().value)
             // console.log(`[Thompson Sampling] a_prob: ${a_prob}, b_prob: ${b_prob}, c_prob: ${c_prob}`)
             let conversions = generateUserConversionSeries(a_prob, b_prob, c_prob)
             // Initialise the distribution parameters, plotData and observedAndClicks
@@ -233,8 +233,8 @@
             // append the initial frame data
             frameData.push({ plotData, observedAndClicks, params })
 
-            // loop over N steps generating the beta distribution for each algorithm as well as the params
-            // through the thompson sampling algorithm
+            // loop over N steps generating the beta distribution for each arm as well as the params
+            // through the thompson sampling
             for (let i = 0; i < N - 1; i++) {
                 let sampledTheta = ['A', 'B', 'C'].reduce((acc, id) => {
                     let [alpha, beta] = params[id]
@@ -281,11 +281,11 @@
             ['A', 'B', 'C'].forEach(id => {
                 let [observed, clicks] = observedAndClicks[id]
                 let [alpha, beta] = params[id]
-                let true_theta = parseFloat(d3.select(`#algorithm-${id}-prob`).node().value)
-                d3.select(`#algorithm-${id}-observations`).text(observed)
-                d3.select(`#algorithm-${id}-clicks`).text(clicks)
-                d3.select(`#algorithm-${id}-theta`).text((alpha / (alpha + beta)).toFixed(2))
-                d3.select(`#algorithm-${id}-true-theta`).text(true_theta)
+                let true_theta = parseFloat(d3.select(`#arm-${id}-prob`).node().value)
+                d3.select(`#arm-${id}-observations`).text(observed)
+                d3.select(`#arm-${id}-clicks`).text(clicks)
+                d3.select(`#arm-${id}-theta`).text((alpha / (alpha + beta)).toFixed(2))
+                d3.select(`#arm-${id}-true-theta`).text(true_theta)
             })
         }
 
@@ -332,9 +332,9 @@
         // add event listener to call chart update on input change
         playHandle.registerCallback(update)
 
-        d3.select("#algorithm-A-prob").on("input.b", onConversionChange)
-        d3.select("#algorithm-B-prob").on("input.b", onConversionChange)
-        d3.select("#algorithm-C-prob").on("input.b", onConversionChange)
+        d3.select("#arm-A-prob").on("input.b", onConversionChange)
+        d3.select("#arm-B-prob").on("input.b", onConversionChange)
+        d3.select("#arm-C-prob").on("input.b", onConversionChange)
 
 
         return chart
