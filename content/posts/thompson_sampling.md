@@ -25,14 +25,12 @@ based on what you know so far (`exploitation`).
 `Thompson sampling` is a strategy for balancing `exploration` and `exploitation` in a `multi-armed bandit` problem to
 maximise `reward`.
 
-
 To make this more concrete let's imaging we our trying to improve click through on the homepage of a website. Imagine we
-have developed a few different algorithms where each algorithm selects personalised content to show the user. We want to
-know which algorithm is the best at getting users to click on the content! In this example the `reward` is deemed to be
-1 if the user clicks and 0 if they don't.
+have developed three different options which we could show the user. We want to know which is the best at getting users
+to click through! In this example the `reward` is deemed to be 1 if the user clicks and 0 if they don't.
 
-In a classic A/B test, if we had three algorithms A, B and C (assuming C is the current control experience) you would
-randomly assign users to one of the three algorithms and then measure the click through rate (CTR) for each algorithm
+In a classic A/B test, if we had three options A, B and C (assuming C is the current control experience) you would
+randomly assign users to one of the three options and then measure the click through rate (CTR) for each option
 once the experiment has ran for the pre-decided time (likely based on a power calculation)
 
 <!-- below insert an svg with a user icon on the left connected to three computers on the right with labels A, B and C -->
@@ -43,16 +41,16 @@ once the experiment has ran for the pre-decided time (likely based on a power ca
 {{< /row >}}
 
 However, in a `multi-armed bandit` problem we want to be more efficient with our data collection. We want to use the
-data we collect to continuously inform the decision of which algorithm to show next. Intuitively if very few users
-seem to be clicking on the content for algorithm A then we would ideally like to show less users algorithm A. In this
+data we collect to continuously inform the decision of which option to show next. Intuitively if very few users
+seem to be clicking on the content for option A then we would ideally like to show less users option A. In this
 way we can learn more about the more promising candidates B and C whilst also not subjecting too many users to a poor
-experience with algorithm A.
+experience with option A.
 
 Describing a bandit problem more formally, for each arm/action $x_1,...,x_k$ we observe an outcome $y_1,...,y_k$ and a
-related reward $r_1(y_1),...,r_k(y_k)$ dependent on the outcome. In the example above the action is which algorithm to
+related reward $r_1(y_1),...,r_k(y_k)$ dependent on the outcome. In the example above the action is which option to
 show the user and the outcome is the same as the reward, 1 if the user clicks and 0 if they don't.
 The outcome $y$ in this example, either a click or no click, is a binary variable and as such it can be modelled as a
-Bernoulli distribution: given algorithm or arm $x_k$ the probability of observing a click is given by a
+Bernoulli distribution: given option or arm $x_k$ the probability of observing a click is given by a
 parameter $\theta_k$.
 \begin{align}
 P(y_k=1|x_k)&=\theta_k \\\\
@@ -79,7 +77,7 @@ $p(\theta_k)$ and it is through this sampling that the algorithm balances explor
 In both cases the distribution of $\theta_k$ is updated as new data is observed using Bayes rule.
 
 So the Thompson sampling algorithm can be boiled down to
-1. Initialise the priors $p(\theta_k) = \text{Beta}(a=1, b=1)$ for the conversion probability of each algorithm
+1. Initialise the priors $p(\theta_k) = \text{Beta}(a=1, b=1)$ for the conversion probability of each arm $x_k$
 2. At each step
    1. **Sample the model**  $\hat{\theta}$ from the current prior $p(\theta_k)$
    2. **Select the optimal action** $x_k$ which correspond to the largest $\hat{\theta}$
@@ -90,10 +88,10 @@ So the Thompson sampling algorithm can be boiled down to
 ### Thompson sampling simulation
 
 To take this example further let's run a simulation where somehow we actually know the true click through rate for each
-algorithm. Select the True CTR for each algorithm and then simulate the process of Thompson sampling.
+option. Select the True CTR for each arm and then simulate the process of Thompson sampling.
 
 {{< thompson_sampling >}}
 
 Notice that once the simulation is complete the Thompson sampling algorithm has converged to showing the best performing
-algorithm more often than the other two algorithms! This is because the Thompson sampling algorithm is able to balance
-exploration and exploitation by sampling from the posterior distribution of the conversion rate for each algorithm.
+option more often than the other two! This is because the Thompson sampling algorithm is able to balance
+exploration and exploitation by sampling from the posterior distribution of the conversion rate for each arm.
