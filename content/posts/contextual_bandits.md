@@ -69,7 +69,7 @@ R(T) = E[\sum_{t=1}^{T} r_{t,a^{*}_t}] - E[\sum_{t=1}^{T} r_{t,a_t}]
 For each trial t, an upper confidence bound (UCB) algorithm estimates both the mean payoff $\hat{\mu}\_{t, a}$ as well as an interval $c_{t,a}$ around the mean. The algorithm then chooses the action with the `highest upper confidence bound`.
 By choosing the action with the highest upper confidence bound the algorithm is able to balance the `exploration-exploitation` trade-off. The algorithm is able to explore actions with high uncertainty and exploit actions with high expected payoff.
 {{<formula class="responsive-math">}}
-a*t = \underset{a}{\operatorname{argmax}}(\hat{\mu}*{t,a} + c\_{t,a})
+a_t = \underset{a}{\operatorname{argmax}}(\hat{\mu}_{t,a} + c_{t,a})
 {{</formula>}}
 
 #### Disjoint Linear Upper Confidence Bound
@@ -78,7 +78,7 @@ In the paper the authors propose `LinUCB` by assuming a `linear` model for the e
 
 {{<formula class="responsive-math">}}
 \begin{align}
-E[r_{t, a} | x_{t,a}] = x\_{t,a}^T \theta_a
+E[r_{t, a} | x_{t,a}] = x_{t,a}^T \theta_a
 \end{align}
 {{</formula>}}
 
@@ -100,7 +100,7 @@ From the paper it can be show that with probability at least $1 - \delta$
 
 {{<formula class="responsive-math">}}
 \begin{align}
-|x*{t,a}^T\theta_a - E[r*{t, a} | x*{t,a}]| \leq \alpha \sqrt{x*{t,a}^T (D*a^T D_a + I)^{-1} x*{t,a}}
+|x_{t,a}^T\theta_a - E[r_{t, a} | x_{t,a}]| \leq \alpha \sqrt{x_{t,a}^T (D_a^T D_a + I)^{-1} x_{t,a}}
 \end{align}
 {{</formula>}}
 
@@ -110,8 +110,8 @@ From this `linUCB` selects the action $a_t$ with the highest upper confidence bo
 
 {{<formula class="responsive-math">}}
 \begin{align}
-a*t &= \underset{a}{\operatorname{argmax}}(x*{t,a}^T \theta*a + \alpha \sqrt{x*{t,a}^T (D*a^T D_a + I)^{-1} x*{t,a}}) \\
-&= \underset{a}{\operatorname{argmax}}(x*{t,a}^T \theta_a + \alpha \sqrt{x*{t,a}^T A*a^{-1} x*{t,a}})
+a_t &= \underset{a}{\operatorname{argmax}}(x_{t,a}^T \theta_a + \alpha \sqrt{x_{t,a}^T (D_a^T D_a + I)^{-1} x_{t,a}}) \\
+&= \underset{a}{\operatorname{argmax}}(x_{t,a}^T \theta_a + \alpha \sqrt{x_{t,a}^T A_a^{-1} x_{t,a}})
 \end{align}
 {{</formula>}}
 
@@ -146,7 +146,7 @@ In this case we still have a linear model for the expected payoff but the featur
 
 {{<formula class="responsive-math">}}
 \begin{align}
-E[r_{t, a} | x_{t,a}] = x*{t,a}^T \theta_a + z*{t,a}^T \beta
+E[r_{t, a} | x_{t,a}] = x_{t,a}^T \theta_a + z_{t,a}^T \beta
 \end{align}
 {{</formula>}}
 
@@ -157,10 +157,28 @@ E[r_{t, a} | x_{t,a}] = x*{t,a}^T \theta_a + z*{t,a}^T \beta
   - $b_0 = 0$ (k dimensional vector)
 - For $t=1, 2, 3, ..., T$
   - Observe context $x_{t,a}$ for each arm $a \in A_t$
-  - $\hat{\beta} = A_0^{-1} b_0$ - For all arms $a \in A_t$ - If $a$ is new: set - $A_a = I$ (d x d identity matrix where d is the number of features) - $B_a = 0_{d x k} $ (d x k matrix of zeros)
-        - $b_a = 0$ (d dimensional zero vector) - Update current mean and variance estimates - $\theta_a = A_a^{-1} (b_a - B_a\hat{\beta})$ - $s_{t, a} = z_{t, a}^T A_0^{-1}z_{t, a} - 2 z_{t, a}^TA_0^{-1}B_a^TA_a^{-1}x_{t, a} +$
-    $x_{t, a}^T A_a^{-1}x_{t, a} + x_{t, a}^T A_a^{-1} B_aA_0^{-1}B_a^TA_a^{-1}x_{t, a}$ - $p_a = x_{t, a}^T \theta_a + z_{t, a}^T \hat{\beta} + \alpha \sqrt{s_{t, a}}$ - Update shared feature blocks based on current information for chosen action $a_t$ - $A_0 = A_0 + B_{a_t}^TA_{a_t}^{-1}B_{a_t}$ - $b_0 = b_0 + B_{a_t}^TA_{a_t}^{-1}b_{a_t}$ - Update the arms specific blocks based on chosen action $a_t$ - $A_{a_t} = A_{a_t} + x_{t, a_t}x_{t, a_t}^T$ - $B_{a_t} = B_{a_t} + x_{t, a_t}z_{t, a_t}^T$ - $b_{a_t} = b_{a_t} + x_{t, a_t}r_{t, a_t}$ - Update the share feature blocks based on chosen action $a_t$ and updated information - $A_0 = A_0 + z_{t, a_t}z_{t, a_t}^T - B_{a_t}^TA_{a_t}^{-1}B_{a_t}$ - $b_0 = b_0 + z_{t, a_t}r_{t, a_t} - B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
-    {{< /accordion >}}
+  - $\hat{\beta} = A_0^{-1} b_0$
+  - For all arms $a \in A_t$
+    - If $a$ is new: set
+      - $A_a = I$ (d x d identity matrix where d is the number of features)
+      - $B_a = 0_{d x k} $ (d x k matrix of zeros)
+      - $b_a = 0$ (d dimensional zero vector)
+    - Update current mean and variance estimates
+      - $\theta_a = A_a^{-1} (b_a - B_a\hat{\beta})$
+      - $s_{t, a} = z_{t, a}^T A_0^{-1}z_{t, a} - 2 z_{t, a}^TA_0^{-1}B_a^TA_a^{-1}x_{t, a} +$
+    $x_{t, a}^T A_a^{-1}x_{t, a} + x_{t, a}^T A_a^{-1} B_aA_0^{-1}B_a^TA_a^{-1}x_{t, a}$
+      - $p_a = x_{t, a}^T \theta_a + z_{t, a}^T \hat{\beta} + \alpha \sqrt{s_{t, a}}$
+    - Update shared feature blocks based on current information for chosen action $a_t$
+      - $A_0 = A_0 + B_{a_t}^TA_{a_t}^{-1}B_{a_t}$
+      - $b_0 = b_0 + B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
+    - Update the arms specific blocks based on chosen action $a_t$
+      - $A_{a_t} = A_{a_t} + x_{t, a_t}x_{t, a_t}^T$
+      - $B_{a_t} = B_{a_t} + x_{t, a_t}z_{t, a_t}^T$
+      - $b_{a_t} = b_{a_t} + x_{t, a_t}r_{t, a_t}$
+    - Update the share feature blocks based on chosen action $a_t$ and updated information
+      - $A_0 = A_0 + z_{t, a_t}z_{t, a_t}^T - B_{a_t}^TA_{a_t}^{-1}B_{a_t}$
+      - $b_0 = b_0 + z_{t, a_t}r_{t, a_t} - B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
+{{< /accordion >}}
 
 ## Simulations with Disjoint LinUCB
 
