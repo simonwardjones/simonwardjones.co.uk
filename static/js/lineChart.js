@@ -234,6 +234,7 @@ class LineChart {
                     .attr("stroke", d => this.getLineColor(d))
                     .attr("fill", "none")
                     .attr("stroke-width", this.options.lineWidth)
+                    .attr("stroke-dasharray", d => d.dashArray ? "5,5" : "0")
                     .attr("opacity", 0)
                     .call(enter =>
                         enter.transition()
@@ -283,7 +284,7 @@ class LineChart {
                     .attr("class", `confidence ${this.chart_id}`)
                     .attr("id", d => `confidence-${d.id}`)
                     .attr("fill", d => this.getLineColor(d, true))
-                    .attr("opacity", 0.5)
+                    .attr("opacity", 0.3)
                     .attr("stroke", "none")
                     .attr("d", d => area(d.confidenceIntervals)
                     )
@@ -292,16 +293,19 @@ class LineChart {
                     update.transition()
                         .duration(this.options.duration)
                         .attrTween("d", d => {
-                            // Warning! selection.select propagates data so don't do
-                            // this.plot.select !
-                            console.log('zz', `.${this.chart_id}#confidence-${d.id}`)
                             var previous = d3.select(`.${this.chart_id}#confidence-${d.id}`)
-                            console.log(`previous`, previous)
                             previous = previous.attr("d")
                             var current = area(d.confidenceIntervals)
                             return d3.interpolatePath(previous, current);
                         })
-                )
+                ),
+                exit => exit
+                    .call(exit =>
+                        exit.transition()
+                            .duration(this.options.duration)
+                            .attr("opacity", 0)
+                            .remove(),
+                    )
 
             )
 
@@ -371,8 +375,17 @@ class LineChart {
             .style("justify-content", "space-evenly")
             .style("background", this.options.svgBackground)
 
+        // note we condense data to unique legend items based on legendGroup or id if no legendGroup
+        let legendData = this.data.reduce((acc, d) => {
+            let key = d.legendGroup || d.id
+            if (!acc.find(x => x.id === key)) {
+                acc.push({ id: key, legendGroup: d.legendGroup, lineColor: d.lineColor })
+            }
+            return acc
+        }, [])
+
         let legendItems = legend.selectAll("div.legendItem")
-            .data(this.data, d => d.id)
+            .data(legendData, d => d.id)
             .join(
                 enter => enter.append("div")
                     .attr("class", `legendItem ${this.chart_id}`)
@@ -382,7 +395,7 @@ class LineChart {
                         legendItem.append("div")
                             .style("background", d => this.getLineColor(d))
                             .style("height", "100%")
-                            .attr('id', d => d)
+                            .attr('id', d => d.legendGroup || d.id)
                             .style("width", "1em")
                             .style("margin-right", "0.5em")
                             .style("clip-path", "circle(0)")
@@ -392,7 +405,7 @@ class LineChart {
 
                         legendItem.append("div")
                             .style("opacity", "0")
-                            .text(d => d.id)
+                            .text(d => d.legendGroup || d.id)
                             .transition()
                             .duration(this.options.duration)
                             .style("opacity", "1")
