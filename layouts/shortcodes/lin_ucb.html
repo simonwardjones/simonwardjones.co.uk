@@ -1,5 +1,45 @@
 <div class="row">
+    <form class="col d-flex pb-3" id="simulation-slider">
+        <button name="play_pause" type="button" style="margin-right: 0.4em; width: 100px" id="play-button">Play</button>
+        <button name="step" type="button" style="margin-right: 0.4em; width: 100px" id="step-button">Step</button>
+        <label style="display: flex; align-items: center; width: 100%">
+            <input name=i type=range min=0 max=1000 value=0 step=1 style="flex-grow:1">
+            <output name=o style="margin-left: 0.4em;">0 Steps</output>
+        </label>
+    </form>
+</div>
+<div class="row">
     <div class="col-sm-12 pb-3" id="distribution-container"></div>
+    <div class="col-sm-12 pl-5">
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>arm</th>
+                    <th>Observations</th>
+                    <th>Clicks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sports</td>
+                    <td id="arm-A-observations">0</td>
+                    <td id="arm-A-clicks">0</td>
+                </tr>
+                <tr>
+                    <td>Politics</td>
+                    <td id="arm-B-observations">0</td>
+                    <td id="arm-B-clicks">0</td>
+                </tr>
+                <tr>
+                    <td>Technology</td>
+                    <td id="arm-C-observations">0</td>
+                    <td id="arm-C-clicks">0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-12 pb-3" id="regret"></div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -13,125 +53,288 @@
 <script src="/js/lineChart.js"></script>
 
 <script>
+    (async () => {
 
+        class disjointLinUCBAgent {
+            constructor(nArms, d, alpha) {
+                console.log(`Creating disjoint LinUCB agent with nArms = ${nArms} and d = ${d}, alpha = ${alpha}`)
+                this.nArms = nArms // number of arms
+                this.d = d // number of feature
+                this.alpha = alpha
+                this.name = "Disjoint LinUCB"
+                this.A = d3.range(nArms).map(_ => math.identity(d))
+                this.b = d3.range(nArms).map(_ => math.zeros(d).reshape([d, 1]))
+            }
 
-    class disjointLinUCBAgent {
-        constructor(k, d, alpha) {
-            console.log(`Creating disjoint LinUCB agent with k = ${k} and d = ${d}, alpha = ${alpha}`)
-            this.k = k // number of arms
-            this.d = d // number of feature
-            this.alpha = alpha
-            this.name = "Disjoint LinUCB"
-            this.A = d3.range(k).map(d => math.identity(d))
-            this.b = d3.range(k).map(d => math.zeros(d))
+            theta() {
+                return this.A.map((A, i) => math.multiply(math.inv(A), this.b[i]))
+            }
+
+            expectedReward(x) {
+                return this.theta().map((theta, i) => {
+                    let reward = math.multiply(math.transpose(theta), x)
+                    return math.squeeze(reward)
+                })
+            }
+
+            standardError(x) {
+                return this.A.map((A, i) => {
+                    let variance = math.squeeze(math.multiply(
+                        math.transpose(x),
+                        math.multiply(math.inv(A), x)
+                    ))
+                    return math.multiply(this.alpha, math.sqrt(variance))
+                })
+            }
+
+            selectArm(context) {
+                const x = math.matrix(context).reshape([this.d, 1])
+                const standardErrors = this.standardError(x)
+                const expectedRewards = this.expectedReward(x)
+                const ucb = expectedRewards.map((expectedReward, i) => expectedReward + standardErrors[i])
+                const maxUCB = Math.max(...ucb)
+                const bestArms = ucb.map((value, index) => value === maxUCB ? index : -1).filter(index => index !== -1)
+                const arm = bestArms[Math.floor(Math.random() * bestArms.length)]
+                return { expectedRewards, standardErrors, ucb, arm }
+            }
+
+            update(context, arm, reward) {
+                const x = math.matrixFromColumns(context)
+                this.A = this.A.map((A, i) => i === arm ? math.add(A, math.multiply(x, math.transpose(x))) : A)
+                this.b = this.b.map((b, i) => i === arm ? math.add(b, math.multiply(reward, x)) : b)
+            }
         }
 
-        theta() {
-            return this.A.map((A, i) => math.multiply(math.inv(A), this.b[i]))
+        class Simulator {
+            constructor(agent, simulationData, armNames, permanentData) {
+                this.agent = agent
+                this.simulationData = simulationData
+                this.N = simulationData.length
+                this.t = 0 // current iteration
+                this.armNames = armNames
+                this.permanentData = permanentData // to be added to each plot
+                this.regretData = [[0, 0]]
+                this.frameData = []
+                this.observedAndClicks = Array.from(Array(agent.nArms).keys()).map(_ => [0, 0])
+                this.xs = d3.range(20, 61, 1).map(x => [[1], [x]])
+            }
+
+            run() {
+                console.log(`Running simulation with N = ${this.N}, simulationData = `, this.simulationData)
+                this.simulationData.forEach(data => {
+                    const { context, rewards } = data
+                    const { expectedRewards, standardErrors, ucb, arm } = this.agent.selectArm(context)
+                    const reward = rewards[arm]
+                    const optimalAgentReward = rewards[data.bestArm]
+                    const regret = optimalAgentReward - reward
+                    const newRegretPoint = [this.t + 1, this.regretData[this.t][1] + regret]
+                    console.log(`New regret point = `, newRegretPoint)
+                    this.regretData = [...this.regretData, newRegretPoint]
+                    this.agent.update(context, arm, reward)
+                    this.t += 1
+                    let plotData = this.agent.theta().map((theta, i) => {
+                        const y = this.xs.map(x => math.squeeze(math.multiply(math.transpose(theta), x)))
+                        const s = this.xs.map(x => {
+                            const variance = math.squeeze(math.multiply(
+                                math.transpose(x),
+                                math.multiply(math.inv(this.agent.A[i]), x)
+                            ))
+                            return math.multiply(this.agent.alpha, math.sqrt(variance))
+                        })
+                        const lower = y.map((y, i) => y - s[i])
+                        const upper = y.map((y, i) => y + s[i])
+                        return {
+                            id: this.armNames[i],
+                            values: d3.zip(d3.range(20, 61, 1), y),
+                            confidenceIntervals: d3.zip(d3.range(20, 61, 1), lower, upper),
+                            lineColor: colours[i]
+                        }
+                    })
+                    plotData = plotData.concat(this.permanentData)
+                    this.observedAndClicks = this.observedAndClicks.map((value, i) => {
+                        if (i === arm) {
+                            return [value[0] + 1, value[1] + reward]
+                        } else {
+                            return value
+                        }
+                    })
+                    const observedAndClicks = this.observedAndClicks
+                    this.frameData.push({ plotData, observedAndClicks, regretPlotData: [{"id": "Regret", "values": this.regretData}] })
+                })
+                return this.frameData
+            }
         }
 
-        expectedReward(context) {
-            return this.theta().map((theta, i) => math.multiply(math.transpose(theta), context))
+        function PlayUtility(values, { initial = 0, step_size = 1, steps = null, delay = null, autoplay = true, loop = true, loopDelay = null } = {}) {
+            const form = document.getElementById('simulation-slider')
+            values = Array.from(values)
+            let current_id = initial
+            let frame = null
+            let timer = null
+            let interval = null
+
+            function start() {
+                form.play_pause.textContent = "Pause"
+                if (delay === null) frame = requestAnimationFrame(tick)
+                else interval = setInterval(tick, delay)
+            }
+
+            function stop() {
+                form.play_pause.textContent = "Play"
+                if (frame !== null) cancelAnimationFrame(frame), frame = null
+                if (timer !== null) clearTimeout(timer), timer = null
+                if (interval !== null) clearInterval(interval), interval = null
+            }
+
+            function running() {
+                return frame !== null || timer !== null || interval !== null
+            }
+
+            function tick() {
+                if (form.i.value == values.length - 1) {
+                    if (!loop) {
+                        stop()
+                        return
+                    }
+                    if (loopDelay !== null) {
+                        if (frame !== null) cancelAnimationFrame(frame), frame = null
+                        if (interval !== null) clearInterval(interval), interval = null
+                        timer = setTimeout(() => (step(), start()), loopDelay)
+                        return
+                    }
+                }
+                if (delay === null) frame = requestAnimationFrame(tick)
+                step()
+            }
+
+            function step() {
+                const current_value = form.i.valueAsNumber
+                const next_value = (current_value + step_size + values.length) % values.length
+                form.i.valueAsNumber = next_value
+                form.i.dispatchEvent(new CustomEvent("input", { bubbles: true }))
+            }
+
+            function registerCallback(callback) {
+                d3.select(form.i).on("input", callback)
+            }
+
+            function onInputChange(event) {
+                if (event && event.isTrusted && running()) stop()
+                form.value = values[form.i.valueAsNumber]
+                form.o.value = `${form.i.valueAsNumber} Steps`
+            }
+
+            d3.select(form.i).on("input.a", onInputChange)
+            onInputChange("manual")
+
+            form.play_pause.onclick = () => {
+                if (running()) return stop()
+                form.i.valueAsNumber = (form.i.valueAsNumber + step_size) % values.length
+                form.i.dispatchEvent(new CustomEvent("input", { bubbles: true }))
+                start()
+            }
+            form.step.onclick = () => {
+                if (running()) return stop()
+                step()
+            }
+
+            if (autoplay) start()
+            else stop()
+
+            if (steps !== null) {
+                form.i.min = 0
+                form.i.max = steps - 1
+            }
+
+            return {
+                start,
+                stop,
+                running,
+                step,
+                form,
+                registerCallback,
+                tick,
+            }
         }
 
-        standardError(context) {
-            return this.A.map((A, i) => {
-                let variance = math.multiply(
-                    math.transpose(context),
-                    math.multiply(math.inv(A), context)
-                )
-                return math.multiply(this.alpha, math.sqrt(variance))
+        function updateTable(observedAndClicks) {
+            ['A', 'B', 'C'].forEach((id, i) => {
+                let [observed, clicks] = observedAndClicks[i]
+                d3.select(`#arm-${id}-observations`).text(observed)
+                d3.select(`#arm-${id}-clicks`).text(clicks)
             })
         }
 
-        selectArm(context) {
-            let standardErrors = this.standardError(context)
-            let expectedRewards = this.expectedReward(context)
-            let ucb = expectedRewards.map((expectedReward, i) => expectedReward + se[i])
-            let maxUCB = Math.max(...ucb);
-            let bestArms = ucb.map((value, index) => value === maxUCB ? index : -1).filter(index => index !== -1);
-            let arm = bestArms[Math.floor(Math.random() * bestArms.length)];
-            return arm
+        function update(e) {
+            const frameId = playHandle.form.i.valueAsNumber
+            const newPlotData = frameData[frameId].plotData
+            const newRegretData = frameData[frameId].regretPlotData
+            const observedAndClicks = frameData[frameId].observedAndClicks
+            console.log(`[Thompson Sampling] Updating with frameId = ${frameId}`)
+            updateTable(observedAndClicks)
+            chart.update(newPlotData)
+            regretChart.update(newRegretData)
         }
 
-        update(context, arm, reward) {
-            let A = this.A[arm]
-            let b = this.b[arm]
-            this.A[arm] = math.add(A, math.multiply(context, math.transpose(context)))
-            this.b[arm] = math.add(b, math.multiply(reward, context))
-        }
-    }
-
-
-
-    class Simulator {
-        constructor(agent, simulationData) {
-            this.agent = agent
-            this.simulationData = simulationData
-            // simulation data has context, and rewards for each arm
-            this.N = simulationData.length
-            this.t = 0 // current iteration
-            this.frameData = []
-
-            let observedAndClicks = simulationData.arms.map(arm => [0, 0])
-            let theta = agent.theta()
-
-        }
-
-        run() {
-            simulationData.foreach(data => {
-                let {context, rewards} = data
-                console.log(`context = ${context}`)
+        function getSimulationData(N) {
+            return d3.range(N).map(d => {
+                let seed = 1000
+                const userAge = d3.randomUniform(20, 60, )()
+                const arms = ["Sports", "Politics", "Technology"]
+                const linearArms = [
+                    age => .5 - (age - 20) * 0.01,
+                    age => .3 + (age - 20) * 0.005,
+                    age => .2
+                ]
+                const trueThetas = linearArms.map(arm => arm(userAge))
+                const maxTheta = Math.max(...trueThetas)
+                const bestArms = trueThetas.map((theta, i) => theta === maxTheta ? i : -1).filter(i => i !== -1)
+                const bestArm = bestArms[Math.floor(Math.random() * bestArms.length)]
+                const rewards = trueThetas.map(theta => d3.randomBernoulli(theta)())
+                return { context: [1, userAge], rewards, bestArm}
             })
         }
-    }
 
+        const colours = ["#007bff", "#dc3545", "#28a745"]
+        const permanentData = [
+            { id: "Sports-Actual", values: [[20, 0.5], [60, 0.1]], dashArray: true, lineColor: colours[0], legendGroup: "Sports" },
+            { id: "Politics-Actual", values: [[20, 0.3], [60, 0.4]], dashArray: true, lineColor: colours[1], legendGroup: "Politics" },
+            { id: "Technology-Actual", values: [[20, 0.2], [60, 0.2]], dashArray: true, lineColor: colours[2], legendGroup: "Technology" }
+        ]
+        const armNames = ["Sports", "Politics", "Technology"]
+        const chartElement = document.querySelector('#distribution-container')
+        const chart = new LineChart(chartElement, permanentData, { duration: 50, startYAtZero: true, maxY: 1 })
 
-    let data = [
-        { id: "Sports", values: [[20, 0.5], [60, 0.1]] },
-        { id: "Politics", values: [[20, 0.3], [60, 0.4]] },
-        { id: "Technology", values: [[20, 0.2], [60, 0.2]] },
-    ]
+        const regretElement = document.querySelector('#regret')
+        const regretChart = new LineChart(regretElement, [], { duration: 50, startYAtZero: true, curveLine: false })
 
-    const chartElement = document.querySelector('#distribution-container')
-    const chart = new LineChart(chartElement, data, { duration: 500, startYAtZero: true, maxY: 1 });
+        window.chart = chart
+        const N = 500 // number of iterations
+        const values = d3.range(N)
+        const settings = {
+            initial: 0,
+            step_size: 1,
+            steps: N,
+            autoplay: false,
+            loop: false,
+            loopDelay: 1000,
+            delay: 50
+        }
+        const playHandle = PlayUtility(values, settings)
+        playHandle.registerCallback(update)
+        console.log("SLEEPING")
+        await new Promise(r => setTimeout(r, 1000))
+        console.log("DONE SLEEPING")
 
-    let N = 1000 // number of iterations
-    let k = 3 // number of arms
-    let d = 2 // disjoint features
+        console.log("Running slow simulations")
+        const simulationData = getSimulationData(N)
+        const alpha = 1 + Math.sqrt(Math.log(2 / 0.99) / 2)
+        const agent = new disjointLinUCBAgent(3, 2, alpha)
+        const simulator = new Simulator(agent, simulationData, armNames, permanentData)
+        const frameData = simulator.run()
+        console.log("Done running simulations")
 
-    let simulationData = getSimulationData(N)
-    const alpha = 1 + Math.sqrt(Math.log(2 / 0.9) / 2)
-    console.log(`alpha = ${alpha}`)
-    console.log(`simulationData = `, simulationData)
-    const agent = new disjointLinUCBAgent(3, 2, alpha);
-    const simulator = new Simulator(agent, simulationData)
-
-    simulator.run()
-
-
-
-    // add type hint
-    function getSimulationData(N) {
-        // In each iteration we simulate a user and their age
-        // we then draw from the arm distributions to see if they would
-        // have clicked if shown the article
-        return d3.range(N).map(d => {
-            let userAge = d3.randomUniform(20, 60)()
-            let arms = ["Sports", "Politics", "Technology"]
-            let linearArms = [
-                age => .5 - (60 - age) * 0.01,
-                age => .3 + (60 - age) * 0.005,
-                age => .2
-            ]
-            let rewards = linearArms.map((arm, i) => {
-                let theta = arm(userAge)
-                let reward = d3.randomBernoulli(theta)()
-                return reward
-            })
-            return { context: [1, userAge], rewards: rewards }
-        })
-    };
-
-
+    })().catch(err => {
+        console.error(err)
+    })
 </script>
