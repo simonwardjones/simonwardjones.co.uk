@@ -168,16 +168,17 @@ E[r_{t, a} | x_{t,a}] = x_{t,a}^T \theta_a + z_{t,a}^T \beta
       - $s_{t, a} = z_{t, a}^T A_0^{-1}z_{t, a} - 2 z_{t, a}^TA_0^{-1}B_a^TA_a^{-1}x_{t, a} +$
     $x_{t, a}^T A_a^{-1}x_{t, a} + x_{t, a}^T A_a^{-1} B_aA_0^{-1}B_a^TA_a^{-1}x_{t, a}$
       - $p_a = x_{t, a}^T \theta_a + z_{t, a}^T \hat{\beta} + \alpha \sqrt{s_{t, a}}$
-    - Update shared feature blocks based on current information for chosen action $a_t$
-      - $A_0 = A_0 + B_{a_t}^TA_{a_t}^{-1}B_{a_t}$
-      - $b_0 = b_0 + B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
-    - Update the arms specific blocks based on chosen action $a_t$
-      - $A_{a_t} = A_{a_t} + x_{t, a_t}x_{t, a_t}^T$
-      - $B_{a_t} = B_{a_t} + x_{t, a_t}z_{t, a_t}^T$
-      - $b_{a_t} = b_{a_t} + x_{t, a_t}r_{t, a_t}$
-    - Update the share feature blocks based on chosen action $a_t$ and updated information
-      - $A_0 = A_0 + z_{t, a_t}z_{t, a_t}^T - B_{a_t}^TA_{a_t}^{-1}B_{a_t}$
-      - $b_0 = b_0 + z_{t, a_t}r_{t, a_t} - B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
+  - Choose arm $a_t = \underset{a}{\operatorname{argmax}} p_a$
+  - Update shared feature blocks based on current information for chosen action $a_t$
+    - $A_0 = A_0 + B_{a_t}^TA_{a_t}^{-1}B_{a_t}$
+    - $b_0 = b_0 + B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
+  - Update the arms specific blocks based on chosen action $a_t$
+    - $A_{a_t} = A_{a_t} + x_{t, a_t}x_{t, a_t}^T$
+    - $B_{a_t} = B_{a_t} + x_{t, a_t}z_{t, a_t}^T$
+    - $b_{a_t} = b_{a_t} + x_{t, a_t}r_{t, a_t}$
+  - Update the share feature blocks based on chosen action $a_t$ and updated information
+    - $A_0 = A_0 + z_{t, a_t}z_{t, a_t}^T - B_{a_t}^TA_{a_t}^{-1}B_{a_t}$
+    - $b_0 = b_0 + z_{t, a_t}r_{t, a_t} - B_{a_t}^TA_{a_t}^{-1}b_{a_t}$
 {{< /accordion >}}
 
 ## Simulations with Disjoint LinUCB
