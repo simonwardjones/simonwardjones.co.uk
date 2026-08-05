@@ -8,15 +8,26 @@
 }
 */
 
-// Colour-wheel SVGs built from abutting stroked arcs/circles show hairline
-// gaps between segments at fractional zoom levels (classic anti-aliasing
-// seam between adjacent shapes) - the page background shows through the
-// gap. Barely visible on the old white background, much more obvious on
-// the dark one. Nudging stroke-width up slightly forces neighbouring
-// segments to overlap and hide the seam without visibly changing the design.
-.seam-safe path,
-.seam-safe circle {
+// Colour-wheel SVGs built from abutting stroked shapes show hairline gaps
+// between segments (anti-aliasing seam between adjacent shapes, worse on
+// real GPU-composited Chrome than in testing) - the page background shows
+// through the gap.
+//
+// For the arc-path wheel, each segment is its own <path>; widening the
+// stroke gives the boundary between two paths more overlap to hide the seam.
+.seam-safe path {
     stroke-width: 31 !important;
+}
+
+// For the dasharray-based wheels (circles/animated spiral), each segment is
+// one arc-length dash on a full circle. Stroke-width only widens the ring
+// radially - it does nothing for the gap, which is angular, between one
+// dash's end and the next segment's start. Lengthening the dash itself is
+// the fix: each 30 degree segment becomes ~33 degrees, so neighbours
+// overlap instead of only just touching. The gap value just needs to stay
+// comfortably larger than the dash so the pattern never repeats mid-circle.
+.seam-safe circle {
+    stroke-dasharray: 17.5 188 !important;
 }
 
 // ---- Modern theme layer -------------------------------------------------
