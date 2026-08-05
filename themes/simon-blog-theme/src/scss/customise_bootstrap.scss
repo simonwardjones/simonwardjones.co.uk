@@ -1,14 +1,19 @@
 // Overide sass variables for boostrap
 $theme-colors: (
-  "primary": #0074d9,
+  "primary": #2c5cf6,
   "danger": #ff4136,
-);
-$theme-colors: (
   "custom-color": #900,
 );
 
-// import roboto
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+$border-radius: 0.5rem;
+$border-radius-sm: 0.375rem;
+$border-radius-lg: 0.75rem;
 
-$font-family-base: "Roboto";
+$card-border-width: 0;
+
+// import Inter (a more contemporary variable-weight webfont than Roboto)
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&display=swap");
+
+$font-family-base: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+$headings-font-weight: 600;
 

@@ -1,6 +1,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- set the theme before first paint so a saved preference never flashes -->
+<script>
+(function () {
+    try {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+    } catch (e) {}
+})();
+</script>
+
 <!-- open graph (facebook) tags -->
 <meta property="og:title" content="{{ .Title }}" />
 <meta property="og:description" content="{{ .Summary }}" />

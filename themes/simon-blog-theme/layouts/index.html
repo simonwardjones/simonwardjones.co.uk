@@ -6,10 +6,14 @@
     <header class="homepage-header">
         <section class="jumbotron text-center">
             <h1 class="name">{{.Title}}</h1>
+            {{ with .Params.subtitle }}
+            <p class="subtitle">{{.}}</p>
+            {{ end }}
+            <div class="hero-actions">
+                <a href="/posts" class="btn btn-primary">View my posts</a>
+                <a href="/contact" class="btn btn-outline-primary">Get in touch</a>
+            </div>
         </section>
-        {{ with .Params.subtitle }}
-        <span class="subtitle">{{.}}</span>
-        {{ end }}
     </header>
 
     <div class="homepage-content">

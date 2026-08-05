@@ -3,199 +3,129 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    gap: 14px;
     width: 100%;
     padding-bottom: 50px;
 }
 
-$social-button-size: 200px;
+$social-button-size: 110px;
 
+// Modern flat tile: tinted brand background, brand-coloured icon, and a
+// simple lift + solid-fill on hover, replacing the old black-tile /
+// diagonal colour-wipe animation.
 .social-button {
-    margin-bottom: 4px;
-    margin-left: 2px;
-    margin-right: 2px;
-    flex-wrap: wrap;
-    background-color: #000;
-    width: $social-button-size * 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: $social-button-size;
     height: $social-button-size;
-    padding-top: $social-button-size / 4;
+    border-radius: $border-radius;
+    background-color: var(--bg-subtle);
     text-align: center;
     position: relative;
     overflow: hidden;
-    opacity: 0.99;
-    box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.05);
-    -webkit-transition: all 0.35s cubic-bezier(0.31, -0.105, 0.43, 1.59);
-    transition: all 0.35s cubic-bezier(0.31, -0.105, 0.43, 1.59);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.social-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+    text-decoration: none;
 }
 
 .social-button .fab,
 .social-button .fa {
-    font-size: 6em;
-    vertical-align: middle;
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
+    font-size: 2.4em;
+    transition: color 0.18s ease;
 }
 
-.social-detail-email {
-    font-size: 13px;
-    color: var(--orange);
-}
-
+.social-detail-email,
 .social-detail-phone {
-    font-size: 16px;
-    color: var(--red);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 0.35em 0 0;
+    padding: 0 0.5em;
+    word-break: break-word;
 }
 
-// Usage in example for medium viewport:
 @include media-breakpoint-down(md) {
-    $social-button-size: 120px;
+    $social-button-size: 84px;
 
     .social-button {
-        width: $social-button-size * 1.2;
+        width: $social-button-size;
         height: $social-button-size;
-        padding-top: $social-button-size / 5;
     }
 
     .social-button .fab,
     .social-button .fa {
-        font-size: 4em;
-        vertical-align: middle;
-        -webkit-transform: scale(0.8);
-        transform: scale(0.8);
+        font-size: 1.8em;
     }
 
-    .social-detail-email {
-        font-size: 9px;
-        color: var(--orange);
-    }
-
+    .social-detail-email,
     .social-detail-phone {
-        font-size: 12px;
-        color: var(--red);
+        font-size: 9px;
     }
 }
 
-.social-button:before {
-    content: "";
-    background-color: #fff;
-    width: 120%;
-    height: 120%;
-    position: absolute;
-    top: 90%;
-    left: -110%;
-    -webkit-transform: rotate(45deg);
-    transform: rotate(45deg);
-    -webkit-transition: all 0.35s cubic-bezier(0.31, -0.105, 0.43, 1.59);
-    transition: all 0.35s cubic-bezier(0.31, -0.105, 0.43, 1.59);
-}
+// Per-brand colour: tinted icon by default, solid brand fill + white icon
+// on hover/focus.
+@each $name, $color in (
+    facebook: #3b5998,
+    google: #dc4a38,
+    dribbble: #f26798,
+    skype: #00aff0,
+    linkedin: #00a0dc,
+    instagram: #c13584,
+    youtube: #cd201f,
+    behance: #1769ff,
+    github: #6cc644,
+) {
+    .social-button.#{$name} .fab,
+    .social-button.#{$name} .fa {
+        color: $color;
+    }
 
-.social-button.facebook:before {
-    background-color: #3b5998;
-}
+    .social-button.#{$name}:hover,
+    .social-button.#{$name}:focus {
+        background-color: $color;
+    }
 
-.social-button.facebook .fab {
-    color: #3b5998;
-}
-
-.social-button.google:before {
-    background-color: #dc4a38;
-}
-
-.social-button.google .fab {
-    color: #dc4a38;
-}
-
-.social-button.dribbble:before {
-    background-color: #f26798;
-}
-
-.social-button.dribbble .fab {
-    color: #f26798;
-}
-
-.social-button.skype:before {
-    background-color: #00aff0;
-}
-
-.social-button.skype .fa {
-    color: #00aff0;
-}
-
-.social-button.linkedin:before {
-    background-color: #00a0dc;
-}
-
-.social-button.linkedin .fab {
-    color: #00a0dc;
-}
-
-.social-button.instagram:before {
-    background-color: #c13584;
-}
-
-.social-button.instagram .fab {
-    color: #c13584;
-}
-
-.social-button.youtube:before {
-    background-color: #cd201f;
-}
-
-.social-button.youtube .fab {
-    color: #cd201f;
-}
-
-.social-button.behance:before {
-    background-color: #1769ff;
-}
-
-.social-button.behance .fab {
-    color: #1769ff;
-}
-
-.social-button.github:before {
-    background-color: #6cc644;
-}
-
-.social-button.github .fab {
-    color: #6cc644;
-}
-
-.social-button.phone:before {
-    background-color: var(--red);
+    .social-button.#{$name}:hover .fab,
+    .social-button.#{$name}:hover .fa,
+    .social-button.#{$name}:focus .fab,
+    .social-button.#{$name}:focus .fa {
+        color: #fff;
+    }
 }
 
 .social-button.phone .fa {
     color: var(--red);
 }
 
-.social-button.email:before {
-    background-color: var(--orange);
+.social-button.phone:hover,
+.social-button.phone:focus {
+    background-color: var(--red);
 }
 
 .social-button.email .fa {
     color: var(--orange);
 }
 
-.social-button:focus:before,
-.social-button:hover:before {
-    top: -10%;
-    left: -10%;
-    left: -10%;
-    -webkit-transform: rotate(45deg) scale(2);
-    transform: rotate(45deg) scale(2);
+.social-button.email:hover,
+.social-button.email:focus {
+    background-color: var(--orange);
 }
 
-.social-button:focus .fab,
-.social-button:hover .fab,
-.social-button:focus .fa,
-.social-button:hover .fa,
+.social-button.phone:hover .fa,
+.social-button.phone:focus .fa,
+.social-button.email:hover .fa,
+.social-button.email:focus .fa {
+    color: #fff;
+}
+
 .social-button:hover .social-detail-email,
 .social-button:hover .social-detail-phone {
     color: #fff;
-    -webkit-transform: scale(1);
-    transform: scale(1);
-}
-
-.social-button:hover {
-    text-decoration: none;
 }

@@ -8,6 +8,313 @@
 }
 */
 
+// Colour-wheel SVGs built from abutting stroked arcs/circles show hairline
+// gaps between segments at fractional zoom levels (classic anti-aliasing
+// seam between adjacent shapes) - the page background shows through the
+// gap. Barely visible on the old white background, much more obvious on
+// the dark one. Nudging stroke-width up slightly forces neighbouring
+// segments to overlap and hide the seam without visibly changing the design.
+.seam-safe path,
+.seam-safe circle {
+    stroke-width: 31 !important;
+}
+
+// ---- Modern theme layer -------------------------------------------------
+// Light/dark colour tokens. Bootstrap 4 itself is compiled statically, so
+// components are re-skinned with plain CSS custom properties here rather
+// than by touching every Bootstrap partial. Every token below is set both
+// by system preference (prefers-color-scheme) and by an explicit
+// html[data-theme] attribute, so the toggle button can override the OS
+// setting either way - see theme-toggle.js.
+@mixin dark-theme-tokens {
+    --bg: #14161c;
+    --bg-subtle: #1b1e26;
+    --text: #e7e9ee;
+    --text-muted: #9aa1ae;
+    --card-bg: #1b1e26;
+    --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --card-shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --code-bg: #20232c;
+    --nav-bg: rgba(20, 22, 28, 0.85);
+    --nav-text: var(--text);
+    --link: #7f9dff;
+    --table-stripe: rgba(255, 255, 255, 0.035);
+}
+
+:root {
+    --bg: #ffffff;
+    --bg-subtle: #f7f8fa;
+    --text: #1c1f26;
+    --text-muted: #6b7280;
+    --card-bg: #ffffff;
+    --card-shadow: 0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.08);
+    --card-shadow-hover: 0 8px 20px rgba(16, 24, 40, 0.12), 0 2px 6px rgba(16, 24, 40, 0.08);
+    --border-subtle: rgba(16, 24, 40, 0.08);
+    --code-bg: #f4f5f7;
+    --red: #ff4136;
+    --orange: #ff8c1a;
+    --nav-bg: rgba(255, 255, 255, 0.85);
+    --nav-text: rgba(0, 0, 0, 0.9);
+    --link: #2c5cf6;
+    --table-stripe: rgba(0, 0, 0, 0.03);
+}
+
+// Follow the OS setting, unless the toggle has set an explicit theme.
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include dark-theme-tokens;
+    }
+}
+
+// The toggle's explicit choice always wins over the OS setting.
+:root[data-theme="dark"] {
+    @include dark-theme-tokens;
+}
+
+// Headings: slightly tightened tracking reads less "default Bootstrap"
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.015em;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+a {
+    color: var(--link);
+}
+
+// Sticky, softly-elevated navbar instead of a flat static bar
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+    backdrop-filter: saturate(180%) blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    box-shadow: 0 1px 0 var(--border-subtle);
+}
+
+.navbar.bg-light {
+    background-color: var(--nav-bg) !important;
+}
+
+// Bootstrap bakes the mobile hamburger icon's stroke colour into a static
+// data-URI keyed off .navbar-light/.navbar-dark, so it doesn't follow our
+// CSS-variable theme automatically - swap it for a light stroke ourselves.
+@mixin light-navbar-toggler-icon {
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(231, 233, 238, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        @include light-navbar-toggler-icon;
+    }
+}
+
+:root[data-theme="dark"] {
+    @include light-navbar-toggler-icon;
+}
+
+.navbar-brand,
+.nav-link {
+    color: var(--nav-text) !important;
+}
+
+// Cards: replace Bootstrap's flat 1px border look with a soft shadow + lift
+.card {
+    background-color: var(--card-bg);
+    color: var(--text);
+    border-radius: $border-radius;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.card-subtitle,
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+// Buttons: subtle lift instead of Bootstrap's flat colour-only hover
+.btn {
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+// Theme switch: a small pill toggle, so it reads as a control you flip
+// rather than a plain icon button.
+.theme-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 44px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: 999px;
+    background-color: var(--bg-subtle);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-switch:hover {
+    border-color: var(--link);
+}
+
+.theme-switch:focus-visible {
+    outline: 2px solid var(--link);
+    outline-offset: 2px;
+}
+
+.theme-switch-track-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.theme-switch-track-icon--sun {
+    left: 5px;
+}
+
+.theme-switch-track-icon--moon {
+    right: 5px;
+}
+
+.theme-switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--link);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.theme-switch[aria-checked="true"] .theme-switch-thumb {
+    transform: translateX(20px);
+}
+
+// Contact form: a grouped panel with a plain stacked layout instead of the
+// old Bootstrap 3-style label/col-offset grid, and inputs re-skinned so they
+// don't sit as stark white boxes in dark mode.
+.contact-form-panel {
+    background-color: var(--card-bg);
+    border-radius: $border-radius-lg;
+    box-shadow: var(--card-shadow);
+    padding: 1.75rem 2rem;
+}
+
+.contact-form-panel h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+}
+
+.contact-form-panel .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.contact-form-panel label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+}
+
+.contact-form-panel .btn {
+    padding: 0.5rem 1.75rem;
+}
+
+.form-control {
+    background-color: var(--bg);
+    border: 1px solid var(--border-subtle);
+    color: var(--text);
+    border-radius: $border-radius-sm;
+}
+
+.form-control:focus {
+    background-color: var(--bg);
+    color: var(--text);
+    border-color: var(--link);
+    box-shadow: 0 0 0 3px rgba(44, 92, 246, 0.15);
+}
+
+// Code blocks: rounded, softly-bordered, no longer the raw default box
+pre,
+:not(pre) > code {
+    background-color: var(--code-bg);
+    color: var(--text);
+}
+
+pre {
+    border: 1px solid var(--border-subtle);
+    border-radius: $border-radius-sm;
+}
+
+:not(pre) > code {
+    border-radius: 0.25rem;
+    padding: 0.15em 0.4em;
+}
+
+// Tables: Bootstrap hardcodes a near-black `.table` text colour, which goes
+// unreadable against a dark page background - route it through the theme
+// tokens instead.
+.table {
+    color: var(--text);
+}
+
+.table td,
+.table th,
+.table thead th {
+    border-color: var(--border-subtle);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--table-stripe);
+}
+
+// Homepage hero: a plain, flatter hero rather than Bootstrap's boxed jumbotron
+.homepage-header .jumbotron {
+    background-color: var(--bg-subtle);
+    border-radius: 0;
+}
+
+.homepage-header .subtitle {
+    display: block;
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-top: -0.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.hero-actions .btn {
+    padding: 0.55rem 1.5rem;
+}
 
 // Nicer subheading in blog posts
 .subheading {
