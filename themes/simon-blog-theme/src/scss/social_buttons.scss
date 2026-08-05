@@ -96,14 +96,6 @@ $social-button-size: 200px;
     color: #3b5998;
 }
 
-.social-button.twitter:before {
-    background-color: #3cf;
-}
-
-.social-button.twitter .fab {
-    color: #3cf;
-}
-
 .social-button.google:before {
     background-color: #dc4a38;
 }
@@ -206,9 +198,4 @@ $social-button-size: 200px;
 
 .social-button:hover {
     text-decoration: none;
-}
-
-#follow-button {
-    color: white;
-    background: #3cf;
 }

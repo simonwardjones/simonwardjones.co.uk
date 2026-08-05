@@ -8,14 +8,6 @@
 {{ with .Params.image }}
 <meta property="og:image" content="{{$.Site.BaseURL}}{{ . }}" />{{ end }}
 
-<!-- twitter tags -->
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="{{ index .Site.Params " twitter_handle" }}" />
-<meta name="twitter:title" content="{{ .Title }}" />
-<meta name="twitter:description" content="{{ .Summary }}" />
-{{ with .Params.image }}
-<meta name="twitter:image" content="{{$.Site.BaseURL}}{{ . }}" />{{ end }}
-
 <!-- canonical -->
 <link rel="canonical" href="{{ .Permalink }}" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">

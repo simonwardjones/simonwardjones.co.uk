@@ -11,7 +11,6 @@ category = "categories"
 
 [params]
 formspree = "https://formspree.io/xrgyqgjw"
-twitter_handle = "@SimonWardJones"
 
 [social]
 email = "simonwardjones16@gmail.com"
@@ -20,4 +19,3 @@ github = "https://github.com/simonwardjones"
 instagram = "https://www.instagram.com/simonw_j/"
 linkedin = "https://www.linkedin.com/in/simon-ward-jones-357b16aa"
 phone = "+447545629774"
-twitter = "https://twitter.com/SimonWardJones"
