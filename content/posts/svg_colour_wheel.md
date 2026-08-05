@@ -4,9 +4,9 @@ date: 2023-08-24T22:01:08+01:00
 draft: false
 mathjax: false
 menu:
-  main:
-    parent: 'Posts'
-    name: "SVG Colour Wheel"
+main:
+parent: 'Posts'
+name: "SVG Colour Wheel"
 summary: "Making an SVG Colour Wheel"
 image: "img/svg_colour_wheel.svg"
 categories:
@@ -436,8 +436,4 @@ This third and final spiral uses the `conic-gradient` css property to define a g
 {{< /row >}}
 
 ### Animation: click to play/pause
-{{< row >}}
-{{< column  class="col-md-8 pb-3 d-flex align-items-center">}}
 {{< svg_spiral_conic_animated >}}
-{{< /column >}}
-{{< /row >}}
