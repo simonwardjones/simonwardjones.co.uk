@@ -436,4 +436,8 @@ This third and final spiral uses the `conic-gradient` css property to define a g
 {{< /row >}}
 
 ### Animation: click to play/pause
+{{< row >}}
+{{< column  class="col-md-8 pb-3 d-flex align-items-center">}}
 {{< svg_spiral_conic_animated >}}
+{{< /column >}}
+{{< /row >}}
