@@ -12,7 +12,7 @@ category = "categories"
 [params]
 formspree = "https://formspree.io/xrgyqgjw"
 
-[social]
+[params.social]
 email = "simonwardjones16@gmail.com"
 facebook = "https://www.facebook.com/simon.wardjones"
 github = "https://github.com/simonwardjones"
