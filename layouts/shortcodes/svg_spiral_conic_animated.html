@@ -1,8 +1,7 @@
 <svg id="animatedSpiral" class="seam-safe" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <style>
-        .circleComponent {
+        .circleComponent.is-spinning {
             animation: App-logo-spin 2s linear 0s alternate infinite;
-            animation-play-state: paused;
         }
 
         @keyframes App-logo-spin {
@@ -45,11 +44,9 @@
 <script>
     let animatedSVG = document.querySelector('#animatedSpiral');
     animatedSVG.addEventListener('click', () => {
-        console.log('Clicked animation')
         const animations = document.querySelectorAll('.circleComponent');
         animations.forEach(animation => {
-            const running = animation.style.animationPlayState || 'paused';
-            animation.style.animationPlayState = running === 'running' ? 'paused' : 'running';
+            animation.classList.toggle('is-spinning');
         })
     })
 </script>
