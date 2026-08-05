@@ -1,5 +1,20 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand text-blue" href="/">SW-J</a>
+  <button id="theme-toggle" type="button" class="theme-switch order-lg-last ml-auto mr-2 mr-lg-0" role="switch"
+    aria-checked="false" aria-label="Toggle dark mode">
+    <svg class="theme-switch-track-icon theme-switch-track-icon--sun" width="12" height="12" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"></circle>
+      <path
+        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41">
+      </path>
+    </svg>
+    <svg class="theme-switch-track-icon theme-switch-track-icon--moon" width="12" height="12" viewBox="0 0 24 24"
+      fill="currentColor">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <span class="theme-switch-thumb"></span>
+  </button>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -33,20 +48,5 @@
       {{ end }}
       {{ end }}
     </ul>
-    <button id="theme-toggle" type="button" class="theme-switch" role="switch" aria-checked="false"
-      aria-label="Toggle dark mode">
-      <svg class="theme-switch-track-icon theme-switch-track-icon--sun" width="12" height="12" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path
-          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41">
-        </path>
-      </svg>
-      <svg class="theme-switch-track-icon theme-switch-track-icon--moon" width="12" height="12" viewBox="0 0 24 24"
-        fill="currentColor">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>
-      <span class="theme-switch-thumb"></span>
-    </button>
   </div>
 </nav>

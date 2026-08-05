@@ -93,6 +93,11 @@ a {
     position: sticky;
     top: 0;
     z-index: 1030;
+    // Bootstrap's default space-between assumes exactly two groups; with a
+    // third item (the theme toggle) it spaces all three evenly, landing the
+    // toggle mid-bar. Pack everything left instead and let the toggle's own
+    // ml-auto push it (and the burger) to the right edge.
+    justify-content: flex-start;
     backdrop-filter: saturate(180%) blur(8px);
     -webkit-backdrop-filter: saturate(180%) blur(8px);
     box-shadow: 0 1px 0 var(--border-subtle);
